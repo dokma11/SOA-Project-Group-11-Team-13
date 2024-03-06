@@ -26,12 +26,16 @@ func initDB() *gorm.DB {
 	return database
 }
 
-func startServer(handler *handler.TourHandler) {
+func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/tours/{id}", handler.GetById).Methods("GET")
-	router.HandleFunc("/tours", handler.Create).Methods("POST")
-	router.HandleFunc("/tours", handler.GetAll).Methods("GET")
+	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
+	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
+	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
+
+	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
+	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
+	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
@@ -49,5 +53,9 @@ func main() {
 	tourService := &service.TourService{TourRepository: tourRepository}
 	tourHandler := &handler.TourHandler{TourService: tourService}
 
-	startServer(tourHandler)
+	keyPointRepository := &repo.KeyPointRepository{DatabaseConnection: database}
+	keyPointService := &service.KeyPointService{KeyPointRepository: keyPointRepository}
+	keyPointHandler := &handler.KeyPointHandler{KeyPointService: keyPointService}
+
+	startServer(tourHandler, keyPointHandler)
 }
