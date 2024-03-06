@@ -30,7 +30,7 @@ type Tour struct {
 	ArchiveDate time.Time  `json:"archiveDate"`
 	//Equipments []Equipment
 	//KeyPoints  []KeyPoint
-	//Reviews []Review
+	Reviews []Review
 	//Durations  []TourDuration
 }
 
