@@ -22,7 +22,7 @@ type Tour struct {
 	Name        string     `json:"name" gorm:"not null;type:string"`
 	Description string     `json:"description"`
 	Difficulty  int        `json:"difficulty"`
-	Tags        []string   `json:"tags"`
+	Tags        []string   `json:"tags" gorm:"type:varchar(255)[]"`
 	Status      TourStatus `json:"status"`
 	Price       float64    `json:"price"`
 	Distance    float64    `json:"distance"`
@@ -36,6 +36,11 @@ type Tour struct {
 
 func NewTour(authorID int, name, description string, tags []string, difficulty int, archiveDate,
 	publishDate time.Time, distance float64, status TourStatus, price float64) (*Tour, error) {
+
+	if tags == nil {
+		tags = []string{}
+	}
+
 	tour := &Tour{
 		AuthorId:    authorID,
 		Name:        name,
