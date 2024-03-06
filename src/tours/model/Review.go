@@ -15,7 +15,7 @@ type Review struct {
 	TourId        int       `json:"tourId"`
 	TourVisitDate time.Time `json:"tourVisitDate"`
 	CommentDate   time.Time `json:"commentDate"`
-	Images        []string  `json:"images"`
+	Images        []string  `json:"images" gorm:"type:varchar(255)[]"`
 }
 
 func NewReview(rating int, comment string, touristId int, tourId int, images []string,
