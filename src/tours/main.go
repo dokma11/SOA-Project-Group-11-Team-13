@@ -26,12 +26,16 @@ func initDB() *gorm.DB {
 	return database
 }
 
-func startServer(handler *handler.TourHandler) {
+func startServer(tourHandler *handler.TourHandler, reviewHandler *handler.ReviewHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/tours/{id}", handler.GetById).Methods("GET")
-	router.HandleFunc("/tours", handler.Create).Methods("POST")
-	router.HandleFunc("/tours", handler.GetAll).Methods("GET")
+	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
+	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
+	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
+
+	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
+	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
+	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
@@ -49,5 +53,9 @@ func main() {
 	tourService := &service.TourService{TourRepository: tourRepository}
 	tourHandler := &handler.TourHandler{TourService: tourService}
 
-	startServer(tourHandler)
+	reviewRepository := &repo.ReviewRepository{DatabaseConnection: database}
+	reviewService := &service.ReviewService{ReviewRepository: reviewRepository}
+	reviewHandler := &handler.ReviewHandler{ReviewService: reviewService}
+
+	startServer(tourHandler, reviewHandler)
 }
