@@ -22,17 +22,23 @@ func initDB() *gorm.DB {
 	}
 
 	database.AutoMigrate(&model.Tour{})
+  database.AutoMigrate(&model.KeyPoint{})
+  database.AutoMigrate(&model.Review{})
 	//database.Exec("INSERT INTO students VALUES ('aec7e123-233d-4a09-a289-75308ea5b7e6', 'Marko Markovic', 'Graficki dizajn')")
 	return database
 }
 
-func startServer(tourHandler *handler.TourHandler, reviewHandler *handler.ReviewHandler) {
+func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler, reviewHandler *handler.ReviewHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
 	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
 	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
 
+  router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
+	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
+	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
+  
 	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
 	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
 	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
@@ -53,9 +59,13 @@ func main() {
 	tourService := &service.TourService{TourRepository: tourRepository}
 	tourHandler := &handler.TourHandler{TourService: tourService}
 
-	reviewRepository := &repo.ReviewRepository{DatabaseConnection: database}
+	keyPointRepository := &repo.KeyPointRepository{DatabaseConnection: database}
+	keyPointService := &service.KeyPointService{KeyPointRepository: keyPointRepository}
+	keyPointHandler := &handler.KeyPointHandler{KeyPointService: keyPointService}
+
+  reviewRepository := &repo.ReviewRepository{DatabaseConnection: database}
 	reviewService := &service.ReviewService{ReviewRepository: reviewRepository}
 	reviewHandler := &handler.ReviewHandler{ReviewService: reviewService}
 
-	startServer(tourHandler, reviewHandler)
+	startServer(tourHandler, keyPointHandler, reviewHandler)
 }
