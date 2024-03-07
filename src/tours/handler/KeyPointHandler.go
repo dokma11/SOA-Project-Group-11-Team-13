@@ -105,7 +105,7 @@ func (handler *KeyPointHandler) Delete(writer http.ResponseWriter, req *http.Req
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(keyPoint)
 	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetById"))
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method Delete"))
 		return
 	}
 }

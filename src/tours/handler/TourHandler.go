@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -64,4 +65,26 @@ func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request
 	}
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request) {
+	idString := mux.Vars(req)["id"]
+	log.Printf("Tour with id %s", idString)
+	id, err := uuid.Parse(idString)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Delete"))
+		return
+	}
+	keyPoint := handler.TourService.Delete(id)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(keyPoint)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method Delete"))
+		return
+	}
 }

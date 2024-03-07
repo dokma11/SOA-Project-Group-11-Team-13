@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"tours/model"
 	"tours/repo"
 )
@@ -30,6 +31,15 @@ func (service *TourService) Create(tour *model.Tour) error {
 	err := service.TourRepository.Create(tour)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were created"))
+		return err
+	}
+	return nil
+}
+
+func (service *TourService) Delete(id uuid.UUID) error {
+	err := service.TourRepository.Delete(id)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no tours were deleted"))
 		return err
 	}
 	return nil
