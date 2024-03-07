@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"tours/handler"
@@ -21,16 +22,52 @@ func initDB() *gorm.DB {
 		return nil
 	}
 
-	database.AutoMigrate(&model.Student{})
-	database.Exec("INSERT INTO students VALUES ('aec7e123-233d-4a09-a289-75308ea5b7e6', 'Marko Markovic', 'Graficki dizajn')")
+	err = database.AutoMigrate(&model.Tour{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("tour auto migrations failed"))
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.KeyPoint{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("key point auto migrations failed"))
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.Review{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("review auto migrations failed"))
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.Equipment{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("equipment auto migrations failed"))
+		return nil
+	}
+
 	return database
 }
 
-func startServer(handler *handler.StudentHandler) {
+func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler,
+	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/students/{id}", handler.Get).Methods("GET")
-	router.HandleFunc("/students", handler.Create).Methods("POST")
+	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
+	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
+	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
+
+	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
+	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
+	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
+
+	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
+	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
+	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
+
+	router.HandleFunc("/equipment/{id}", equipmentHandler.GetById).Methods("GET")
+	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")
+	router.HandleFunc("/equipment", equipmentHandler.GetAll).Methods("GET")
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
@@ -43,9 +80,22 @@ func main() {
 		print("FAILED TO CONNECT TO DB")
 		return
 	}
-	repo := &repo.StudentRepository{DatabaseConnection: database}
-	service := &service.StudentService{StudentRepo: repo}
-	handler := &handler.StudentHandler{StudentService: service}
 
-	startServer(handler)
+	tourRepository := &repo.TourRepository{DatabaseConnection: database}
+	tourService := &service.TourService{TourRepository: tourRepository}
+	tourHandler := &handler.TourHandler{TourService: tourService}
+
+	keyPointRepository := &repo.KeyPointRepository{DatabaseConnection: database}
+	keyPointService := &service.KeyPointService{KeyPointRepository: keyPointRepository}
+	keyPointHandler := &handler.KeyPointHandler{KeyPointService: keyPointService}
+
+	reviewRepository := &repo.ReviewRepository{DatabaseConnection: database}
+	reviewService := &service.ReviewService{ReviewRepository: reviewRepository}
+	reviewHandler := &handler.ReviewHandler{ReviewService: reviewService}
+
+	equipmentRepository := &repo.EquipmentRepository{DatabaseConnection: database}
+	equipmentService := &service.EquipmentService{EquipmentRepository: equipmentRepository}
+	equipmentHandler := &handler.EquipmentHandler{EquipmentService: equipmentService}
+
+	startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler)
 }
