@@ -52,3 +52,12 @@ func (service *KeyPointService) Delete(id uuid.UUID) error {
 	}
 	return nil
 }
+
+func (service *KeyPointService) Update(keyPoint *model.KeyPoint) error {
+	err := service.KeyPointRepository.Update(keyPoint)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no keypoints were updated"))
+		return err
+	}
+	return nil
+}

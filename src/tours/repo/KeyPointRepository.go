@@ -57,3 +57,14 @@ func (repo *KeyPointRepository) Delete(id uuid.UUID) error {
 	}
 	return nil
 }
+
+func (repo *KeyPointRepository) Update(keyPoint *model.KeyPoint) error {
+	dbResult := repo.DatabaseConnection.Model(&model.KeyPoint{}).Where("id = ?", keyPoint.ID).Updates(keyPoint)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no key point found for update")
+	}
+	return nil
+}
