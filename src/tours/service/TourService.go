@@ -27,6 +27,14 @@ func (service *TourService) GetAll() (*[]model.Tour, error) {
 	return &tours, nil
 }
 
+func (service *TourService) GetPublished() (*[]model.Tour, error) {
+	tours, err := service.TourRepository.GetPublished()
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("no published tours were found"))
+	}
+	return &tours, nil
+}
+
 func (service *TourService) Create(tour *model.Tour) error {
 	err := service.TourRepository.Create(tour)
 	if err != nil {

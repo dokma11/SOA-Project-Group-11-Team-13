@@ -33,8 +33,6 @@ func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Reques
 }
 
 func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", id)
 	tours, err := handler.TourService.GetAll()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
@@ -45,6 +43,21 @@ func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request
 	err = json.NewEncoder(writer).Encode(tours)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetAll"))
+		return
+	}
+}
+
+func (handler *TourHandler) GetPublished(writer http.ResponseWriter, req *http.Request) {
+	tours, err := handler.TourService.GetPublished()
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(tours)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetPublished"))
 		return
 	}
 }

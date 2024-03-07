@@ -29,6 +29,15 @@ func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 	return tours, nil
 }
 
+func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
+	var tours []model.Tour
+	dbResult := repo.DatabaseConnection.Where("status = ?", "Published").Find(&tours)
+	if dbResult != nil {
+		return nil, dbResult.Error
+	}
+	return tours, nil
+}
+
 func (repo *TourRepository) Create(tour *model.Tour) error {
 	dbResult := repo.DatabaseConnection.Create(tour)
 	if dbResult.Error != nil {
