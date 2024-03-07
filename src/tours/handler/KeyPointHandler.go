@@ -32,8 +32,6 @@ func (handler *KeyPointHandler) GetById(writer http.ResponseWriter, req *http.Re
 }
 
 func (handler *KeyPointHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("KeyPoint with id %s", id)
 	keyPoints, err := handler.KeyPointService.GetAll()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
@@ -44,6 +42,23 @@ func (handler *KeyPointHandler) GetAll(writer http.ResponseWriter, req *http.Req
 	err = json.NewEncoder(writer).Encode(keyPoints)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetAll"))
+		return
+	}
+}
+
+func (handler *KeyPointHandler) GetAllByTourId(writer http.ResponseWriter, req *http.Request) {
+	tourId := mux.Vars(req)["tourId"]
+	log.Printf("KeyPoint with tour id %s", tourId)
+	keyPoints, err := handler.KeyPointService.GetAllByTourId(tourId)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(keyPoints)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetAllByTourId"))
 		return
 	}
 }

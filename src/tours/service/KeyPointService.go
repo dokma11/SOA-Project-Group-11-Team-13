@@ -26,6 +26,14 @@ func (service *KeyPointService) GetAll() (*[]model.KeyPoint, error) {
 	return &keyPoints, nil
 }
 
+func (service *KeyPointService) GetAllByTourId(tourId string) (*[]model.KeyPoint, error) {
+	keyPoints, err := service.KeyPointRepository.GetAllByTourId(tourId)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("no keypoints with given tour id: %s were found", tourId))
+	}
+	return &keyPoints, nil
+}
+
 func (service *KeyPointService) Create(keyPoint *model.KeyPoint) error {
 	err := service.KeyPointRepository.Create(keyPoint)
 	if err != nil {

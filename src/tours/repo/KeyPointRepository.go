@@ -1,9 +1,8 @@
 package repo
 
 import (
-	"tours/model"
-
 	"gorm.io/gorm"
+	"tours/model"
 )
 
 type KeyPointRepository struct {
@@ -19,13 +18,22 @@ func (repo *KeyPointRepository) GetById(id string) (model.KeyPoint, error) {
 	return keyPoint, nil
 }
 
+func (repo *KeyPointRepository) GetAllByTourId(tourId string) ([]model.KeyPoint, error) {
+	var keyPoints []model.KeyPoint
+	dbResult := repo.DatabaseConnection.Find(&keyPoints, "tour_id = ?", tourId)
+	if dbResult != nil {
+		return keyPoints, dbResult.Error
+	}
+	return keyPoints, nil
+}
+
 func (repo *KeyPointRepository) GetAll() ([]model.KeyPoint, error) {
-	var keyPoint []model.KeyPoint
-	dbResult := repo.DatabaseConnection.Find(&keyPoint)
+	var keyPoints []model.KeyPoint
+	dbResult := repo.DatabaseConnection.Find(&keyPoints)
 	if dbResult != nil {
 		return nil, dbResult.Error
 	}
-	return keyPoint, nil
+	return keyPoints, nil
 }
 
 func (repo *KeyPointRepository) Create(keyPoint *model.KeyPoint) error {
