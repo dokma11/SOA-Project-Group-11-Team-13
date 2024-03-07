@@ -48,3 +48,14 @@ func (repo *TourRepository) Delete(id uuid.UUID) error {
 	}
 	return nil
 }
+
+func (repo *TourRepository) Update(tour *model.Tour) error {
+	dbResult := repo.DatabaseConnection.Model(&model.Tour{}).Where("id = ?", tour.ID).Updates(tour)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no tour found for update")
+	}
+	return nil
+}

@@ -44,3 +44,12 @@ func (service *TourService) Delete(id uuid.UUID) error {
 	}
 	return nil
 }
+
+func (service *TourService) Update(tour *model.Tour) error {
+	err := service.TourRepository.Update(tour)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no tours were updated"))
+		return err
+	}
+	return nil
+}
