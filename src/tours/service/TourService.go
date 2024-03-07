@@ -88,3 +88,21 @@ func (service *TourService) Publish(id uuid.UUID) error {
 	_ = fmt.Errorf(fmt.Sprintf("can not publish an already published tour"))
 	return nil
 }
+
+func (service *TourService) Archive(id uuid.UUID) error {
+	tour, err := service.TourRepository.GetById(id)
+
+	if tour.Status == model.Published {
+		tour.Status = model.Archived
+		tour.ArchiveDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+		err = service.TourRepository.Update(&tour)
+		if err != nil {
+			_ = fmt.Errorf(fmt.Sprintf("no tours were archived"))
+			return err
+		}
+		return nil
+	}
+
+	_ = fmt.Errorf(fmt.Sprintf("can not archive selected tour"))
+	return nil
+}

@@ -169,3 +169,24 @@ func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Reques
 		return
 	}
 }
+func (handler *TourHandler) Archive(writer http.ResponseWriter, req *http.Request) {
+	idString := mux.Vars(req)["id"]
+	log.Printf("Tour with id %s", idString)
+	id, err := uuid.Parse(idString)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Archive"))
+		return
+	}
+	tour := handler.TourService.Archive(id)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(tour)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
+		return
+	}
+}
