@@ -27,7 +27,7 @@ func (repo *ReviewRepository) GetAll() ([]model.Review, error) {
 	return reviews, nil
 }
 
-func (repo *ReviewRepository) CreateReview(review *model.Review) error {
+func (repo *ReviewRepository) Create(review *model.Review) error {
 	dbResult := repo.DatabaseConnection.Create(review)
 	if dbResult.Error != nil {
 		return dbResult.Error

@@ -21,13 +21,13 @@ func (service *ReviewService) GetById(id string) (*model.Review, error) {
 func (service *ReviewService) GetAll() (*[]model.Review, error) {
 	reviews, err := service.ReviewRepository.GetAll()
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("no tours were found"))
+		return nil, fmt.Errorf(fmt.Sprintf("no reviews were found"))
 	}
 	return &reviews, nil
 }
 
 func (service *ReviewService) Create(review *model.Review) error {
-	err := service.ReviewRepository.CreateReview(review)
+	err := service.ReviewRepository.Create(review)
 	if err != nil {
 		return err
 	}
