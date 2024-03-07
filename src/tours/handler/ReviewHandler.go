@@ -86,3 +86,21 @@ func (handler *ReviewHandler) Delete(writer http.ResponseWriter, req *http.Reque
 		return
 	}
 }
+
+func (handler *ReviewHandler) Update(writer http.ResponseWriter, req *http.Request) {
+	var review model.Review
+	err := json.NewDecoder(req.Body).Decode(&review)
+	if err != nil {
+		println("Error while parsing json")
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.ReviewService.Update(&review)
+	if err != nil {
+		println("Error while updating review")
+		writer.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
+}

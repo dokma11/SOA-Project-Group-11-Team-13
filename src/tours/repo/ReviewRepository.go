@@ -48,3 +48,14 @@ func (repo *ReviewRepository) Delete(id uuid.UUID) error {
 	}
 	return nil
 }
+
+func (repo *ReviewRepository) Update(review *model.Review) error {
+	dbResult := repo.DatabaseConnection.Model(&model.Review{}).Where("id = ?", review.ID).Updates(review)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no review found for update")
+	}
+	return nil
+}

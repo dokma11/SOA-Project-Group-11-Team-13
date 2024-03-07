@@ -120,7 +120,7 @@ func (handler *KeyPointHandler) Update(writer http.ResponseWriter, req *http.Req
 	}
 	err = handler.KeyPointService.Update(&keyPoint)
 	if err != nil {
-		println("Error while creating a new keyPoint")
+		println("Error while updating keyPoint")
 		writer.WriteHeader(http.StatusExpectationFailed)
 		return
 	}
