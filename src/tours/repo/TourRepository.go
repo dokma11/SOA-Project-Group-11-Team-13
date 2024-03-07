@@ -27,7 +27,7 @@ func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 	return tours, nil
 }
 
-func (repo *TourRepository) CreateTour(tour *model.Tour) error {
+func (repo *TourRepository) Create(tour *model.Tour) error {
 	dbResult := repo.DatabaseConnection.Create(tour)
 	if dbResult.Error != nil {
 		return dbResult.Error

@@ -27,7 +27,7 @@ func (service *TourService) GetAll() (*[]model.Tour, error) {
 }
 
 func (service *TourService) Create(tour *model.Tour) error {
-	err := service.TourRepository.CreateTour(tour)
+	err := service.TourRepository.Create(tour)
 	if err != nil {
 		return err
 	}
