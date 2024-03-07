@@ -12,13 +12,13 @@ type Review struct {
 	Rating        int       `json:"rating"`
 	Comment       string    `json:"comment"`
 	TouristId     int       `json:"touristId"`
-	TourId        int       `json:"tourId"`
+	TourId        int64     `json:"tourId"`
 	TourVisitDate time.Time `json:"tourVisitDate"`
 	CommentDate   time.Time `json:"commentDate"`
 	Images        []string  `json:"images" gorm:"type:varchar(255)[]"`
 }
 
-func NewReview(rating int, comment string, touristId int, tourId int, images []string,
+func NewReview(rating int, comment string, touristId int, tourId int64, images []string,
 	tourVisitDate time.Time, commentDate time.Time) (*Review, error) {
 
 	if images == nil {
