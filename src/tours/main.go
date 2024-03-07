@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"tours/handler"
@@ -21,14 +22,35 @@ func initDB() *gorm.DB {
 		return nil
 	}
 
-	database.AutoMigrate(&model.Tour{})
-	database.AutoMigrate(&model.KeyPoint{})
-	database.AutoMigrate(&model.Review{})
-	//database.Exec("INSERT INTO students VALUES ('aec7e123-233d-4a09-a289-75308ea5b7e6', 'Marko Markovic', 'Graficki dizajn')")
+	err = database.AutoMigrate(&model.Tour{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("tour auto migrations failed"))
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.KeyPoint{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("key point auto migrations failed"))
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.Review{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("review auto migrations failed"))
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.Equipment{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("equipment auto migrations failed"))
+		return nil
+	}
+
 	return database
 }
 
-func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler, reviewHandler *handler.ReviewHandler) {
+func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler,
+	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
@@ -42,6 +64,10 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
 	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
 	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
+
+	router.HandleFunc("/equipment/{id}", equipmentHandler.GetById).Methods("GET")
+	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")
+	router.HandleFunc("/equipment", equipmentHandler.GetAll).Methods("GET")
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
@@ -67,5 +93,9 @@ func main() {
 	reviewService := &service.ReviewService{ReviewRepository: reviewRepository}
 	reviewHandler := &handler.ReviewHandler{ReviewService: reviewService}
 
-	startServer(tourHandler, keyPointHandler, reviewHandler)
+	equipmentRepository := &repo.EquipmentRepository{DatabaseConnection: database}
+	equipmentService := &service.EquipmentService{EquipmentRepository: equipmentRepository}
+	equipmentHandler := &handler.EquipmentHandler{EquipmentService: equipmentService}
+
+	startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler)
 }
