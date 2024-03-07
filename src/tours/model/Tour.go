@@ -17,20 +17,20 @@ const (
 )
 
 type Tour struct {
-	ID          uuid.UUID  `json:"id"`
-	AuthorId    int        `json:"authorId"`
-	Name        string     `json:"name" gorm:"not null;type:string"`
-	Description string     `json:"description"`
-	Difficulty  int        `json:"difficulty"`
-	Tags        []string   `json:"tags" gorm:"type:varchar(255)[]"`
-	Status      TourStatus `json:"status"`
-	Price       float64    `json:"price"`
-	Distance    float64    `json:"distance"`
-	PublishDate time.Time  `json:"publishDate"`
-	ArchiveDate time.Time  `json:"archiveDate"`
-	//Equipments []Equipment
-	//KeyPoints  []KeyPoint
-	Reviews []Review
+	ID          uuid.UUID   `json:"id"`
+	AuthorId    int         `json:"authorId"`
+	Name        string      `json:"name" gorm:"not null;type:string"`
+	Description string      `json:"description"`
+	Difficulty  int         `json:"difficulty"`
+	Tags        []string    `json:"tags" gorm:"type:varchar(255)[]"`
+	Status      TourStatus  `json:"status"`
+	Price       float64     `json:"price"`
+	Distance    float64     `json:"distance"`
+	PublishDate time.Time   `json:"publishDate"`
+	ArchiveDate time.Time   `json:"archiveDate"`
+	Equipment   []Equipment `json:"equipment" gorm:"type:varchar(255)[]"`
+	KeyPoints   []KeyPoint  `json:"keyPoints" gorm:"type:varchar(255)[]"`
+	Reviews     []Review    `json:"reviews" gorm:"type:varchar(255)[]"`
 	//Durations  []TourDuration
 }
 
