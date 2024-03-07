@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -91,13 +92,23 @@ func (handler *TourHandler) GetPublished(writer http.ResponseWriter, req *http.R
 }
 
 func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	var tour model.Tour
-	err := json.NewDecoder(req.Body).Decode(&tour)
+	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
+		fmt.Println("Error reading request body:", err)
+		http.Error(writer, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Println("Request Body:", string(body))
+	var tour model.Tour
+
+	err = json.Unmarshal(body, &tour)
+	if err != nil {
+		fmt.Println("Error decoding JSON:", err)
+		http.Error(writer, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
 	err = handler.TourService.Create(&tour)
 	if err != nil {
 		println("Error while creating a new tour")
