@@ -2,7 +2,10 @@ module tours
 
 go 1.22.0
 
-require gorm.io/gorm v1.25.7
+require (
+	github.com/lib/pq v1.10.9
+	gorm.io/gorm v1.25.7
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
