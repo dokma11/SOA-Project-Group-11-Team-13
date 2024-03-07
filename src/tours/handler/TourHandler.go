@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"strconv"
 	"tours/model"
 	"tours/service"
 )
@@ -19,6 +20,28 @@ func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Reques
 	id := mux.Vars(req)["id"]
 	log.Printf("Tour with id %s", id)
 	tour, err := handler.TourService.GetById(id)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(tour)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
+		return
+	}
+}
+
+func (handler *TourHandler) GetByAuthorId(writer http.ResponseWriter, req *http.Request) {
+	authorIdString := mux.Vars(req)["authorId"]
+	log.Printf("Tour with author id %s", authorIdString)
+	authorId, err := strconv.Atoi(authorIdString)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method GetByAuthorId"))
+		return
+	}
+	tour, err := handler.TourService.GetByAuthorId(authorId)
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)

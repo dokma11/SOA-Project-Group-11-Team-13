@@ -19,6 +19,14 @@ func (service *TourService) GetById(id string) (*model.Tour, error) {
 	return &tour, nil
 }
 
+func (service *TourService) GetByAuthorId(authorId int) (*[]model.Tour, error) {
+	tours, err := service.TourRepository.GetByAuthorId(authorId)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))
+	}
+	return &tours, nil
+}
+
 func (service *TourService) GetAll() (*[]model.Tour, error) {
 	tours, err := service.TourRepository.GetAll()
 	if err != nil {

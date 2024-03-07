@@ -54,12 +54,13 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
+	router.HandleFunc("/tours/authors/{authorId}", tourHandler.GetByAuthorId).Methods("GET")
 	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
 	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
 	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
 	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
 	router.HandleFunc("/tours", tourHandler.Update).Methods("UPDATE")
-
+	
 	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
 	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
 	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")

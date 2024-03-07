@@ -20,6 +20,15 @@ func (repo *TourRepository) GetById(id string) (model.Tour, error) {
 	return tour, nil
 }
 
+func (repo *TourRepository) GetByAuthorId(authorId int) ([]model.Tour, error) {
+	var tours []model.Tour
+	dbResult := repo.DatabaseConnection.Where("author_id = ?", authorId).Find(&tours)
+	if dbResult != nil {
+		return tours, dbResult.Error
+	}
+	return tours, nil
+}
+
 func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.Find(&tours)
