@@ -11,7 +11,7 @@ type TourRepository struct {
 	DatabaseConnection *gorm.DB
 }
 
-func (repo *TourRepository) GetById(id string) (model.Tour, error) {
+func (repo *TourRepository) GetById(id uuid.UUID) (model.Tour, error) {
 	tour := model.Tour{}
 	dbResult := repo.DatabaseConnection.First(&tour, "id = ?", id)
 	if dbResult != nil {

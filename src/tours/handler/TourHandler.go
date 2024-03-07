@@ -17,8 +17,13 @@ type TourHandler struct {
 }
 
 func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", id)
+	idString := mux.Vars(req)["id"]
+	log.Printf("Tour with id %s", idString)
+	id, err := uuid.Parse(idString)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method GetById"))
+		return
+	}
 	tour, err := handler.TourService.GetById(id)
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
@@ -111,14 +116,14 @@ func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Delete"))
 		return
 	}
-	keyPoint := handler.TourService.Delete(id)
+	tour := handler.TourService.Delete(id)
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(keyPoint)
+	err = json.NewEncoder(writer).Encode(tour)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method Delete"))
 		return
@@ -141,4 +146,26 @@ func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request
 	}
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Request) {
+	idString := mux.Vars(req)["id"]
+	log.Printf("Tour with id %s", idString)
+	id, err := uuid.Parse(idString)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Publish"))
+		return
+	}
+	tour := handler.TourService.Publish(id)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(tour)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
+		return
+	}
 }

@@ -59,20 +59,21 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
 	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
 	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
-	router.HandleFunc("/tours", tourHandler.Update).Methods("UPDATE")
-	
+	router.HandleFunc("/tours", tourHandler.Update).Methods("PUT")
+	router.HandleFunc("/tours/publish", tourHandler.Publish).Methods("PUT")
+
 	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
 	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
 	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
 	router.HandleFunc("/keyPoints/{tourId}", keyPointHandler.GetAllByTourId).Methods("GET")
 	router.HandleFunc("/keyPoints/{id}", keyPointHandler.Delete).Methods("DELETE")
-	router.HandleFunc("/keyPoints", keyPointHandler.Update).Methods("UPDATE")
+	router.HandleFunc("/keyPoints", keyPointHandler.Update).Methods("PUT")
 
 	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
 	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
 	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
 	router.HandleFunc("/reviews/{id}", reviewHandler.Delete).Methods("DELETE")
-	router.HandleFunc("/reviews", reviewHandler.Update).Methods("UPDATE")
+	router.HandleFunc("/reviews", reviewHandler.Update).Methods("PUT")
 
 	router.HandleFunc("/equipment/{id}", equipmentHandler.GetById).Methods("GET")
 	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")

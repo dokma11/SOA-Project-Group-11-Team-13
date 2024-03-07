@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/google/uuid"
+	"time"
 	"tours/model"
 	"tours/repo"
 )
@@ -11,7 +12,7 @@ type TourService struct {
 	TourRepository *repo.TourRepository
 }
 
-func (service *TourService) GetById(id string) (*model.Tour, error) {
+func (service *TourService) GetById(id uuid.UUID) (*model.Tour, error) {
 	tour, err := service.TourRepository.GetById(id)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("menu item with id %s not found", id))
@@ -67,5 +68,23 @@ func (service *TourService) Update(tour *model.Tour) error {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were updated"))
 		return err
 	}
+	return nil
+}
+
+func (service *TourService) Publish(id uuid.UUID) error {
+	tour, err := service.TourRepository.GetById(id)
+
+	if tour.Status != model.Published {
+		tour.Status = model.Published
+		tour.PublishDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+		err = service.TourRepository.Update(&tour)
+		if err != nil {
+			_ = fmt.Errorf(fmt.Sprintf("no tours were published"))
+			return err
+		}
+		return nil
+	}
+
+	_ = fmt.Errorf(fmt.Sprintf("can not publish an already published tour"))
 	return nil
 }
