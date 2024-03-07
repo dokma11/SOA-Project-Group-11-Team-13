@@ -2,11 +2,13 @@ package model
 
 import (
 	"errors"
+	"gorm.io/gorm"
 
 	"github.com/google/uuid"
 )
 
 type KeyPoint struct {
+	gorm.Model
 	ID              uuid.UUID `json:"id"`
 	TourId          int64     `json:"tourId"`
 	Name            string    `json:"name"`

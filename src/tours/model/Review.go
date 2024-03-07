@@ -8,6 +8,7 @@ import (
 )
 
 type Review struct {
+	gorm.Model
 	ID            uuid.UUID `json:"id"`
 	Rating        int       `json:"rating"`
 	Comment       string    `json:"comment"`

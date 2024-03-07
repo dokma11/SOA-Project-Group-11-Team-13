@@ -7,10 +7,11 @@ import (
 )
 
 type Equipment struct {
+	gorm.Model
 	ID          uuid.UUID `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	Tours       []string  `json:"tours" gorm:"type:varchar(255)[]"`
+	Tours       []Tour    `gorm:"many2many:tour_equipment;"`
 }
 
 func NewEquipment(name string, description string) (*Equipment, error) {

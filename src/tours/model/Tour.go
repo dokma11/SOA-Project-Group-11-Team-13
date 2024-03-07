@@ -3,39 +3,56 @@ package model
 import (
 	"errors"
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"time"
 )
 
-type TourStatus string
+type TourStatus int
 
 const (
-	Draft     TourStatus = "Draft"
-	Archived  TourStatus = "Archived"
-	Published TourStatus = "Published"
-	Ready     TourStatus = "Ready"
+	Draft TourStatus = iota
+	Archived
+	Published
+	Ready
+)
+
+type TourCategory int
+
+const (
+	Adventure TourCategory = iota
+	FamilyTrips
+	Cruise
+	Cultural
 )
 
 type Tour struct {
-	ID          uuid.UUID   `json:"id"`
-	AuthorId    int         `json:"authorId"`
-	Name        string      `json:"name" gorm:"not null;type:string"`
-	Description string      `json:"description"`
-	Difficulty  int         `json:"difficulty"`
-	Tags        []string    `json:"tags" gorm:"type:varchar(255)[]"`
-	Status      TourStatus  `json:"status"`
-	Price       float64     `json:"price"`
-	Distance    float64     `json:"distance"`
-	PublishDate time.Time   `json:"publishDate"`
-	ArchiveDate time.Time   `json:"archiveDate"`
-	Equipment   []Equipment `json:"equipment" gorm:"type:varchar(255)[]"`
-	KeyPoints   []KeyPoint  `json:"keyPoints" gorm:"type:varchar(255)[]"`
-	Reviews     []Review    `json:"reviews" gorm:"type:varchar(255)[]"`
-	//Durations  []TourDuration
+	gorm.Model
+	ID          uuid.UUID      `json:"Id"`
+	AuthorId    int            `json:"AuthorId" gorm:"not null;type:int"`
+	Name        string         `json:"Name" gorm:"not null;type:string"`
+	Description string         `json:"Description" gorm:"not null;type:string"`
+	Difficulty  int            `json:"Difficulty" gorm:"not null;type:int"`
+	Tags        pq.StringArray `json:"Tags" gorm:"type:text[]"`
+	Status      TourStatus     `json:"Status"`
+	Price       float64        `json:"Price"`
+	Distance    float64        `json:"Distance"`
+	PublishDate time.Time      `json:"PublishDate"`
+	ArchiveDate time.Time      `json:"ArchiveDate"`
+	Category    TourCategory   `json:"Category"`
+	IsDeleted   bool           `json:"IsDeleted"`
+	KeyPoints   []KeyPoint     `gorm:"foreignKey:TourId"`
+	Equipment   []Equipment    `gorm:"many2many:tour_equipment;"`
+	Reviews     []Review       `gorm:"foreignKey:TourId"`
+	Durations   []TourDuration `json:"Durations" gorm:"type:jsonb"`
+	CreatedAt   time.Time      `gorm:"autoCreateTime: false"`
+	UpdatedAt   time.Time      `gorm:"autoUpdateTime: false"`
+	DeletedAt   time.Time      `gorm:"autoDeleteTime: false"`
 }
 
 func NewTour(authorID int, name, description string, tags []string, difficulty int, archiveDate,
-	publishDate time.Time, distance float64, status TourStatus, price float64) (*Tour, error) {
+	publishDate time.Time, distance float64, status TourStatus, price float64, category TourCategory,
+	isDeleted bool) (*Tour, error) {
 
 	if tags == nil {
 		tags = []string{}
@@ -52,6 +69,8 @@ func NewTour(authorID int, name, description string, tags []string, difficulty i
 		Distance:    distance,
 		PublishDate: publishDate,
 		ArchiveDate: archiveDate,
+		Category:    category,
+		IsDeleted:   isDeleted,
 	}
 
 	if err := tour.Validate(); err != nil {
@@ -83,5 +102,9 @@ func (tour *Tour) Validate() error {
 
 func (tour *Tour) BeforeCreate(scope *gorm.DB) error {
 	tour.ID = uuid.New()
+	tour.Equipment = []Equipment{}
+	tour.Durations = []TourDuration{}
+	tour.KeyPoints = []KeyPoint{}
+	tour.Reviews = []Review{}
 	return nil
 }
