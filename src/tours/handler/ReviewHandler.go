@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -23,7 +24,11 @@ func (handler *ReviewHandler) GetById(writer http.ResponseWriter, req *http.Requ
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	json.NewEncoder(writer).Encode(review)
+	err = json.NewEncoder(writer).Encode(review)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode reviews in method GetById"))
+		return
+	}
 }
 
 func (handler *ReviewHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
@@ -34,7 +39,11 @@ func (handler *ReviewHandler) GetAll(writer http.ResponseWriter, req *http.Reque
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	json.NewEncoder(writer).Encode(reviews)
+	err = json.NewEncoder(writer).Encode(reviews)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode reviews in method GetAll"))
+		return
+	}
 }
 
 func (handler *ReviewHandler) Create(writer http.ResponseWriter, req *http.Request) {

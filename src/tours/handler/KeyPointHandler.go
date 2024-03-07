@@ -2,12 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"tours/model"
 	"tours/service"
-
-	"github.com/gorilla/mux"
 )
 
 type KeyPointHandler struct {
@@ -24,7 +24,11 @@ func (handler *KeyPointHandler) GetById(writer http.ResponseWriter, req *http.Re
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	json.NewEncoder(writer).Encode(keyPoint)
+	err = json.NewEncoder(writer).Encode(keyPoint)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetById"))
+		return
+	}
 }
 
 func (handler *KeyPointHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
@@ -37,7 +41,11 @@ func (handler *KeyPointHandler) GetAll(writer http.ResponseWriter, req *http.Req
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	json.NewEncoder(writer).Encode(keyPoints)
+	err = json.NewEncoder(writer).Encode(keyPoints)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetAll"))
+		return
+	}
 }
 
 func (handler *KeyPointHandler) Create(writer http.ResponseWriter, req *http.Request) {

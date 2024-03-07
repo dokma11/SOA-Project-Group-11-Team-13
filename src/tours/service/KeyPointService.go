@@ -29,6 +29,7 @@ func (service *KeyPointService) GetAll() (*[]model.KeyPoint, error) {
 func (service *KeyPointService) Create(keyPoint *model.KeyPoint) error {
 	err := service.KeyPointRepository.Create(keyPoint)
 	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no keypoints were created"))
 		return err
 	}
 	return nil

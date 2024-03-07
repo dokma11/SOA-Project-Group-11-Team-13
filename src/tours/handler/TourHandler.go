@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -23,7 +24,11 @@ func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Reques
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	json.NewEncoder(writer).Encode(tour)
+	err = json.NewEncoder(writer).Encode(tour)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
+		return
+	}
 }
 
 func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
@@ -36,7 +41,11 @@ func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	json.NewEncoder(writer).Encode(tours)
+	err = json.NewEncoder(writer).Encode(tours)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetAll"))
+		return
+	}
 }
 
 func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request) {

@@ -29,6 +29,7 @@ func (service *TourService) GetAll() (*[]model.Tour, error) {
 func (service *TourService) Create(tour *model.Tour) error {
 	err := service.TourRepository.Create(tour)
 	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no tours were created"))
 		return err
 	}
 	return nil

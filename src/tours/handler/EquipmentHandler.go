@@ -41,6 +41,7 @@ func (handler *EquipmentHandler) GetAll(writer http.ResponseWriter, req *http.Re
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(equipment)
 	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode equipment in method GetAll"))
 		return
 	}
 }
