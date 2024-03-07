@@ -36,9 +36,9 @@ func NewKeyPoint(tourId int64, name, description, locationAddress, imagePath str
 }
 
 func (keyPoint *KeyPoint) Validate() error {
-	if keyPoint.TourId == 0 {
+	/*if keyPoint.TourId == 0 {
 		return errors.New("invalid TourId")
-	}
+	}*/
 	if keyPoint.Name == "" {
 		return errors.New("invalid Name")
 	}
