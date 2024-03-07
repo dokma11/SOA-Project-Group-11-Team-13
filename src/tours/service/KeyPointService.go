@@ -27,7 +27,7 @@ func (service *KeyPointService) GetAll() (*[]model.KeyPoint, error) {
 }
 
 func (service *KeyPointService) Create(keyPoint *model.KeyPoint) error {
-	err := service.KeyPointRepository.CreateTour(keyPoint)
+	err := service.KeyPointRepository.Create(keyPoint)
 	if err != nil {
 		return err
 	}

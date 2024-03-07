@@ -28,7 +28,7 @@ func (repo *KeyPointRepository) GetAll() ([]model.KeyPoint, error) {
 	return keyPoint, nil
 }
 
-func (repo *KeyPointRepository) CreateTour(keyPoint *model.KeyPoint) error {
+func (repo *KeyPointRepository) Create(keyPoint *model.KeyPoint) error {
 	dbResult := repo.DatabaseConnection.Create(keyPoint)
 	if dbResult.Error != nil {
 		return dbResult.Error
