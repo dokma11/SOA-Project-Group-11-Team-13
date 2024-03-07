@@ -1,6 +1,8 @@
 package repo
 
 import (
+	"errors"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"tours/model"
 )
@@ -33,5 +35,16 @@ func (repo *ReviewRepository) Create(review *model.Review) error {
 		return dbResult.Error
 	}
 	println("Rows affected: ", dbResult.RowsAffected)
+	return nil
+}
+
+func (repo *ReviewRepository) Delete(id uuid.UUID) error {
+	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.Review{})
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no review found for deletion")
+	}
 	return nil
 }
