@@ -2,16 +2,15 @@ package model
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Equipment struct {
 	gorm.Model
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Tours       []Tour    `gorm:"many2many:tour_equipment;"`
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Tours       []Tour `gorm:"many2many:tour_equipment;"`
 }
 
 func NewEquipment(name string, description string) (*Equipment, error) {
@@ -38,6 +37,12 @@ func (equipment *Equipment) Validate() error {
 }
 
 func (equipment *Equipment) BeforeCreate(scope *gorm.DB) error {
-	equipment.ID = uuid.New()
+	if equipment.ID == 0 {
+		var maxID int64
+		if err := scope.Table("equipment").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
+			return err
+		}
+		equipment.ID = maxID + 1
+	}
 	return nil
 }

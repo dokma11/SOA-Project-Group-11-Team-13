@@ -2,14 +2,13 @@ package model
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"time"
 )
 
 type Review struct {
 	gorm.Model
-	ID            uuid.UUID `json:"id"`
+	ID            int64     `json:"id"`
 	Rating        int       `json:"rating"`
 	Comment       string    `json:"comment"`
 	TouristId     int       `json:"touristId"`
@@ -57,6 +56,12 @@ func (review *Review) Validate() error {
 }
 
 func (review *Review) BeforeCreate(scope *gorm.DB) error {
-	review.ID = uuid.New()
+	if review.ID == 0 {
+		var maxID int64
+		if err := scope.Table("reviews").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
+			return err
+		}
+		review.ID = maxID + 1
+	}
 	return nil
 }
