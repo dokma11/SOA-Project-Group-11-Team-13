@@ -7,14 +7,14 @@ import (
 
 type KeyPoint struct {
 	gorm.Model
-	ID              int64   `json:"id"`
-	TourId          int64   `json:"tourId"`
-	Name            string  `json:"name"`
-	Description     string  `json:"description"`
-	Longitude       float64 `json:"longitude"`
-	Latitude        float64 `json:"latitude"`
-	LocationAddress string  `json:"locationAddress"`
-	ImagePath       string  `json:"imagePath"`
+	ID              int64   `json:"Id"`
+	TourId          int64   `json:"TourId"`
+	Name            string  `json:"Name"`
+	Description     string  `json:"Description"`
+	Longitude       float64 `json:"Longitude"`
+	Latitude        float64 `json:"Latitude"`
+	LocationAddress string  `json:"LocationAddress"`
+	ImagePath       string  `json:"ImagePath"`
 }
 
 func NewKeyPoint(tourId int64, name, description, locationAddress, imagePath string, longitude, latitude float64) (*KeyPoint, error) {

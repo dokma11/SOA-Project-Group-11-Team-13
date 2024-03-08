@@ -104,7 +104,9 @@ func (handler *KeyPointHandler) Update(writer http.ResponseWriter, req *http.Req
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	err = handler.KeyPointService.Update(&keyPoint)
+
 	if err != nil {
 		println("Error while updating keyPoint")
 		writer.WriteHeader(http.StatusExpectationFailed)
