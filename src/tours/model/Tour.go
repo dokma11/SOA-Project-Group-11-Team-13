@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"time"
@@ -28,7 +27,7 @@ const (
 
 type Tour struct {
 	gorm.Model
-	ID          uuid.UUID      `json:"Id"`
+	ID          int64          `json:"Id"`
 	AuthorId    int            `json:"AuthorId" gorm:"not null;type:int"`
 	Name        string         `json:"Name" gorm:"not null;type:string"`
 	Description string         `json:"Description" gorm:"not null;type:string"`
@@ -98,7 +97,14 @@ func (tour *Tour) Validate() error {
 }
 
 func (tour *Tour) BeforeCreate(scope *gorm.DB) error {
-	tour.ID = uuid.New()
+	if tour.ID == 0 {
+		var maxID int64
+		if err := scope.Table("tours").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
+			return err
+		}
+		tour.ID = maxID + 1
+	}
+
 	tour.Equipment = []Equipment{}
 	tour.Durations = []TourDuration{}
 	tour.KeyPoints = []KeyPoint{}
