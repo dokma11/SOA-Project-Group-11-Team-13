@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"time"
 	"tours/dto"
 	"tours/model"
@@ -13,7 +12,7 @@ type TourService struct {
 	TourRepository *repo.TourRepository
 }
 
-func (service *TourService) GetById(id uuid.UUID) (*model.Tour, error) {
+func (service *TourService) GetById(id string) (*model.Tour, error) {
 	tour, err := service.TourRepository.GetById(id)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("menu item with id %s not found", id))
@@ -21,7 +20,7 @@ func (service *TourService) GetById(id uuid.UUID) (*model.Tour, error) {
 	return &tour, nil
 }
 
-func (service *TourService) GetByAuthorId(authorId int) (*[]dto.TourResponseDto, error) {
+func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseDto, error) {
 	tours, err := service.TourRepository.GetByAuthorId(authorId)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))
@@ -54,7 +53,7 @@ func (service *TourService) Create(tour *model.Tour) error {
 	return nil
 }
 
-func (service *TourService) Delete(id uuid.UUID) error {
+func (service *TourService) Delete(id string) error {
 	err := service.TourRepository.Delete(id)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were deleted"))
@@ -72,7 +71,7 @@ func (service *TourService) Update(tour *model.Tour) error {
 	return nil
 }
 
-func (service *TourService) Publish(id uuid.UUID) error {
+func (service *TourService) Publish(id string) error {
 	tour, err := service.TourRepository.GetById(id)
 
 	if tour.Status != model.Published {
@@ -90,7 +89,7 @@ func (service *TourService) Publish(id uuid.UUID) error {
 	return nil
 }
 
-func (service *TourService) Archive(id uuid.UUID) error {
+func (service *TourService) Archive(id string) error {
 	tour, err := service.TourRepository.GetById(id)
 
 	if tour.Status == model.Published {

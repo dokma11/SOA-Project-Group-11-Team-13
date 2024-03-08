@@ -2,7 +2,6 @@ package repo
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"tours/model"
 )
@@ -38,7 +37,7 @@ func (repo *ReviewRepository) Create(review *model.Review) error {
 	return nil
 }
 
-func (repo *ReviewRepository) Delete(id uuid.UUID) error {
+func (repo *ReviewRepository) Delete(id string) error {
 	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.Review{})
 	if dbResult.Error != nil {
 		return dbResult.Error

@@ -3,11 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"strconv"
 	"tours/model"
 	"tours/service"
 )
@@ -51,12 +49,7 @@ func (handler *KeyPointHandler) GetAll(writer http.ResponseWriter, req *http.Req
 func (handler *KeyPointHandler) GetAllByTourId(writer http.ResponseWriter, req *http.Request) {
 	tourIdString := mux.Vars(req)["tourId"]
 	log.Printf("KeyPoint with tour id %s", tourIdString)
-	tourId, err := strconv.ParseInt(tourIdString, 10, 64)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse tour id in method GetAllByTourId"))
-		return
-	}
-	keyPoints, err := handler.KeyPointService.GetAllByTourId(tourId)
+	keyPoints, err := handler.KeyPointService.GetAllByTourId(tourIdString)
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
@@ -91,19 +84,12 @@ func (handler *KeyPointHandler) Create(writer http.ResponseWriter, req *http.Req
 func (handler *KeyPointHandler) Delete(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
 	log.Printf("KeyPoint with id %s", idString)
-	id, err := uuid.Parse(idString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Delete"))
-		return
-	}
-	keyPoint := handler.KeyPointService.Delete(id)
+
+	keyPoint := handler.KeyPointService.Delete(idString)
+
 	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(keyPoint)
+	err := json.NewEncoder(writer).Encode(keyPoint)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method Delete"))
 		return

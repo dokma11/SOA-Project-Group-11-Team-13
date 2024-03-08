@@ -15,7 +15,7 @@ type TourRepository struct {
 	DatabaseConnection *gorm.DB
 }
 
-func (repo *TourRepository) GetById(id uuid.UUID) (model.Tour, error) {
+func (repo *TourRepository) GetById(id string) (model.Tour, error) {
 	tour := model.Tour{}
 	dbResult := repo.DatabaseConnection.First(&tour, "id = ?", id)
 	if dbResult != nil {
@@ -24,7 +24,7 @@ func (repo *TourRepository) GetById(id uuid.UUID) (model.Tour, error) {
 	return tour, nil
 }
 
-func (repo *TourRepository) GetByAuthorId(authorId int) ([]dto.TourResponseDto, error) {
+func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDto, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.Where("author_id = ?", authorId).Find(&tours)
 
@@ -39,7 +39,7 @@ func (repo *TourRepository) GetByAuthorId(authorId int) ([]dto.TourResponseDto, 
 		tourDto.Name = tour.Name
 		tourDto.Description = tour.Description
 
-		tourDto.ID = uuidToInt64(tour.ID)
+		tourDto.ID = tour.ID
 
 		tourDto.Durations = tour.Durations
 		tourDto.PublishDate = tour.PublishDate
@@ -87,7 +87,7 @@ func (repo *TourRepository) Create(tour *model.Tour) error {
 	return nil
 }
 
-func (repo *TourRepository) Delete(id uuid.UUID) error {
+func (repo *TourRepository) Delete(id string) error {
 	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.Tour{})
 	if dbResult.Error != nil {
 		return dbResult.Error

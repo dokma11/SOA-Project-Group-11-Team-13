@@ -2,7 +2,6 @@ package repo
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"tours/model"
 )
@@ -20,7 +19,7 @@ func (repo *KeyPointRepository) GetById(id string) (model.KeyPoint, error) {
 	return keyPoint, nil
 }
 
-func (repo *KeyPointRepository) GetAllByTourId(tourId int64) ([]model.KeyPoint, error) {
+func (repo *KeyPointRepository) GetAllByTourId(tourId string) ([]model.KeyPoint, error) {
 	var keyPoints []model.KeyPoint
 	dbResult := repo.DatabaseConnection.Find(&keyPoints, "tour_id = ?", tourId)
 	if dbResult != nil {
@@ -47,7 +46,7 @@ func (repo *KeyPointRepository) Create(keyPoint *model.KeyPoint) error {
 	return nil
 }
 
-func (repo *KeyPointRepository) Delete(id uuid.UUID) error {
+func (repo *KeyPointRepository) Delete(id string) error {
 	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.KeyPoint{})
 	if dbResult.Error != nil {
 		return dbResult.Error

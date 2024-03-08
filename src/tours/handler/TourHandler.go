@@ -3,12 +3,11 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
+	"tours/dto"
 	"tours/model"
 	"tours/service"
 )
@@ -20,19 +19,36 @@ type TourHandler struct {
 func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
 	log.Printf("Tour with id %s", idString)
-	id, err := uuid.Parse(idString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method GetById"))
-		return
-	}
-	tour, err := handler.TourService.GetById(id)
+
+	tour, err := handler.TourService.GetById(idString)
+
+	var tourDto dto.TourResponseDto
+	tourDto.AverageRating = 0.0
+	tourDto.Tags = tour.Tags
+	tourDto.KeyPoints = tour.KeyPoints
+	tourDto.Status = dto.TourStatus(tour.Status)
+	tourDto.Name = tour.Name
+	tourDto.Description = tour.Description
+
+	tourDto.ID = tour.ID
+
+	tourDto.Durations = tour.Durations
+	tourDto.PublishDate = tour.PublishDate
+	tourDto.ArchiveDate = tour.ArchiveDate
+	tourDto.Category = dto.TourCategory(tour.Category)
+	tourDto.IsDeleted = tour.IsDeleted
+	tourDto.Price = tour.Price
+	tourDto.Distance = tour.Distance
+	tourDto.Difficulty = tour.Difficulty
+	tourDto.AuthorId = tour.AuthorId
+
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tour)
+	err = json.NewEncoder(writer).Encode(tourDto)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
 		return
@@ -42,12 +58,9 @@ func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Reques
 func (handler *TourHandler) GetByAuthorId(writer http.ResponseWriter, req *http.Request) {
 	authorIdString := mux.Vars(req)["authorId"]
 	log.Printf("Tour with author id %s", authorIdString)
-	authorId, err := strconv.Atoi(authorIdString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method GetByAuthorId"))
-		return
-	}
-	tour, err := handler.TourService.GetByAuthorId(authorId)
+
+	tour, err := handler.TourService.GetByAuthorId(authorIdString)
+
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
@@ -110,6 +123,7 @@ func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request
 	}
 
 	err = handler.TourService.Create(&tour)
+
 	if err != nil {
 		println("Error while creating a new tour")
 		writer.WriteHeader(http.StatusExpectationFailed)
@@ -122,19 +136,12 @@ func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request
 func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
 	log.Printf("Tour with id %s", idString)
-	id, err := uuid.Parse(idString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Delete"))
-		return
-	}
-	tour := handler.TourService.Delete(id)
+
+	tour := handler.TourService.Delete(idString)
+
 	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tour)
+	err := json.NewEncoder(writer).Encode(tour)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method Delete"))
 		return
@@ -149,7 +156,9 @@ func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	err = handler.TourService.Update(&tour)
+
 	if err != nil {
 		println("Error while updating tour")
 		writer.WriteHeader(http.StatusExpectationFailed)
@@ -162,19 +171,12 @@ func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request
 func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
 	log.Printf("Tour with id %s", idString)
-	id, err := uuid.Parse(idString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Publish"))
-		return
-	}
-	tour := handler.TourService.Publish(id)
+
+	tour := handler.TourService.Publish(idString)
+
 	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tour)
+	err := json.NewEncoder(writer).Encode(tour)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
 		return
@@ -183,19 +185,12 @@ func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Reques
 func (handler *TourHandler) Archive(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
 	log.Printf("Tour with id %s", idString)
-	id, err := uuid.Parse(idString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Archive"))
-		return
-	}
-	tour := handler.TourService.Archive(id)
+
+	tour := handler.TourService.Archive(idString)
+
 	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tour)
+	err := json.NewEncoder(writer).Encode(tour)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
 		return

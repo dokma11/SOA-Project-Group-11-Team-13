@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -68,19 +67,12 @@ func (handler *ReviewHandler) Create(writer http.ResponseWriter, req *http.Reque
 func (handler *ReviewHandler) Delete(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
 	log.Printf("Review with id %s", idString)
-	id, err := uuid.Parse(idString)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to parse id in method Delete"))
-		return
-	}
-	review := handler.ReviewService.Delete(id)
+
+	review := handler.ReviewService.Delete(idString)
+
 	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(review)
+	err := json.NewEncoder(writer).Encode(review)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetById"))
 		return

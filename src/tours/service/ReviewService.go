@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"tours/model"
 	"tours/repo"
 )
@@ -36,7 +35,7 @@ func (service *ReviewService) Create(review *model.Review) error {
 	return nil
 }
 
-func (service *ReviewService) Delete(id uuid.UUID) error {
+func (service *ReviewService) Delete(id string) error {
 	err := service.ReviewRepository.Delete(id)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no keypoints were deleted"))
