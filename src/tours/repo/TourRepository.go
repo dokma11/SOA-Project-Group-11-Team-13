@@ -4,6 +4,10 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"hash/fnv"
+	"math"
+	"math/big"
+	"tours/dto"
 	"tours/model"
 )
 
@@ -20,13 +24,40 @@ func (repo *TourRepository) GetById(id uuid.UUID) (model.Tour, error) {
 	return tour, nil
 }
 
-func (repo *TourRepository) GetByAuthorId(authorId int) ([]model.Tour, error) {
+func (repo *TourRepository) GetByAuthorId(authorId int) ([]dto.TourResponseDto, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.Where("author_id = ?", authorId).Find(&tours)
-	if dbResult != nil {
-		return tours, dbResult.Error
+
+	var tourDtos []dto.TourResponseDto
+
+	for _, tour := range tours {
+		var tourDto dto.TourResponseDto
+		tourDto.AverageRating = 0.0
+		tourDto.Tags = tour.Tags
+		tourDto.KeyPoints = tour.KeyPoints
+		tourDto.Status = dto.TourStatus(tour.Status)
+		tourDto.Name = tour.Name
+		tourDto.Description = tour.Description
+
+		tourDto.ID = uuidToInt64(tour.ID)
+
+		tourDto.Durations = tour.Durations
+		tourDto.PublishDate = tour.PublishDate
+		tourDto.ArchiveDate = tour.ArchiveDate
+		tourDto.Category = dto.TourCategory(tour.Category)
+		tourDto.IsDeleted = tour.IsDeleted
+		tourDto.Price = tour.Price
+		tourDto.Distance = tour.Distance
+		tourDto.Difficulty = tour.Difficulty
+		tourDto.AuthorId = tour.AuthorId
+
+		tourDtos = append(tourDtos, tourDto)
 	}
-	return tours, nil
+
+	if dbResult != nil {
+		return tourDtos, dbResult.Error
+	}
+	return tourDtos, nil
 }
 
 func (repo *TourRepository) GetAll() ([]model.Tour, error) {
@@ -76,4 +107,18 @@ func (repo *TourRepository) Update(tour *model.Tour) error {
 		return errors.New("no tour found for update")
 	}
 	return nil
+}
+
+func uuidToInt64(u uuid.UUID) int64 {
+	hash := fnv.New64a()
+	hash.Write(u[:])
+
+	hashValue := big.NewInt(0)
+	hashValue.SetUint64(hash.Sum64())
+
+	maxInt64 := big.NewInt(math.MaxInt64)
+	hashValue.Mod(hashValue, maxInt64)
+	int64Value := hashValue.Int64()
+
+	return int64Value
 }

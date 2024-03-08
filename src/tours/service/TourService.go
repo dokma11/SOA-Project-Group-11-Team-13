@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"time"
+	"tours/dto"
 	"tours/model"
 	"tours/repo"
 )
@@ -20,7 +21,7 @@ func (service *TourService) GetById(id uuid.UUID) (*model.Tour, error) {
 	return &tour, nil
 }
 
-func (service *TourService) GetByAuthorId(authorId int) (*[]model.Tour, error) {
+func (service *TourService) GetByAuthorId(authorId int) (*[]dto.TourResponseDto, error) {
 	tours, err := service.TourRepository.GetByAuthorId(authorId)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))
