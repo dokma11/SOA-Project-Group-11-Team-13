@@ -45,9 +45,6 @@ type Tour struct {
 	Equipment   []Equipment    `gorm:"many2many:tour_equipment;"`
 	Reviews     []Review       `gorm:"foreignKey:TourId"`
 	Durations   []TourDuration `json:"Durations" gorm:"type:jsonb"`
-	CreatedAt   time.Time      `gorm:"autoCreateTime: false"`
-	UpdatedAt   time.Time      `gorm:"autoUpdateTime: false"`
-	DeletedAt   time.Time      `gorm:"autoDeleteTime: false"`
 }
 
 func NewTour(authorID int, name, description string, tags []string, difficulty int, archiveDate,
