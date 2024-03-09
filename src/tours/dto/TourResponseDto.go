@@ -10,8 +10,8 @@ type TourStatus int
 
 const (
 	Draft TourStatus = iota
-	Archived
 	Published
+	Archived
 	Ready
 )
 
