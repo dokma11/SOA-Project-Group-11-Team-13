@@ -3,13 +3,14 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"tours/dto"
 	"tours/model"
 	"tours/service"
+
+	"github.com/gorilla/mux"
 )
 
 type TourHandler struct {
@@ -195,4 +196,53 @@ func (handler *TourHandler) Archive(writer http.ResponseWriter, req *http.Reques
 		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
 		return
 	}
+}
+
+func (handler *TourHandler) GetEquipment(writer http.ResponseWriter, req *http.Request) {
+	tourId := mux.Vars(req)["tourId"]
+	log.Printf("Equipment for tour with id %s", tourId)
+
+	equipmentList, err := handler.TourService.GetEquipment(tourId)
+
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(equipmentList)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode equipment in method GetEquipment"))
+		return
+	}
+}
+
+func (handler *TourHandler) AddEquipment(writer http.ResponseWriter, req *http.Request) {
+	tourId := mux.Vars(req)["tourId"]
+	equipmentId := mux.Vars(req)["equipmentId"]
+	log.Printf("Adding equipment with id %s to tour with id %s", equipmentId, tourId)
+
+	err := handler.TourService.AddEquipment(tourId, equipmentId)
+
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+}
+
+func (handler *TourHandler) DeleteEquipment(writer http.ResponseWriter, req *http.Request) {
+	tourId := mux.Vars(req)["tourId"]
+	equipmentId := mux.Vars(req)["equipmentId"]
+	log.Printf("Deleting equipment with id %s from tour with id %s", equipmentId, tourId)
+
+	err := handler.TourService.DeleteEquipment(tourId, equipmentId)
+
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
 }
