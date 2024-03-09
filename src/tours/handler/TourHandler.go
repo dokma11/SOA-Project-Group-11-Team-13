@@ -151,6 +151,17 @@ func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request
 
 func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request) {
 	var tour model.Tour
+	//err := json.NewDecoder(req.Body).Decode(&tour)
+	/*
+		body, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			fmt.Println("Error reading request body:", err)
+			http.Error(writer, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		err = json.Unmarshal(body, &tour)
+	*/
 	err := json.NewDecoder(req.Body).Decode(&tour)
 	if err != nil {
 		println("Error while parsing json")
