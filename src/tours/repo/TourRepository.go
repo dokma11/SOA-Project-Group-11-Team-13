@@ -21,7 +21,8 @@ func (repo *TourRepository) GetById(id string) (dto.TourResponseDto, error) {
 		Table("tours").
 		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
 		Where("id = ?", id).
-		Scan(&tour)
+		Preload("KeyPoints").
+		First(&tour)
 	if dbResult.Error != nil {
 		return tourDto, dbResult.Error
 	}
@@ -68,7 +69,8 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDt
 		Table("tours").
 		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
 		Where("author_id = ?", authorId).
-		Scan(&tours)
+		Preload("KeyPoints").
+		Find(&tours)
 	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
@@ -116,7 +118,7 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDt
 
 func (repo *TourRepository) GetAll() ([]dto.TourResponseDto, error) {
 	var tours []model.Tour
-	dbResult := repo.DatabaseConnection.Find(&tours)
+	dbResult := repo.DatabaseConnection.Preload("KeyPoints").Find(&tours)
 	if dbResult != nil {
 		return nil, dbResult.Error
 	}
@@ -168,7 +170,8 @@ func (repo *TourRepository) GetPublished() ([]dto.TourResponseDto, error) {
 		Table("tours").
 		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
 		Where("status = ?", "Published").
-		Scan(&tours)
+		Preload("KeyPoints").
+		Find(&tours)
 	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
@@ -235,32 +238,35 @@ func (repo *TourRepository) Delete(id string) error {
 }
 
 func (repo *TourRepository) Update(tour *model.Tour) error {
-	if len(tour.Durations) > 0 {
-		durationsJSON, err := json.Marshal(tour.Durations)
-		if err != nil {
-			return err
-		}
-
-		dbResult := repo.DatabaseConnection.Exec(
-			"UPDATE tours SET durations = ? WHERE id = ?",
-			string(durationsJSON),
-			tour.ID,
-		)
-		if dbResult.Error != nil {
-			return dbResult.Error
-		}
-		if dbResult.RowsAffected == 0 {
-			return errors.New("no tour found for update")
-		}
-		return nil
-	} else {
-		dbResult := repo.DatabaseConnection.Model(&model.Tour{}).Where("id = ?", tour.ID).Updates(tour)
-		if dbResult.Error != nil {
-			return dbResult.Error
-		}
-		if dbResult.RowsAffected == 0 {
-			return errors.New("no tour found for update")
-		}
-		return nil
+	dbResult := repo.DatabaseConnection.Model(&model.Tour{}).
+		Where("id = ?", tour.ID).
+		Omit("Durations").
+		Updates(tour)
+	if dbResult.Error != nil {
+		return dbResult.Error
 	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no tour found for update")
+	}
+	return nil
+}
+
+func (repo *TourRepository) AddDurations(tour *model.Tour) error {
+	durationsJSON, err := json.Marshal(tour.Durations)
+	if err != nil {
+		return err
+	}
+
+	dbResult := repo.DatabaseConnection.Exec(
+		"UPDATE tours SET durations = ? WHERE id = ?",
+		string(durationsJSON),
+		tour.ID,
+	)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no tour found for duration addition")
+	}
+	return nil
 }
