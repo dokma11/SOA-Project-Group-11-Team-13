@@ -142,3 +142,27 @@ func (service *TourService) Archive(id string) error {
 	_ = fmt.Errorf(fmt.Sprintf("can not archive selected tour"))
 	return nil
 }
+
+func (service *TourService) GetEquipment(tourId string) ([]model.Equipment, error) {
+	equipmentList, err := service.TourRepository.GetEquipment(tourId)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("equipment for tour with id %d not found", tourId))
+	}
+	return equipmentList, nil
+}
+
+func (service *TourService) AddEquipment(tourId string, equipmentId string) error {
+	err := service.TourRepository.AddEquipment(tourId, equipmentId)
+	if err != nil {
+		return fmt.Errorf(fmt.Sprintf("failed to add equipment to tour with id %d", tourId))
+	}
+	return nil
+}
+
+func (service *TourService) DeleteEquipment(tourId string, equipmentId string) error {
+	err := service.TourRepository.DeleteEquipment(tourId, equipmentId)
+	if err != nil {
+		return fmt.Errorf(fmt.Sprintf("failed to delete equipment from tour with id %d", tourId))
+	}
+	return nil
+}

@@ -3,11 +3,12 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"tours/model"
 	"tours/service"
+
+	"github.com/gorilla/mux"
 )
 
 type EquipmentHandler struct {
