@@ -3,21 +3,16 @@ package repo
 import (
 	"encoding/json"
 	"errors"
-	"hash/fnv"
-	"math"
-	"math/big"
 	"fmt"
 	"tours/dto"
 	"tours/model"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type TourRepository struct {
 	DatabaseConnection *gorm.DB
 }
-
 
 func (repo *TourRepository) GetById(id string) (dto.TourResponseDto, error) {
 	var tour model.Tour
@@ -143,8 +138,9 @@ func (repo *TourRepository) AddDurations(tour *model.Tour) error {
 	}
 
 	dbResult := repo.DatabaseConnection.Exec(
-		"UPDATE tours SET durations = ? WHERE id = ?",
+		"UPDATE tours SET durations = ?, distance = ? WHERE id = ?",
 		string(durationsJSON),
+		tour.Distance,
 		tour.ID,
 	)
 	if dbResult.Error != nil {
@@ -153,6 +149,79 @@ func (repo *TourRepository) AddDurations(tour *model.Tour) error {
 	if dbResult.RowsAffected == 0 {
 		return errors.New("no tour found for duration addition")
 	}
+	return nil
+}
+
+func (repo *TourRepository) GetEquipment(tourId string) ([]model.Equipment, error) {
+	var tour model.Tour
+
+	dbResult := repo.DatabaseConnection.
+		Table("tours").
+		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
+		Where("id = ?", tourId).
+		Preload("Equipment").
+		First(&tour)
+
+	if dbResult.Error != nil {
+		return nil, dbResult.Error
+	}
+
+	return tour.Equipment, nil
+}
+
+func (repo *TourRepository) AddEquipment(tourId string, equipmentId string) error {
+	var tour model.Tour
+	var equipment model.Equipment
+
+	dbResult := repo.DatabaseConnection.
+		Table("tours").
+		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
+		Where("id = ?", tourId).
+		First(&tour)
+
+	if err := repo.DatabaseConnection.First(&equipment, "id = ?", equipmentId).Error; err != nil {
+		return err
+	}
+
+	tour.Equipment = append(tour.Equipment, equipment)
+
+	dbResult = repo.DatabaseConnection.Save(&tour)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+
+	return nil
+}
+
+func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) error {
+	var tour model.Tour
+	var equipment model.Equipment
+
+	dbResult := repo.DatabaseConnection.
+		Table("tours").
+		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
+		Where("id = ?", tourId).
+		First(&tour)
+
+	if err := repo.DatabaseConnection.First(&equipment, "id = ?", equipmentId).Error; err != nil {
+		return err
+	}
+
+	var updatedEquipment []model.Equipment
+	for _, e := range tour.Equipment {
+		if e.ID != equipment.ID {
+			updatedEquipment = append(updatedEquipment, e)
+		}
+	}
+	tour.Equipment = updatedEquipment
+
+	repo.DatabaseConnection.Model(&tour).Association("Equipment").Delete(&equipment)
+
+	dbResult = repo.DatabaseConnection.Save(&tour)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+
 	return nil
 }
 
@@ -191,91 +260,4 @@ func MapToDto(repo *TourRepository, tour *model.Tour, tourDto *dto.TourResponseD
 	tourDto.AuthorId = tour.AuthorId
 
 	return tourDto, nil
-}
-
-func (repo *TourRepository) GetEquipment(tourId string) ([]model.Equipment, error) {
-	/*println("USAO ZA GET equipmnet ture: ")
-	var equipmentList []model.Equipment
-	dbResult := repo.DatabaseConnection.Model(&model.Tour{}).
-		Where("id = ?", tourId).
-		Find(&equipmentList)
-
-	if len(equipmentList) == 0 {
-		return equipmentList, nil
-	}
-	if dbResult.Error != nil {
-		println("EROR U TOUR REPO ZA GET EQUIPMENT")
-		return nil, dbResult.Error
-	}
-	return equipmentList, nil*/
-	//println("USAO ZA GET EQUIPMENT TOUR: ")
-
-	var tour model.Tour
-	dbResult := repo.DatabaseConnection.Preload("Equipment").First(&tour, tourId)
-
-	if dbResult.Error != nil {
-		//println("ERROR IN TOUR REPO FOR GET EQUIPMENT")
-		return nil, dbResult.Error
-	}
-
-	return tour.Equipment, nil
-}
-
-func (repo *TourRepository) AddEquipment(tourId string, equipmentId string) error {
-	//println("USAO ZA ADD equip: ")
-	var tour model.Tour
-	var equipment model.Equipment
-
-	// Load the tour and equipment entities
-	if err := repo.DatabaseConnection.Preload("Equipment").First(&tour, "id = ?", tourId).Error; err != nil {
-		return err
-	}
-	if err := repo.DatabaseConnection.First(&equipment, "id = ?", equipmentId).Error; err != nil {
-		return err
-	}
-
-	// Add equipment to the tour
-	tour.Equipment = append(tour.Equipment, equipment)
-
-	// Save the changes
-	dbResult := repo.DatabaseConnection.Save(&tour)
-	if dbResult.Error != nil {
-		return dbResult.Error
-	}
-
-	return nil
-}
-
-func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) error {
-	println("USAO ZA remove equip: ")
-	var tour model.Tour
-	var equipment model.Equipment
-
-	// Load the tour and equipment entities
-	if err := repo.DatabaseConnection.Preload("Equipment").First(&tour, "id = ?", tourId).Error; err != nil {
-		return err
-	}
-	if err := repo.DatabaseConnection.First(&equipment, "id = ?", equipmentId).Error; err != nil {
-		return err
-	}
-
-	// Remove equipment from the tour
-	var updatedEquipment []model.Equipment
-	for _, e := range tour.Equipment {
-		if e.ID != equipment.ID {
-			updatedEquipment = append(updatedEquipment, e)
-		}
-	}
-	tour.Equipment = updatedEquipment
-
-	// Delete the association
-	repo.DatabaseConnection.Model(&tour).Association("Equipment").Delete(&equipment)
-
-	// Save the changes
-	dbResult := repo.DatabaseConnection.Save(&tour)
-	if dbResult.Error != nil {
-		return dbResult.Error
-	}
-
-	return nil
 }
