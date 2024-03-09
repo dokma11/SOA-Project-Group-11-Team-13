@@ -1,7 +1,9 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"time"
@@ -110,4 +112,20 @@ func (tour *Tour) BeforeCreate(scope *gorm.DB) error {
 	tour.KeyPoints = []KeyPoint{}
 	tour.Reviews = []Review{}
 	return nil
+}
+
+func (td *TourDuration) Scan(value interface{}) error {
+
+	println("Usao u scan taj srta vec")
+
+	if value == nil {
+		return nil
+	}
+
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("Scan source is not []byte")
+	}
+
+	return json.Unmarshal(bytes, td)
 }

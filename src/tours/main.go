@@ -60,7 +60,7 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
 	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
 	router.HandleFunc("/tours", tourHandler.Update).Methods("PUT")
-	router.HandleFunc("/tours/publish", tourHandler.Publish).Methods("PUT")
+	router.HandleFunc("/tours/publish/{id}", tourHandler.Publish).Methods("PUT")
 	router.HandleFunc("/tours/archive", tourHandler.Archive).Methods("PUT")
 
 	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")

@@ -1,12 +1,10 @@
 package repo
 
 import (
+	"encoding/json"
 	"errors"
-	"github.com/google/uuid"
+	"fmt"
 	"gorm.io/gorm"
-	"hash/fnv"
-	"math"
-	"math/big"
 	"tours/dto"
 	"tours/model"
 )
@@ -15,18 +13,65 @@ type TourRepository struct {
 	DatabaseConnection *gorm.DB
 }
 
-func (repo *TourRepository) GetById(id string) (model.Tour, error) {
-	tour := model.Tour{}
-	dbResult := repo.DatabaseConnection.First(&tour, "id = ?", id)
-	if dbResult != nil {
-		return tour, dbResult.Error
+func (repo *TourRepository) GetById(id string) (dto.TourResponseDto, error) {
+	var tour model.Tour
+	var tourDto dto.TourResponseDto
+
+	dbResult := repo.DatabaseConnection.
+		Table("tours").
+		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
+		Where("id = ?", id).
+		Scan(&tour)
+	if dbResult.Error != nil {
+		return tourDto, dbResult.Error
 	}
-	return tour, nil
+
+	tourDto.AverageRating = 0.0
+	tourDto.Tags = tour.Tags
+	tourDto.KeyPoints = tour.KeyPoints
+	tourDto.Status = dto.TourStatus(tour.Status)
+	tourDto.Name = tour.Name
+	tourDto.Description = tour.Description
+	tourDto.ID = tour.ID
+
+	var durationsJSON []byte
+	if err := repo.DatabaseConnection.Raw("SELECT durations FROM tours WHERE id = ?", tour.ID).Row().Scan(&durationsJSON); err != nil {
+		fmt.Println(fmt.Sprintf("Error: Couldn't get tours durations"))
+		return tourDto, err
+	}
+
+	var durations []model.TourDuration
+
+	if len(durationsJSON) > 0 {
+		if err := json.Unmarshal(durationsJSON, &durations); err != nil {
+			fmt.Println(fmt.Sprintf("Error: Couldn't unmarshal tours durations"))
+			return tourDto, err
+		}
+	}
+
+	tourDto.Durations = durations
+	tourDto.PublishDate = tour.PublishDate
+	tourDto.ArchiveDate = tour.ArchiveDate
+	tourDto.Category = dto.TourCategory(tour.Category)
+	tourDto.IsDeleted = tour.IsDeleted
+	tourDto.Price = tour.Price
+	tourDto.Distance = tour.Distance
+	tourDto.Difficulty = tour.Difficulty
+	tourDto.AuthorId = tour.AuthorId
+
+	return tourDto, nil
 }
 
 func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDto, error) {
 	var tours []model.Tour
-	dbResult := repo.DatabaseConnection.Where("author_id = ?", authorId).Find(&tours)
+	dbResult := repo.DatabaseConnection.
+		Table("tours").
+		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
+		Where("author_id = ?", authorId).
+		Scan(&tours)
+	if dbResult.Error != nil {
+		return nil, dbResult.Error
+	}
 
 	var tourDtos []dto.TourResponseDto
 
@@ -38,10 +83,22 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDt
 		tourDto.Status = dto.TourStatus(tour.Status)
 		tourDto.Name = tour.Name
 		tourDto.Description = tour.Description
-
 		tourDto.ID = tour.ID
 
-		tourDto.Durations = tour.Durations
+		var durationsJSON []byte
+		if err := repo.DatabaseConnection.Raw("SELECT durations FROM tours WHERE id = ?", tour.ID).Row().Scan(&durationsJSON); err != nil {
+			return nil, err
+		}
+
+		var durations []model.TourDuration
+
+		if len(durationsJSON) > 0 {
+			if err := json.Unmarshal(durationsJSON, &durations); err != nil {
+				return nil, err
+			}
+		}
+
+		tourDto.Durations = durations
 		tourDto.PublishDate = tour.PublishDate
 		tourDto.ArchiveDate = tour.ArchiveDate
 		tourDto.Category = dto.TourCategory(tour.Category)
@@ -54,28 +111,107 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDt
 		tourDtos = append(tourDtos, tourDto)
 	}
 
-	if dbResult != nil {
-		return tourDtos, dbResult.Error
-	}
 	return tourDtos, nil
 }
 
-func (repo *TourRepository) GetAll() ([]model.Tour, error) {
+func (repo *TourRepository) GetAll() ([]dto.TourResponseDto, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.Find(&tours)
 	if dbResult != nil {
 		return nil, dbResult.Error
 	}
-	return tours, nil
+
+	var tourDtos []dto.TourResponseDto
+
+	for _, tour := range tours {
+		var tourDto dto.TourResponseDto
+		tourDto.AverageRating = 0.0
+		tourDto.Tags = tour.Tags
+		tourDto.KeyPoints = tour.KeyPoints
+		tourDto.Status = dto.TourStatus(tour.Status)
+		tourDto.Name = tour.Name
+		tourDto.Description = tour.Description
+		tourDto.ID = tour.ID
+
+		var durationsJSON []byte
+		if err := repo.DatabaseConnection.Raw("SELECT durations FROM tours WHERE id = ?", tour.ID).Row().Scan(&durationsJSON); err != nil {
+			return nil, err
+		}
+
+		var durations []model.TourDuration
+
+		if len(durationsJSON) > 0 {
+			if err := json.Unmarshal(durationsJSON, &durations); err != nil {
+				return nil, err
+			}
+		}
+
+		tourDto.Durations = durations
+		tourDto.PublishDate = tour.PublishDate
+		tourDto.ArchiveDate = tour.ArchiveDate
+		tourDto.Category = dto.TourCategory(tour.Category)
+		tourDto.IsDeleted = tour.IsDeleted
+		tourDto.Price = tour.Price
+		tourDto.Distance = tour.Distance
+		tourDto.Difficulty = tour.Difficulty
+		tourDto.AuthorId = tour.AuthorId
+
+		tourDtos = append(tourDtos, tourDto)
+	}
+
+	return tourDtos, nil
 }
 
-func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
+func (repo *TourRepository) GetPublished() ([]dto.TourResponseDto, error) {
 	var tours []model.Tour
-	dbResult := repo.DatabaseConnection.Where("status = ?", "Published").Find(&tours)
-	if dbResult != nil {
+	dbResult := repo.DatabaseConnection.
+		Table("tours").
+		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
+		Where("status = ?", "Published").
+		Scan(&tours)
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
-	return tours, nil
+
+	var tourDtos []dto.TourResponseDto
+
+	for _, tour := range tours {
+		var tourDto dto.TourResponseDto
+		tourDto.AverageRating = 0.0
+		tourDto.Tags = tour.Tags
+		tourDto.KeyPoints = tour.KeyPoints
+		tourDto.Status = dto.TourStatus(tour.Status)
+		tourDto.Name = tour.Name
+		tourDto.Description = tour.Description
+		tourDto.ID = tour.ID
+
+		var durationsJSON []byte
+		if err := repo.DatabaseConnection.Raw("SELECT durations FROM tours WHERE id = ?", tour.ID).Row().Scan(&durationsJSON); err != nil {
+			return nil, err
+		}
+
+		var durations []model.TourDuration
+
+		if len(durationsJSON) > 0 {
+			if err := json.Unmarshal(durationsJSON, &durations); err != nil {
+				return nil, err
+			}
+		}
+
+		tourDto.Durations = durations
+		tourDto.PublishDate = tour.PublishDate
+		tourDto.ArchiveDate = tour.ArchiveDate
+		tourDto.Category = dto.TourCategory(tour.Category)
+		tourDto.IsDeleted = tour.IsDeleted
+		tourDto.Price = tour.Price
+		tourDto.Distance = tour.Distance
+		tourDto.Difficulty = tour.Difficulty
+		tourDto.AuthorId = tour.AuthorId
+
+		tourDtos = append(tourDtos, tourDto)
+	}
+
+	return tourDtos, nil
 }
 
 func (repo *TourRepository) Create(tour *model.Tour) error {
@@ -99,26 +235,32 @@ func (repo *TourRepository) Delete(id string) error {
 }
 
 func (repo *TourRepository) Update(tour *model.Tour) error {
-	dbResult := repo.DatabaseConnection.Model(&model.Tour{}).Where("id = ?", tour.ID).Updates(tour)
-	if dbResult.Error != nil {
-		return dbResult.Error
+	if len(tour.Durations) > 0 {
+		durationsJSON, err := json.Marshal(tour.Durations)
+		if err != nil {
+			return err
+		}
+
+		dbResult := repo.DatabaseConnection.Exec(
+			"UPDATE tours SET durations = ? WHERE id = ?",
+			string(durationsJSON),
+			tour.ID,
+		)
+		if dbResult.Error != nil {
+			return dbResult.Error
+		}
+		if dbResult.RowsAffected == 0 {
+			return errors.New("no tour found for update")
+		}
+		return nil
+	} else {
+		dbResult := repo.DatabaseConnection.Model(&model.Tour{}).Where("id = ?", tour.ID).Updates(tour)
+		if dbResult.Error != nil {
+			return dbResult.Error
+		}
+		if dbResult.RowsAffected == 0 {
+			return errors.New("no tour found for update")
+		}
+		return nil
 	}
-	if dbResult.RowsAffected == 0 {
-		return errors.New("no tour found for update")
-	}
-	return nil
-}
-
-func uuidToInt64(u uuid.UUID) int64 {
-	hash := fnv.New64a()
-	hash.Write(u[:])
-
-	hashValue := big.NewInt(0)
-	hashValue.SetUint64(hash.Sum64())
-
-	maxInt64 := big.NewInt(math.MaxInt64)
-	hashValue.Mod(hashValue, maxInt64)
-	int64Value := hashValue.Int64()
-
-	return int64Value
 }

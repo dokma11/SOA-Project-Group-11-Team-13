@@ -12,7 +12,7 @@ type TourService struct {
 	TourRepository *repo.TourRepository
 }
 
-func (service *TourService) GetById(id string) (*model.Tour, error) {
+func (service *TourService) GetById(id string) (*dto.TourResponseDto, error) {
 	tour, err := service.TourRepository.GetById(id)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("menu item with id %s not found", id))
@@ -28,7 +28,7 @@ func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseD
 	return &tours, nil
 }
 
-func (service *TourService) GetAll() (*[]model.Tour, error) {
+func (service *TourService) GetAll() (*[]dto.TourResponseDto, error) {
 	tours, err := service.TourRepository.GetAll()
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("no tours were found"))
@@ -36,7 +36,7 @@ func (service *TourService) GetAll() (*[]model.Tour, error) {
 	return &tours, nil
 }
 
-func (service *TourService) GetPublished() (*[]model.Tour, error) {
+func (service *TourService) GetPublished() (*[]dto.TourResponseDto, error) {
 	tours, err := service.TourRepository.GetPublished()
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("no published tours were found"))
@@ -72,11 +72,29 @@ func (service *TourService) Update(tour *model.Tour) error {
 }
 
 func (service *TourService) Publish(id string) error {
-	tour, err := service.TourRepository.GetById(id)
+	tourDto, err := service.TourRepository.GetById(id)
 
-	if tour.Status != model.Published {
-		tour.Status = model.Published
-		tour.PublishDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+	if tourDto.Status != dto.Published {
+		tourDto.Status = dto.Published
+		tourDto.PublishDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+
+		var tour model.Tour
+		tour.Tags = tourDto.Tags
+		tour.KeyPoints = tourDto.KeyPoints
+		tour.Status = model.TourStatus(tourDto.Status)
+		tour.Name = tourDto.Name
+		tour.Description = tourDto.Description
+		tour.ID = tourDto.ID
+		tour.Durations = tourDto.Durations
+		tour.PublishDate = tourDto.PublishDate
+		tour.ArchiveDate = tourDto.ArchiveDate
+		tour.Category = model.TourCategory(tourDto.Category)
+		tour.IsDeleted = tourDto.IsDeleted
+		tour.Price = tourDto.Price
+		tour.Distance = tourDto.Distance
+		tour.Difficulty = tourDto.Difficulty
+		tour.AuthorId = tourDto.AuthorId
+
 		err = service.TourRepository.Update(&tour)
 		if err != nil {
 			_ = fmt.Errorf(fmt.Sprintf("no tours were published"))
@@ -90,11 +108,29 @@ func (service *TourService) Publish(id string) error {
 }
 
 func (service *TourService) Archive(id string) error {
-	tour, err := service.TourRepository.GetById(id)
+	tourDto, err := service.TourRepository.GetById(id)
 
-	if tour.Status == model.Published {
-		tour.Status = model.Archived
-		tour.ArchiveDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+	if tourDto.Status == dto.Published {
+		tourDto.Status = dto.Archived
+		tourDto.ArchiveDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+
+		var tour model.Tour
+		tour.Tags = tourDto.Tags
+		tour.KeyPoints = tourDto.KeyPoints
+		tour.Status = model.TourStatus(tourDto.Status)
+		tour.Name = tourDto.Name
+		tour.Description = tourDto.Description
+		tour.ID = tourDto.ID
+		tour.Durations = tourDto.Durations
+		tour.PublishDate = tourDto.PublishDate
+		tour.ArchiveDate = tourDto.ArchiveDate
+		tour.Category = model.TourCategory(tourDto.Category)
+		tour.IsDeleted = tourDto.IsDeleted
+		tour.Price = tourDto.Price
+		tour.Distance = tourDto.Distance
+		tour.Difficulty = tourDto.Difficulty
+		tour.AuthorId = tourDto.AuthorId
+
 		err = service.TourRepository.Update(&tour)
 		if err != nil {
 			_ = fmt.Errorf(fmt.Sprintf("no tours were archived"))
