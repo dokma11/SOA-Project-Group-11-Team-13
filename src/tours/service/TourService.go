@@ -71,12 +71,20 @@ func (service *TourService) Update(tour *model.Tour) error {
 	return nil
 }
 
+func (service *TourService) AddDurations(tour *model.Tour) error {
+	err := service.TourRepository.AddDurations(tour)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no durations were addede to tours"))
+		return err
+	}
+	return nil
+}
+
 func (service *TourService) Publish(id string) error {
 	tourDto, err := service.TourRepository.GetById(id)
-
 	if tourDto.Status != dto.Published {
 		tourDto.Status = dto.Published
-		tourDto.PublishDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+		tourDto.PublishDate = time.Now().Local()
 
 		var tour model.Tour
 		tour.Tags = tourDto.Tags
