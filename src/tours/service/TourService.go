@@ -120,7 +120,7 @@ func (service *TourService) Archive(id string) error {
 
 	if tourDto.Status == dto.Published {
 		tourDto.Status = dto.Archived
-		tourDto.ArchiveDate = time.Now().Local() // moram proveriti da li ovako ili bez local
+		tourDto.ArchiveDate = time.Now().Local()
 
 		var tour model.Tour
 		tour.Tags = tourDto.Tags
