@@ -179,9 +179,29 @@ func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request
 	writer.Header().Set("Content-Type", "application/json")
 }
 
+func (handler *TourHandler) AddDurations(writer http.ResponseWriter, req *http.Request) {
+	var tour model.Tour
+	err := json.NewDecoder(req.Body).Decode(&tour)
+	if err != nil {
+		println("Error while parsing json")
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = handler.TourService.AddDurations(&tour)
+
+	if err != nil {
+		println("Error while updating tour")
+		writer.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
+}
+
 func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Request) {
 	idString := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", idString)
+	log.Printf("Publish tour with id %s", idString)
 
 	tour := handler.TourService.Publish(idString)
 
