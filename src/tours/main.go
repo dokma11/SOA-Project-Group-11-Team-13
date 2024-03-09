@@ -81,6 +81,10 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")
 	router.HandleFunc("/equipment", equipmentHandler.GetAll).Methods("GET")
 
+	router.HandleFunc("/tours/{tourId}/equipment", tourHandler.GetEquipment).Methods("GET")
+	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.AddEquipment).Methods("POST")
+	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.DeleteEquipment).Methods("DELETE")
+
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
 	log.Fatal(http.ListenAndServe(":8081", router))
