@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -45,4 +46,9 @@ func (equipment *Equipment) BeforeCreate(scope *gorm.DB) error {
 		equipment.ID = maxID + 1
 	}
 	return nil
+}
+
+func (equipment *Equipment) String() string {
+	return fmt.Sprintf("Equipment{ID: %d, Name: %s, Description: %s, Tours: %v}",
+		equipment.ID, equipment.Name, equipment.Description, equipment.Tours)
 }

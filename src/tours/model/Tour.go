@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"time"
@@ -119,4 +120,13 @@ func (tour *Tour) BeforeCreate(scope *gorm.DB) error {
 	tour.KeyPoints = []KeyPoint{}
 	tour.Reviews = []Review{}
 	return nil
+}
+
+func (tour *Tour) String() string {
+	return fmt.Sprintf("Tour{ID: %d, AuthorId: %d, Name: %s, Description: %s, Difficulty: %d, Tags: %v, "+
+		"Status: %d, Price: %.2f, Distance: %.2f, PublishDate: %s, ArchiveDate: %s, Category: %d, "+
+		"IsDeleted: %t, KeyPoints: %v, Equipment: %v, Reviews: %v, Durations: %v}",
+		tour.ID, tour.AuthorId, tour.Name, tour.Description, tour.Difficulty, tour.Tags,
+		tour.Status, tour.Price, tour.Distance, tour.PublishDate, tour.ArchiveDate, tour.Category,
+		tour.IsDeleted, tour.KeyPoints, tour.Equipment, tour.Reviews, tour.Durations)
 }

@@ -2,7 +2,9 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -70,4 +72,12 @@ func (review *Review) BeforeCreate(scope *gorm.DB) error {
 		review.ID = maxID + 1
 	}
 	return nil
+}
+
+func (review *Review) String() string {
+	imagesStr := strings.Join(review.Images, ", ")
+	return fmt.Sprintf("Review{ID: %d, Rating: %d, Comment: %s, TouristId: %d, TourId: %d, "+
+		"TourVisitDate: %s, CommentDate: %s, Images: [%s]}",
+		review.ID, review.Rating, review.Comment, review.TouristId, review.TourId,
+		review.TourVisitDate.Format("2006-01-02"), review.CommentDate.Format("2006-01-02"), imagesStr)
 }

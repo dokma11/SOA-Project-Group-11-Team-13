@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 )
 
 type TransportType int
@@ -38,4 +39,9 @@ func (tourDuration *TourDuration) Validate() error {
 		return errors.New("invalid Transport Type. Transport Type's value must be in range of 0 to 2")
 	}
 	return nil
+}
+
+func (tourDuration *TourDuration) String() string {
+	return fmt.Sprintf("TourDuration{Duration: %d, TransportType: %d}",
+		tourDuration.Duration, tourDuration.TransportType)
 }

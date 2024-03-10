@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -67,4 +68,11 @@ func (keyPoint *KeyPoint) BeforeCreate(scope *gorm.DB) error {
 		keyPoint.ID = maxID + 1
 	}
 	return nil
+}
+
+func (keyPoint *KeyPoint) String() string {
+	return fmt.Sprintf("KeyPoint{ID: %d, TourId: %d, Name: %s, Description: %s, "+
+		"Longitude: %f, Latitude: %f, LocationAddress: %s, ImagePath: %s}",
+		keyPoint.ID, keyPoint.TourId, keyPoint.Name, keyPoint.Description, keyPoint.Longitude,
+		keyPoint.Latitude, keyPoint.LocationAddress, keyPoint.ImagePath)
 }
