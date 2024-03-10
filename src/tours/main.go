@@ -59,47 +59,75 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler, facilityHandler *handler.FacilityHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
+	initializeTourRoutes(router, tourHandler)
+	initializeKeyPointRoutes(router, keyPointHandler)
+	initializeReviewRoutes(router, reviewHandler)
+	initializeEquipmentRoutes(router, equipmentHandler)
+	initializeFacilityRoutes(router, facilityHandler)
+
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
+	println("Server starting")
+	log.Fatal(http.ListenAndServe(":8081", router))
+}
+
+func initializeTourRoutes(router *mux.Router, tourHandler *handler.TourHandler) {
 	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
 	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
 	router.HandleFunc("/tours/authors/{authorId}", tourHandler.GetByAuthorId).Methods("GET")
-	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
 	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
-	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
+	router.HandleFunc("/tours/{tourId}/equipment", tourHandler.GetEquipment).Methods("GET")
+
+	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
+	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.AddEquipment).Methods("POST")
+
 	router.HandleFunc("/tours", tourHandler.Update).Methods("PUT")
 	router.HandleFunc("/tours/durations", tourHandler.AddDurations).Methods("PUT")
 	router.HandleFunc("/tours/publish/{id}", tourHandler.Publish).Methods("PUT")
 	router.HandleFunc("/tours/archive/{id}", tourHandler.Archive).Methods("PUT")
 
-	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
-	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
-	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
-	router.HandleFunc("/keyPoints/tour/{tourId}", keyPointHandler.GetAllByTourId).Methods("GET")
-	router.HandleFunc("/keyPoints/{id}", keyPointHandler.Delete).Methods("DELETE")
-	router.HandleFunc("/keyPoints", keyPointHandler.Update).Methods("PUT")
+	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
+	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.DeleteEquipment).Methods("DELETE")
+}
 
+func initializeReviewRoutes(router *mux.Router, reviewHandler *handler.ReviewHandler) {
 	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
-	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
 	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
-	router.HandleFunc("/reviews/{id}", reviewHandler.Delete).Methods("DELETE")
+
+	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
+
 	router.HandleFunc("/reviews", reviewHandler.Update).Methods("PUT")
 
+	router.HandleFunc("/reviews/{id}", reviewHandler.Delete).Methods("DELETE")
+}
+
+func initializeKeyPointRoutes(router *mux.Router, keyPointHandler *handler.KeyPointHandler) {
+	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
+	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
+	router.HandleFunc("/keyPoints/tour/{tourId}", keyPointHandler.GetAllByTourId).Methods("GET")
+
+	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
+
+	router.HandleFunc("/keyPoints", keyPointHandler.Update).Methods("PUT")
+
+	router.HandleFunc("/keyPoints/{id}", keyPointHandler.Delete).Methods("DELETE")
+}
+
+func initializeEquipmentRoutes(router *mux.Router, equipmentHandler *handler.EquipmentHandler) {
 	router.HandleFunc("/equipment/{id}", equipmentHandler.GetById).Methods("GET")
-	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")
 	router.HandleFunc("/equipment", equipmentHandler.GetAll).Methods("GET")
 
-	router.HandleFunc("/tours/{tourId}/equipment", tourHandler.GetEquipment).Methods("GET")
-	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.AddEquipment).Methods("POST")
-	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.DeleteEquipment).Methods("DELETE")
+	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")
+}
 
-	router.HandleFunc("/facilities", facilityHandler.Create).Methods("POST")
+func initializeFacilityRoutes(router *mux.Router, facilityHandler *handler.FacilityHandler) {
 	router.HandleFunc("/facilities", facilityHandler.GetAll).Methods("GET")
 	router.HandleFunc("/facilities/author/{authorId}", facilityHandler.GetAllByAuthorId).Methods("GET")
-	router.HandleFunc("/facilities/{id}", facilityHandler.Delete).Methods("DELETE")
+
+	router.HandleFunc("/facilities", facilityHandler.Create).Methods("POST")
+
 	router.HandleFunc("/facilities", facilityHandler.Update).Methods("PUT")
 
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
-	println("Server starting")
-	log.Fatal(http.ListenAndServe(":8081", router))
+	router.HandleFunc("/facilities/{id}", facilityHandler.Delete).Methods("DELETE")
 }
 
 func main() {
