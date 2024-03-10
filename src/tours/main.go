@@ -53,11 +53,11 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
+	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
 	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
 	router.HandleFunc("/tours/authors/{authorId}", tourHandler.GetByAuthorId).Methods("GET")
 	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
 	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
-	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
 	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
 	router.HandleFunc("/tours", tourHandler.Update).Methods("PUT")
 	router.HandleFunc("/tours/durations", tourHandler.AddDurations).Methods("PUT")
