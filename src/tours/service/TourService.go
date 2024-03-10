@@ -81,29 +81,17 @@ func (service *TourService) AddDurations(tour *model.Tour) error {
 }
 
 func (service *TourService) Publish(id string) error {
-	tourDto, err := service.TourRepository.GetById(id)
+	tourDto, _ := service.TourRepository.GetById(id)
+
 	if tourDto.Status != dto.Published {
-		tourDto.Status = dto.Published
-		tourDto.PublishDate = time.Now().Local()
+		tour, err := model.NewTour(tourDto.ID, tourDto.AuthorId, tourDto.Name, tourDto.Description, tourDto.Tags,
+			tourDto.Difficulty, tourDto.ArchiveDate, time.Now().Local().Add(time.Hour), tourDto.Distance, model.Published,
+			tourDto.Price, model.TourCategory(tourDto.Category), tourDto.IsDeleted, tourDto.KeyPoints, tourDto.Durations)
+		if err != nil {
+			return err
+		}
 
-		var tour model.Tour
-		tour.Tags = tourDto.Tags
-		tour.KeyPoints = tourDto.KeyPoints
-		tour.Status = model.TourStatus(tourDto.Status)
-		tour.Name = tourDto.Name
-		tour.Description = tourDto.Description
-		tour.ID = tourDto.ID
-		tour.Durations = tourDto.Durations
-		tour.PublishDate = tourDto.PublishDate
-		tour.ArchiveDate = tourDto.ArchiveDate
-		tour.Category = model.TourCategory(tourDto.Category)
-		tour.IsDeleted = tourDto.IsDeleted
-		tour.Price = tourDto.Price
-		tour.Distance = tourDto.Distance
-		tour.Difficulty = tourDto.Difficulty
-		tour.AuthorId = tourDto.AuthorId
-
-		err = service.TourRepository.Update(&tour)
+		err = service.TourRepository.Update(tour)
 		if err != nil {
 			_ = fmt.Errorf(fmt.Sprintf("no tours were published"))
 			return err
@@ -116,30 +104,17 @@ func (service *TourService) Publish(id string) error {
 }
 
 func (service *TourService) Archive(id string) error {
-	tourDto, err := service.TourRepository.GetById(id)
+	tourDto, _ := service.TourRepository.GetById(id)
 
 	if tourDto.Status == dto.Published {
-		tourDto.Status = dto.Archived
-		tourDto.ArchiveDate = time.Now().Local()
+		tour, err := model.NewTour(tourDto.ID, tourDto.AuthorId, tourDto.Name, tourDto.Description, tourDto.Tags,
+			tourDto.Difficulty, time.Now().Local().Add(time.Hour), tourDto.PublishDate, tourDto.Distance, model.Archived,
+			tourDto.Price, model.TourCategory(tourDto.Category), tourDto.IsDeleted, tourDto.KeyPoints, tourDto.Durations)
+		if err != nil {
+			return err
+		}
 
-		var tour model.Tour
-		tour.Tags = tourDto.Tags
-		tour.KeyPoints = tourDto.KeyPoints
-		tour.Status = model.TourStatus(tourDto.Status)
-		tour.Name = tourDto.Name
-		tour.Description = tourDto.Description
-		tour.ID = tourDto.ID
-		tour.Durations = tourDto.Durations
-		tour.PublishDate = tourDto.PublishDate
-		tour.ArchiveDate = tourDto.ArchiveDate
-		tour.Category = model.TourCategory(tourDto.Category)
-		tour.IsDeleted = tourDto.IsDeleted
-		tour.Price = tourDto.Price
-		tour.Distance = tourDto.Distance
-		tour.Difficulty = tourDto.Difficulty
-		tour.AuthorId = tourDto.AuthorId
-
-		err = service.TourRepository.Update(&tour)
+		err = service.TourRepository.Update(tour)
 		if err != nil {
 			_ = fmt.Errorf(fmt.Sprintf("no tours were archived"))
 			return err
@@ -154,7 +129,7 @@ func (service *TourService) Archive(id string) error {
 func (service *TourService) GetEquipment(tourId string) ([]model.Equipment, error) {
 	equipmentList, err := service.TourRepository.GetEquipment(tourId)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("equipment for tour with id %d not found", tourId))
+		return nil, fmt.Errorf(fmt.Sprintf("equipment for tour with id %s not found", tourId))
 	}
 	return equipmentList, nil
 }
@@ -162,7 +137,7 @@ func (service *TourService) GetEquipment(tourId string) ([]model.Equipment, erro
 func (service *TourService) AddEquipment(tourId string, equipmentId string) error {
 	err := service.TourRepository.AddEquipment(tourId, equipmentId)
 	if err != nil {
-		return fmt.Errorf(fmt.Sprintf("failed to add equipment to tour with id %d", tourId))
+		return fmt.Errorf(fmt.Sprintf("failed to add equipment to tour with id %s", tourId))
 	}
 	return nil
 }
@@ -170,7 +145,7 @@ func (service *TourService) AddEquipment(tourId string, equipmentId string) erro
 func (service *TourService) DeleteEquipment(tourId string, equipmentId string) error {
 	err := service.TourRepository.DeleteEquipment(tourId, equipmentId)
 	if err != nil {
-		return fmt.Errorf(fmt.Sprintf("failed to delete equipment from tour with id %d", tourId))
+		return fmt.Errorf(fmt.Sprintf("failed to delete equipment from tour with id %s", tourId))
 	}
 	return nil
 }

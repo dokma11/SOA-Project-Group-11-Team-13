@@ -47,15 +47,16 @@ type Tour struct {
 	Durations   []TourDuration `json:"Durations" gorm:"type:jsonb"`
 }
 
-func NewTour(authorID int, name, description string, tags []string, difficulty int, archiveDate,
+func NewTour(id int64, authorID int, name string, description string, tags pq.StringArray, difficulty int, archiveDate time.Time,
 	publishDate time.Time, distance float64, status TourStatus, price float64, category TourCategory,
-	isDeleted bool) (*Tour, error) {
+	isDeleted bool, keyPoints []KeyPoint, durations []TourDuration) (*Tour, error) {
 
 	if tags == nil {
 		tags = []string{}
 	}
 
 	tour := &Tour{
+		ID:          id,
 		AuthorId:    authorID,
 		Name:        name,
 		Description: description,
@@ -68,6 +69,8 @@ func NewTour(authorID int, name, description string, tags []string, difficulty i
 		ArchiveDate: archiveDate,
 		Category:    category,
 		IsDeleted:   isDeleted,
+		KeyPoints:   keyPoints,
+		Durations:   durations,
 	}
 
 	if err := tour.Validate(); err != nil {
