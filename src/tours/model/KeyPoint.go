@@ -16,9 +16,11 @@ type KeyPoint struct {
 	Latitude        float64 `json:"Latitude"`
 	LocationAddress string  `json:"LocationAddress"`
 	ImagePath       string  `json:"ImagePath"`
+	Order           int64   `json:"Order"`
 }
 
-func NewKeyPoint(tourId int64, name, description, locationAddress, imagePath string, longitude, latitude float64) (*KeyPoint, error) {
+func NewKeyPoint(tourId int64, name, description, locationAddress, imagePath string, longitude, latitude float64,
+	order int64) (*KeyPoint, error) {
 	keyPoint := &KeyPoint{
 		TourId:          tourId,
 		Name:            name,
@@ -27,6 +29,7 @@ func NewKeyPoint(tourId int64, name, description, locationAddress, imagePath str
 		Latitude:        latitude,
 		LocationAddress: locationAddress,
 		ImagePath:       imagePath,
+		Order:           order,
 	}
 
 	if err := keyPoint.Validate(); err != nil {
@@ -55,6 +58,9 @@ func (keyPoint *KeyPoint) Validate() error {
 	if keyPoint.ImagePath == "" {
 		return errors.New("invalid Image Path. ImagePath cannot be empty")
 	}
+	if keyPoint.Order < 0 {
+		return errors.New("invalid Order. Order cannot be negative")
+	}
 
 	return nil
 }
@@ -72,7 +78,7 @@ func (keyPoint *KeyPoint) BeforeCreate(scope *gorm.DB) error {
 
 func (keyPoint *KeyPoint) String() string {
 	return fmt.Sprintf("KeyPoint{ID: %d, TourId: %d, Name: %s, Description: %s, "+
-		"Longitude: %f, Latitude: %f, LocationAddress: %s, ImagePath: %s}",
+		"Longitude: %f, Latitude: %f, LocationAddress: %s, ImagePath: %s, Order: %d}",
 		keyPoint.ID, keyPoint.TourId, keyPoint.Name, keyPoint.Description, keyPoint.Longitude,
-		keyPoint.Latitude, keyPoint.LocationAddress, keyPoint.ImagePath)
+		keyPoint.Latitude, keyPoint.LocationAddress, keyPoint.ImagePath, keyPoint.Order)
 }
