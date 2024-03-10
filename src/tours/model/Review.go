@@ -9,10 +9,10 @@ import (
 type Review struct {
 	gorm.Model
 	ID            int64     `json:"id"`
-	Rating        int       `json:"rating"`
-	Comment       string    `json:"comment"`
-	TouristId     int       `json:"touristId"`
-	TourId        int64     `json:"tourId"`
+	Rating        int       `json:"rating" gorm:"not null;type:int"`
+	Comment       string    `json:"comment" gorm:"not null;type:string"`
+	TouristId     int       `json:"touristId" gorm:"not null;type:int"`
+	TourId        int64     `json:"tourId" gorm:"not null;type:int64"`
 	TourVisitDate time.Time `json:"tourVisitDate"`
 	CommentDate   time.Time `json:"commentDate"`
 	Images        []string  `json:"images" gorm:"type:varchar(255)[]"`
@@ -44,13 +44,19 @@ func NewReview(rating int, comment string, touristId int, tourId int64, images [
 
 func (review *Review) Validate() error {
 	if review.Rating < 1 && review.Rating > 5 {
-		return errors.New("invalid Rating")
+		return errors.New("invalid Rating. Rating's value range is from 1 to 5")
 	}
 	if review.Comment == "" {
-		return errors.New("invalid Comment")
+		return errors.New("invalid Comment. Comment cannot be empty")
 	}
 	if len(review.Images) < 1 {
-		return errors.New("invalid Images")
+		return errors.New("invalid Images. Images cannot be empty")
+	}
+	if review.TourVisitDate.IsZero() {
+		return errors.New("invalid Tour Visit Date. Tour Visit Date cannot be empty")
+	}
+	if review.CommentDate.IsZero() {
+		return errors.New("invalid Comment Date. Comment Date cannot be empty")
 	}
 	return nil
 }

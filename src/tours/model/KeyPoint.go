@@ -36,14 +36,11 @@ func NewKeyPoint(tourId int64, name, description, locationAddress, imagePath str
 }
 
 func (keyPoint *KeyPoint) Validate() error {
-	/*if keyPoint.TourId == 0 {
-		return errors.New("invalid TourId")
-	}*/
 	if keyPoint.Name == "" {
-		return errors.New("invalid Name")
+		return errors.New("invalid Name. Name cannot be empty")
 	}
 	if keyPoint.Description == "" {
-		return errors.New("invalid Description")
+		return errors.New("invalid Description. Description cannot be empty")
 	}
 	if keyPoint.Longitude < -180 || keyPoint.Longitude > 180 {
 		return errors.New("invalid Longitude")
@@ -52,10 +49,10 @@ func (keyPoint *KeyPoint) Validate() error {
 		return errors.New("invalid Latitude")
 	}
 	if keyPoint.LocationAddress == "" {
-		return errors.New("invalid Location Address")
+		return errors.New("invalid Location Address. Location Address cannot be empty")
 	}
 	if keyPoint.ImagePath == "" {
-		return errors.New("invalid ImagePath")
+		return errors.New("invalid Image Path. ImagePath cannot be empty")
 	}
 
 	return nil

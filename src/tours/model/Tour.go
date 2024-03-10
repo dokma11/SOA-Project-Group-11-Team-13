@@ -1,9 +1,7 @@
 package model
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"time"
@@ -94,6 +92,15 @@ func (tour *Tour) Validate() error {
 	if tour.Price < 0 {
 		return errors.New("price cannot be negative")
 	}
+	if tour.Distance < 0 {
+		return errors.New("distance cannot be negative")
+	}
+	if tour.Category < 0 || tour.Category > 3 {
+		return errors.New("invalid Category")
+	}
+	if tour.Status < 0 || tour.Status > 3 {
+		return errors.New("invalid Status")
+	}
 
 	return nil
 }
@@ -112,20 +119,4 @@ func (tour *Tour) BeforeCreate(scope *gorm.DB) error {
 	tour.KeyPoints = []KeyPoint{}
 	tour.Reviews = []Review{}
 	return nil
-}
-
-func (td *TourDuration) Scan(value interface{}) error {
-
-	println("Usao u scan taj srta vec")
-
-	if value == nil {
-		return nil
-	}
-
-	bytes, ok := value.([]byte)
-	if !ok {
-		return fmt.Errorf("Scan source is not []byte")
-	}
-
-	return json.Unmarshal(bytes, td)
 }

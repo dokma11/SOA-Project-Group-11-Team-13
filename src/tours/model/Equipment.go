@@ -8,8 +8,8 @@ import (
 type Equipment struct {
 	gorm.Model
 	ID          int64  `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name        string `json:"name" gorm:"not null;type:string"`
+	Description string `json:"description" gorm:"not null;type:string"`
 	Tours       []Tour `gorm:"many2many:tour_equipment;"`
 }
 
@@ -28,10 +28,10 @@ func NewEquipment(name string, description string) (*Equipment, error) {
 
 func (equipment *Equipment) Validate() error {
 	if equipment.Name == "" {
-		return errors.New("invalid Equipment Name")
+		return errors.New("invalid Name. Name cannot be empty")
 	}
 	if equipment.Description == "" {
-		return errors.New("invalid Equipment Description")
+		return errors.New("invalid Description. Description cannot be empty")
 	}
 	return nil
 }

@@ -32,39 +32,10 @@ func NewTourDuration(duration int, transportType TransportType) (*TourDuration, 
 
 func (tourDuration *TourDuration) Validate() error {
 	if tourDuration.Duration < 0 {
-		return errors.New("invalid Duration")
+		return errors.New("invalid Duration. Duration cannot be empty")
 	}
-
-	/*
-		if tourDuration.TransportType == "" {
-			return errors.New("invalid Transport type")
-		}
-	*/
+	if tourDuration.TransportType < 0 || tourDuration.TransportType > 2 {
+		return errors.New("invalid Transport Type. Transport Type's value must be in range of 0 to 2")
+	}
 	return nil
 }
-
-/*
-func (tourDuration TourDuration) Value() (driver.Value, error) {
-	return json.Marshal(tourDuration)
-}
-
-func (tourDuration *TourDuration) Scan(src interface{}) error {
-	switch v := src.(type) {
-	case []byte:
-		return json.Unmarshal(v, tourDuration)
-	case string:
-		return json.Unmarshal([]byte(v), tourDuration)
-	default:
-		return errors.New(fmt.Sprintf("Unsupported type: %T", v))
-	}
-}
-*/
-/*
-func (td TourDuration) Value() (driver.Value, error) {
-	return json.Marshal(td)
-}
-
-func (td *TourDuration) Scan(value interface{}) error {
-	return json.Unmarshal(value.([]byte), td)
-}
-*/
