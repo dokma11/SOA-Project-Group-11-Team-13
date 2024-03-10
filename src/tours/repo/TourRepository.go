@@ -107,13 +107,30 @@ func (repo *TourRepository) Create(tour *model.Tour) error {
 }
 
 func (repo *TourRepository) Delete(id string) error {
-	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.Tour{})
+	// Retrieve the tour with its key points
+	var tour model.Tour
+	result := repo.DatabaseConnection.Preload("KeyPoints").Where("id = ?", id).Omit("Durations").First(&tour)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// Delete the tour
+	dbResult := repo.DatabaseConnection.Delete(&tour)
 	if dbResult.Error != nil {
 		return dbResult.Error
 	}
 	if dbResult.RowsAffected == 0 {
 		return errors.New("no tour found for deletion")
 	}
+
+	// Delete the key points associated with the tour
+	for _, keyPoint := range tour.KeyPoints {
+		dbResult := repo.DatabaseConnection.Delete(&keyPoint)
+		if dbResult.Error != nil {
+			return dbResult.Error
+		}
+	}
+
 	return nil
 }
 
@@ -123,11 +140,14 @@ func (repo *TourRepository) Update(tour *model.Tour) error {
 		Omit("Durations").
 		Updates(tour)
 	if dbResult.Error != nil {
+		println("DESIO EROR U UPDATE REPO")
 		return dbResult.Error
 	}
 	if dbResult.RowsAffected == 0 {
+		println("DESIO EROR U UPDATE REPO")
 		return errors.New("no tour found for update")
 	}
+	println("IZVRSIO UPDATE U REPO")
 	return nil
 }
 
