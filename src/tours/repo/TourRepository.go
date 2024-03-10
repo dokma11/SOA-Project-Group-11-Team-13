@@ -79,7 +79,7 @@ func (repo *TourRepository) GetPublished() ([]dto.TourResponseDto, error) {
 	dbResult := repo.DatabaseConnection.
 		Table("tours").
 		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
-		Where("status = ?", "Published").
+		Where("status = ?", int64(model.Published)).
 		Preload("KeyPoints").
 		Find(&tours)
 	if dbResult.Error != nil {
