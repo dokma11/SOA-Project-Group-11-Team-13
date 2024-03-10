@@ -46,11 +46,17 @@ func initDB() *gorm.DB {
 		return nil
 	}
 
+	err = database.AutoMigrate(&model.Facility{})
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("facility auto migrations failed"))
+		return nil
+	}
+
 	return database
 }
 
 func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler,
-	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler) {
+	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler, facilityHandler *handler.FacilityHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
@@ -85,6 +91,12 @@ func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyP
 	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.AddEquipment).Methods("POST")
 	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.DeleteEquipment).Methods("DELETE")
 
+	router.HandleFunc("/facilities", facilityHandler.Create).Methods("POST")
+	router.HandleFunc("/facilities", facilityHandler.GetAll).Methods("GET")
+	router.HandleFunc("/facilities/author/{authorId}", facilityHandler.GetAllByAuthorId).Methods("GET")
+	router.HandleFunc("/facilities/{id}", facilityHandler.Delete).Methods("DELETE")
+	router.HandleFunc("/facilities", facilityHandler.Update).Methods("PUT")
+
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
 	log.Fatal(http.ListenAndServe(":8081", router))
@@ -113,5 +125,9 @@ func main() {
 	equipmentService := &service.EquipmentService{EquipmentRepository: equipmentRepository}
 	equipmentHandler := &handler.EquipmentHandler{EquipmentService: equipmentService}
 
-	startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler)
+	facilityRepository := &repo.FacilityRepository{DatabaseConnection: database}
+	facilityService := &service.FacilityService{FacilityRepository: facilityRepository}
+	facilityHandler := &handler.FacilityHandler{FacilityService: facilityService}
+
+	startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler, facilityHandler)
 }
