@@ -29,6 +29,25 @@ func (service *ReviewService) GetAll() (*[]model.Review, error) {
 func (service *ReviewService) Create(review *model.Review) error {
 	err := service.ReviewRepository.Create(review)
 	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no reviews were created"))
+		return err
+	}
+	return nil
+}
+
+func (service *ReviewService) Delete(id string) error {
+	err := service.ReviewRepository.Delete(id)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no reviews were deleted"))
+		return err
+	}
+	return nil
+}
+
+func (service *ReviewService) Update(review *model.Review) error {
+	err := service.ReviewRepository.Update(review)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no reviews were updated"))
 		return err
 	}
 	return nil

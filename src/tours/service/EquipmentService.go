@@ -29,6 +29,7 @@ func (service *EquipmentService) GetAll() (*[]model.Equipment, error) {
 func (service *EquipmentService) Create(equipment *model.Equipment) error {
 	err := service.EquipmentRepository.Create(equipment)
 	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no equipment was created"))
 		return err
 	}
 	return nil

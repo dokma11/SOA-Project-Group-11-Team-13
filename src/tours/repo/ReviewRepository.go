@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	"gorm.io/gorm"
 	"tours/model"
 )
@@ -33,5 +34,27 @@ func (repo *ReviewRepository) Create(review *model.Review) error {
 		return dbResult.Error
 	}
 	println("Rows affected: ", dbResult.RowsAffected)
+	return nil
+}
+
+func (repo *ReviewRepository) Delete(id string) error {
+	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.Review{})
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no review found for deletion")
+	}
+	return nil
+}
+
+func (repo *ReviewRepository) Update(review *model.Review) error {
+	dbResult := repo.DatabaseConnection.Model(&model.Review{}).Where("id = ?", review.ID).Updates(review)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no review found for update")
+	}
 	return nil
 }

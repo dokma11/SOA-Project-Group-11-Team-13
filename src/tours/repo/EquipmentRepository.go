@@ -1,8 +1,9 @@
 package repo
 
 import (
-	"gorm.io/gorm"
 	"tours/model"
+
+	"gorm.io/gorm"
 )
 
 type EquipmentRepository struct {
@@ -12,7 +13,7 @@ type EquipmentRepository struct {
 func (repo *EquipmentRepository) GetById(id string) (model.Equipment, error) {
 	equipment := model.Equipment{}
 	dbResult := repo.DatabaseConnection.First(&equipment, "id = ?", id)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return equipment, dbResult.Error
 	}
 	return equipment, nil
@@ -21,7 +22,7 @@ func (repo *EquipmentRepository) GetById(id string) (model.Equipment, error) {
 func (repo *EquipmentRepository) GetAll() ([]model.Equipment, error) {
 	var equipment []model.Equipment
 	dbResult := repo.DatabaseConnection.Find(&equipment)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return equipment, nil

@@ -2,19 +2,20 @@ package model
 
 import (
 	"errors"
+	"fmt"
 )
 
-type TransportType string
+type TransportType int
 
 const (
-	Walking TransportType = "Walking"
-	Bicycle TransportType = "Bicycle"
-	Car     TransportType = "Car"
+	Walking TransportType = iota
+	Bicycle
+	Car
 )
 
 type TourDuration struct {
-	Duration      int           `json:"duration"`
-	TransportType TransportType `json:"transportType"`
+	Duration      int           `json:"Duration"`
+	TransportType TransportType `json:"TransportType"`
 }
 
 func NewTourDuration(duration int, transportType TransportType) (*TourDuration, error) {
@@ -32,11 +33,15 @@ func NewTourDuration(duration int, transportType TransportType) (*TourDuration, 
 
 func (tourDuration *TourDuration) Validate() error {
 	if tourDuration.Duration < 0 {
-		return errors.New("invalid Duration")
+		return errors.New("invalid Duration. Duration cannot be empty")
 	}
-	if tourDuration.TransportType == "" {
-		return errors.New("invalid Transport type")
+	if tourDuration.TransportType < 0 || tourDuration.TransportType > 2 {
+		return errors.New("invalid Transport Type. Transport Type's value must be in range of 0 to 2")
 	}
-
 	return nil
+}
+
+func (tourDuration *TourDuration) String() string {
+	return fmt.Sprintf("TourDuration{Duration: %d, TransportType: %d}",
+		tourDuration.Duration, tourDuration.TransportType)
 }
