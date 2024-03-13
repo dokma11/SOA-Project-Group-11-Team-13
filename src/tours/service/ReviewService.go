@@ -38,7 +38,7 @@ func (service *ReviewService) Create(review *model.Review) error {
 func (service *ReviewService) Delete(id string) error {
 	err := service.ReviewRepository.Delete(id)
 	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("no keypoints were deleted"))
+		_ = fmt.Errorf(fmt.Sprintf("no reviews were deleted"))
 		return err
 	}
 	return nil
@@ -47,7 +47,7 @@ func (service *ReviewService) Delete(id string) error {
 func (service *ReviewService) Update(review *model.Review) error {
 	err := service.ReviewRepository.Update(review)
 	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("no keypoints were updated"))
+		_ = fmt.Errorf(fmt.Sprintf("no reviews were updated"))
 		return err
 	}
 	return nil
