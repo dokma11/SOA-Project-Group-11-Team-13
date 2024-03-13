@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 	"tours/dto"
 	"tours/model"
@@ -17,7 +18,12 @@ func (service *TourService) GetById(id string) (*dto.TourResponseDto, error) {
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("menu item with id %s not found", id))
 	}
-	return &tour, nil
+	if tourDto, err := service.MapToDto(&tour, &dto.TourResponseDto{}); err == nil {
+		return tourDto, nil
+	} else {
+		fmt.Println("Error mapping tour to DTO:", err)
+		return nil, err
+	}
 }
 
 func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseDto, error) {
@@ -25,7 +31,17 @@ func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseD
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))
 	}
-	return &tours, nil
+
+	var tourDtos []dto.TourResponseDto
+	for _, tour := range tours {
+		if tourDto, err := service.MapToDto(&tour, &dto.TourResponseDto{}); err == nil {
+			tourDtos = append(tourDtos, *tourDto)
+		} else {
+			fmt.Println("Error mapping tour to DTO:", err)
+		}
+	}
+
+	return &tourDtos, nil
 }
 
 func (service *TourService) GetAll() (*[]dto.TourResponseDto, error) {
@@ -33,7 +49,17 @@ func (service *TourService) GetAll() (*[]dto.TourResponseDto, error) {
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("no tours were found"))
 	}
-	return &tours, nil
+
+	var tourDtos []dto.TourResponseDto
+	for _, tour := range tours {
+		if tourDto, err := service.MapToDto(&tour, &dto.TourResponseDto{}); err == nil {
+			tourDtos = append(tourDtos, *tourDto)
+		} else {
+			fmt.Println("Error mapping tour to DTO:", err)
+		}
+	}
+
+	return &tourDtos, nil
 }
 
 func (service *TourService) GetPublished() (*[]dto.TourResponseDto, error) {
@@ -41,7 +67,17 @@ func (service *TourService) GetPublished() (*[]dto.TourResponseDto, error) {
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("no published tours were found"))
 	}
-	return &tours, nil
+
+	var tourDtos []dto.TourResponseDto
+	for _, tour := range tours {
+		if tourDto, err := service.MapToDto(&tour, &dto.TourResponseDto{}); err == nil {
+			tourDtos = append(tourDtos, *tourDto)
+		} else {
+			fmt.Println("Error mapping tour to DTO:", err)
+		}
+	}
+
+	return &tourDtos, nil
 }
 
 func (service *TourService) Create(tour *model.Tour) error {
@@ -83,10 +119,10 @@ func (service *TourService) AddDurations(tour *model.Tour) error {
 func (service *TourService) Publish(id string) error {
 	tourDto, _ := service.TourRepository.GetById(id)
 
-	if tourDto.Status != dto.Published {
+	if tourDto.Status != model.Published {
 		tour, err := model.NewTour(tourDto.ID, tourDto.AuthorId, tourDto.Name, tourDto.Description, tourDto.Tags,
 			tourDto.Difficulty, tourDto.ArchiveDate, time.Now().Local().Add(time.Hour), tourDto.Distance, model.Published,
-			tourDto.Price, model.TourCategory(tourDto.Category), tourDto.IsDeleted, tourDto.KeyPoints, tourDto.Durations)
+			tourDto.Price, tourDto.Category, tourDto.IsDeleted, tourDto.KeyPoints, tourDto.Durations)
 		if err != nil {
 			return err
 		}
@@ -106,10 +142,10 @@ func (service *TourService) Publish(id string) error {
 func (service *TourService) Archive(id string) error {
 	tourDto, _ := service.TourRepository.GetById(id)
 
-	if tourDto.Status == dto.Published {
+	if tourDto.Status == model.Published {
 		tour, err := model.NewTour(tourDto.ID, tourDto.AuthorId, tourDto.Name, tourDto.Description, tourDto.Tags,
 			tourDto.Difficulty, time.Now().Local().Add(time.Hour), tourDto.PublishDate, tourDto.Distance, model.Archived,
-			tourDto.Price, model.TourCategory(tourDto.Category), tourDto.IsDeleted, tourDto.KeyPoints, tourDto.Durations)
+			tourDto.Price, tourDto.Category, tourDto.IsDeleted, tourDto.KeyPoints, tourDto.Durations)
 		if err != nil {
 			return err
 		}
@@ -148,4 +184,32 @@ func (service *TourService) DeleteEquipment(tourId string, equipmentId string) e
 		return fmt.Errorf(fmt.Sprintf("failed to delete equipment from tour with id %s", tourId))
 	}
 	return nil
+}
+
+func (service *TourService) MapToDto(tour *model.Tour, tourDto *dto.TourResponseDto) (*dto.TourResponseDto, error) {
+	var durations, err = service.TourRepository.GetDurations(strconv.FormatInt(tour.ID, 10))
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("failed to obtain durations while mapping to dto"))
+	}
+
+	tourDto = &dto.TourResponseDto{
+		AverageRating: 0.0,
+		Tags:          tour.Tags,
+		KeyPoints:     tour.KeyPoints,
+		Status:        dto.TourStatus(tour.Status),
+		Name:          tour.Name,
+		Description:   tour.Description,
+		ID:            tour.ID,
+		AuthorId:      tour.AuthorId,
+		Durations:     durations,
+		PublishDate:   tour.PublishDate,
+		ArchiveDate:   tour.ArchiveDate,
+		Category:      dto.TourCategory(tour.Category),
+		IsDeleted:     tour.IsDeleted,
+		Price:         tour.Price,
+		Distance:      tour.Distance,
+		Difficulty:    tour.Difficulty,
+	}
+
+	return tourDto, nil
 }

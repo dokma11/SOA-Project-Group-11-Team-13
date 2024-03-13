@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"tours/dto"
 	"tours/model"
 
 	"gorm.io/gorm"
@@ -14,87 +13,52 @@ type TourRepository struct {
 	DatabaseConnection *gorm.DB
 }
 
-func (repo *TourRepository) GetById(id string) (dto.TourResponseDto, error) {
+func (repo *TourRepository) GetById(id string) (model.Tour, error) {
 	var tour model.Tour
-	var tourDto dto.TourResponseDto
-
 	dbResult := repo.DatabaseConnection.
-		Table("tours").
-		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
-		Where("id = ?", id).
 		Preload("KeyPoints").
+		Where("id = ?", id).
+		Omit("Durations").
 		First(&tour)
 	if dbResult.Error != nil {
-		return tourDto, dbResult.Error
+		return tour, dbResult.Error
 	}
-
-	returnValue, _ := MapToDto(repo, &tour, &tourDto)
-	return *returnValue, nil
+	return tour, nil
 }
 
-func (repo *TourRepository) GetByAuthorId(authorId string) ([]dto.TourResponseDto, error) {
+func (repo *TourRepository) GetByAuthorId(authorId string) ([]model.Tour, error) {
 	var tours []model.Tour
-
 	dbResult := repo.DatabaseConnection.
-		Table("tours").
-		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
-		Where("author_id = ?", authorId).
 		Preload("KeyPoints").
+		Where("author_id = ?", authorId).
+		Omit("Durations").
 		Find(&tours)
 	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
-
-	var tourDtos []dto.TourResponseDto
-
-	for _, tour := range tours {
-		var tourDto dto.TourResponseDto
-		responseValue, _ := MapToDto(repo, &tour, &tourDto)
-		tourDtos = append(tourDtos, *responseValue)
-	}
-
-	return tourDtos, nil
+	return tours, nil
 }
 
-func (repo *TourRepository) GetAll() ([]dto.TourResponseDto, error) {
+func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.Preload("KeyPoints").Find(&tours)
 	if dbResult != nil {
 		return nil, dbResult.Error
 	}
-
-	var tourDtos []dto.TourResponseDto
-
-	for _, tour := range tours {
-		var tourDto dto.TourResponseDto
-		responseValue, _ := MapToDto(repo, &tour, &tourDto)
-		tourDtos = append(tourDtos, *responseValue)
-	}
-
-	return tourDtos, nil
+	return tours, nil
 }
 
-func (repo *TourRepository) GetPublished() ([]dto.TourResponseDto, error) {
+func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
-		Table("tours").
-		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
-		Where("status = ?", int64(model.Published)).
 		Preload("KeyPoints").
+		Where("status = ?", int64(model.Published)).
+		Omit("Durations").
 		Find(&tours)
 	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
-
-	var tourDtos []dto.TourResponseDto
-
-	for _, tour := range tours {
-		var tourDto dto.TourResponseDto
-		responseValue, _ := MapToDto(repo, &tour, &tourDto)
-		tourDtos = append(tourDtos, *responseValue)
-	}
-
-	return tourDtos, nil
+	return tours, nil
 }
 
 func (repo *TourRepository) Create(tour *model.Tour) error {
@@ -108,7 +72,8 @@ func (repo *TourRepository) Create(tour *model.Tour) error {
 
 func (repo *TourRepository) Delete(id string) error {
 	var tour model.Tour
-	result := repo.DatabaseConnection.Preload("KeyPoints").
+	result := repo.DatabaseConnection.
+		Preload("KeyPoints").
 		Where("id = ?", id).
 		Omit("Durations").
 		First(&tour)
@@ -173,10 +138,9 @@ func (repo *TourRepository) GetEquipment(tourId string) ([]model.Equipment, erro
 	var tour model.Tour
 
 	dbResult := repo.DatabaseConnection.
-		Table("tours").
-		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
-		Where("id = ?", tourId).
 		Preload("Equipment").
+		Where("id = ?", tourId).
+		Omit("Durations").
 		First(&tour)
 
 	if dbResult.Error != nil {
@@ -191,9 +155,8 @@ func (repo *TourRepository) AddEquipment(tourId string, equipmentId string) erro
 	var equipment model.Equipment
 
 	dbResult := repo.DatabaseConnection.
-		Table("tours").
-		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
 		Where("id = ?", tourId).
+		Omit("Durations").
 		First(&tour)
 
 	if err := repo.DatabaseConnection.First(&equipment, "id = ?", equipmentId).Error; err != nil {
@@ -215,9 +178,8 @@ func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) e
 	var equipment model.Equipment
 
 	dbResult := repo.DatabaseConnection.
-		Table("tours").
-		Select("id, tags, status, name, description, publish_date, archive_date, category, is_deleted, price, distance, difficulty, author_id").
 		Where("id = ?", tourId).
+		Omit("Durations").
 		First(&tour)
 
 	if err := repo.DatabaseConnection.First(&equipment, "id = ?", equipmentId).Error; err != nil {
@@ -232,7 +194,10 @@ func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) e
 	}
 	tour.Equipment = updatedEquipment
 
-	repo.DatabaseConnection.Model(&tour).Association("Equipment").Delete(&equipment)
+	err := repo.DatabaseConnection.Model(&tour).Association("Equipment").Delete(&equipment)
+	if err != nil {
+		return errors.New("error while deleting tours equipment")
+	}
 
 	dbResult = repo.DatabaseConnection.Save(&tour)
 	if dbResult.Error != nil {
@@ -242,19 +207,14 @@ func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) e
 	return nil
 }
 
-func MapToDto(repo *TourRepository, tour *model.Tour, tourDto *dto.TourResponseDto) (*dto.TourResponseDto, error) {
-	tourDto.AverageRating = 0.0
-	tourDto.Tags = tour.Tags
-	tourDto.KeyPoints = tour.KeyPoints
-	tourDto.Status = dto.TourStatus(tour.Status)
-	tourDto.Name = tour.Name
-	tourDto.Description = tour.Description
-	tourDto.ID = tour.ID
-
+func (repo *TourRepository) GetDurations(id string) ([]model.TourDuration, error) {
 	var durationsJSON []byte
-	if err := repo.DatabaseConnection.Raw("SELECT durations FROM tours WHERE id = ?", tour.ID).Row().Scan(&durationsJSON); err != nil {
+	if err := repo.DatabaseConnection.
+		Raw("SELECT durations FROM tours WHERE id = ?", id).
+		Row().
+		Scan(&durationsJSON); err != nil {
 		fmt.Println(fmt.Sprintf("Error: Couldn't get tours durations"))
-		return tourDto, err
+		return nil, err
 	}
 
 	var durations []model.TourDuration
@@ -262,19 +222,9 @@ func MapToDto(repo *TourRepository, tour *model.Tour, tourDto *dto.TourResponseD
 	if len(durationsJSON) > 0 {
 		if err := json.Unmarshal(durationsJSON, &durations); err != nil {
 			fmt.Println(fmt.Sprintf("Error: Couldn't unmarshal tours durations"))
-			return tourDto, err
+			return nil, err
 		}
 	}
 
-	tourDto.Durations = durations
-	tourDto.PublishDate = tour.PublishDate
-	tourDto.ArchiveDate = tour.ArchiveDate
-	tourDto.Category = dto.TourCategory(tour.Category)
-	tourDto.IsDeleted = tour.IsDeleted
-	tourDto.Price = tour.Price
-	tourDto.Distance = tour.Distance
-	tourDto.Difficulty = tour.Difficulty
-	tourDto.AuthorId = tour.AuthorId
-
-	return tourDto, nil
+	return durations, nil
 }
