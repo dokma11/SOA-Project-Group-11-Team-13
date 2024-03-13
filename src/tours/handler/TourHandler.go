@@ -27,6 +27,7 @@ func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Reques
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(tour)
 	if err != nil {
@@ -36,16 +37,17 @@ func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Reques
 }
 
 func (handler *TourHandler) GetByAuthorId(writer http.ResponseWriter, req *http.Request) {
-	authorIdString := mux.Vars(req)["authorId"]
-	log.Printf("Tour with author id %s", authorIdString)
+	authorId := mux.Vars(req)["authorId"]
+	log.Printf("Tour with author id %s", authorId)
 
-	tour, err := handler.TourService.GetByAuthorId(authorIdString)
+	tour, err := handler.TourService.GetByAuthorId(authorId)
 
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(tour)
 	if err != nil {
@@ -55,12 +57,14 @@ func (handler *TourHandler) GetByAuthorId(writer http.ResponseWriter, req *http.
 }
 
 func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Get all tours")
 	tours, err := handler.TourService.GetAll()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(tours)
 	if err != nil {
@@ -70,12 +74,14 @@ func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request
 }
 
 func (handler *TourHandler) GetPublished(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Get published tours")
 	tours, err := handler.TourService.GetPublished()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(tours)
 	if err != nil {
@@ -85,6 +91,7 @@ func (handler *TourHandler) GetPublished(writer http.ResponseWriter, req *http.R
 }
 
 func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Create a tour")
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		fmt.Println("Error reading request body:", err)
@@ -114,10 +121,10 @@ func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request
 }
 
 func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", idString)
+	id := mux.Vars(req)["id"]
+	log.Printf("Tour with id %s", id)
 
-	tour := handler.TourService.Delete(idString)
+	tour := handler.TourService.Delete(id)
 
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
@@ -129,6 +136,7 @@ func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request
 }
 
 func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Update a tour")
 	var tour model.Tour
 	err := json.NewDecoder(req.Body).Decode(&tour)
 	if err != nil {
@@ -149,6 +157,7 @@ func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request
 }
 
 func (handler *TourHandler) AddDurations(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Add durations to a tour")
 	var tour model.Tour
 	err := json.NewDecoder(req.Body).Decode(&tour)
 	if err != nil {
@@ -169,10 +178,10 @@ func (handler *TourHandler) AddDurations(writer http.ResponseWriter, req *http.R
 }
 
 func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Publish tour with id %s", idString)
+	id := mux.Vars(req)["id"]
+	log.Printf("Publish tour with id %s", id)
 
-	tour := handler.TourService.Publish(idString)
+	tour := handler.TourService.Publish(id)
 
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
@@ -183,10 +192,10 @@ func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Reques
 	}
 }
 func (handler *TourHandler) Archive(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", idString)
+	id := mux.Vars(req)["id"]
+	log.Printf("Tour with id %s", id)
 
-	tour := handler.TourService.Archive(idString)
+	tour := handler.TourService.Archive(id)
 
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
@@ -208,6 +217,7 @@ func (handler *TourHandler) GetEquipment(writer http.ResponseWriter, req *http.R
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(equipmentList)
 	if err != nil {

@@ -17,7 +17,9 @@ type ReviewHandler struct {
 func (handler *ReviewHandler) GetById(writer http.ResponseWriter, req *http.Request) {
 	id := mux.Vars(req)["id"]
 	log.Printf("Review with id %s", id)
+
 	review, err := handler.ReviewService.GetById(id)
+
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
@@ -38,6 +40,7 @@ func (handler *ReviewHandler) GetAll(writer http.ResponseWriter, req *http.Reque
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(reviews)
 	if err != nil {
@@ -54,7 +57,9 @@ func (handler *ReviewHandler) Create(writer http.ResponseWriter, req *http.Reque
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	err = handler.ReviewService.Create(&review)
+
 	if err != nil {
 		println("Error while creating a new review")
 		writer.WriteHeader(http.StatusExpectationFailed)
@@ -65,10 +70,10 @@ func (handler *ReviewHandler) Create(writer http.ResponseWriter, req *http.Reque
 }
 
 func (handler *ReviewHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Review with id %s", idString)
+	id := mux.Vars(req)["id"]
+	log.Printf("Review with id %s", id)
 
-	review := handler.ReviewService.Delete(idString)
+	review := handler.ReviewService.Delete(id)
 
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
@@ -87,7 +92,9 @@ func (handler *ReviewHandler) Update(writer http.ResponseWriter, req *http.Reque
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	err = handler.ReviewService.Update(&review)
+
 	if err != nil {
 		println("Error while updating review")
 		writer.WriteHeader(http.StatusExpectationFailed)

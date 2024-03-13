@@ -18,12 +18,15 @@ type EquipmentHandler struct {
 func (handler *EquipmentHandler) GetById(writer http.ResponseWriter, req *http.Request) {
 	id := mux.Vars(req)["id"]
 	log.Printf("Equipment with id %s", id)
+
 	equipment, err := handler.EquipmentService.GetById(id)
+
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(equipment)
 	if err != nil {
@@ -33,12 +36,14 @@ func (handler *EquipmentHandler) GetById(writer http.ResponseWriter, req *http.R
 }
 
 func (handler *EquipmentHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Get all equipment")
 	equipment, err := handler.EquipmentService.GetAll()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(equipment)
 	if err != nil {
@@ -48,6 +53,7 @@ func (handler *EquipmentHandler) GetAll(writer http.ResponseWriter, req *http.Re
 }
 
 func (handler *EquipmentHandler) Create(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Create equipment")
 	var equipment model.Equipment
 	err := json.NewDecoder(req.Body).Decode(&equipment)
 	if err != nil {
@@ -55,7 +61,9 @@ func (handler *EquipmentHandler) Create(writer http.ResponseWriter, req *http.Re
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	err = handler.EquipmentService.Create(&equipment)
+
 	if err != nil {
 		println("Error while creating a new equipment")
 		writer.WriteHeader(http.StatusExpectationFailed)

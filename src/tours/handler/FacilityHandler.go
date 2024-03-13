@@ -15,12 +15,14 @@ type FacilityHandler struct {
 }
 
 func (handler *FacilityHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Get all facilities")
 	facilities, err := handler.FacilityService.GetAll()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(facilities)
 	if err != nil {
@@ -32,12 +34,15 @@ func (handler *FacilityHandler) GetAll(writer http.ResponseWriter, req *http.Req
 func (handler *FacilityHandler) GetAllByAuthorId(writer http.ResponseWriter, req *http.Request) {
 	authorId := mux.Vars(req)["authorId"]
 	log.Printf("Facility with author id %s", authorId)
+
 	facilities, err := handler.FacilityService.GetAllByAuthorId(authorId)
+
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(facilities)
 	if err != nil {
@@ -47,6 +52,7 @@ func (handler *FacilityHandler) GetAllByAuthorId(writer http.ResponseWriter, req
 }
 
 func (handler *FacilityHandler) Create(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Create a facility")
 	var facility model.Facility
 	err := json.NewDecoder(req.Body).Decode(&facility)
 	if err != nil {
@@ -54,7 +60,9 @@ func (handler *FacilityHandler) Create(writer http.ResponseWriter, req *http.Req
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	err = handler.FacilityService.Create(&facility)
+
 	if err != nil {
 		println("Error while creating a new facility")
 		writer.WriteHeader(http.StatusExpectationFailed)
@@ -80,6 +88,7 @@ func (handler *FacilityHandler) Delete(writer http.ResponseWriter, req *http.Req
 }
 
 func (handler *FacilityHandler) Update(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Update a facility")
 	var facility model.Facility
 	err := json.NewDecoder(req.Body).Decode(&facility)
 	if err != nil {
@@ -89,6 +98,7 @@ func (handler *FacilityHandler) Update(writer http.ResponseWriter, req *http.Req
 	}
 
 	err = handler.FacilityService.Update(&facility)
+
 	if err != nil {
 		println("Error while updating facility")
 		writer.WriteHeader(http.StatusExpectationFailed)
