@@ -7,6 +7,7 @@ import (
 )
 
 type BlogStatus int
+
 const (
 	Draft BlogStatus = iota
 	Published
@@ -24,7 +25,7 @@ type Blog struct {
 	Status BlogStatus
 	AuthorId int
 	ClubId int
-	Comments []Comment
-	Votes []Vote
+	Comments []Comment `gorm:"foreignKey:BlogId"`
+	Votes []Vote `gorm:"foreignKey:BlogId"`
 	// VisibilityPolicy BlogVisibilityPolicy - mozda necemo morati komplikovati
 }

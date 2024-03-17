@@ -1,15 +1,17 @@
+package model
+
+import "gorm.io/gorm"
+
 type VoteType int
 const (
-	Draft BlogStatus = iota
-	Published
-	Closed
-	Active
-	Famous
+	Downvote VoteType = iota
+	Upvote
 )
 
 type Vote struct {
 	gorm.Model
 	ID int
 	UserId int
+	BlogId int
 	Type VoteType
 }

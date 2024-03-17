@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"tours/model"
+	"blogs/model"
 
 	"gorm.io/gorm"
 )
@@ -10,7 +10,7 @@ type StudentRepository struct {
 	DatabaseConnection *gorm.DB
 }
 
-func (repo *StudentRepository) FindById(id string) (model.Student, error) {
+func (repo *StudentRepository) GetById(id string) (model.Student, error) {
 	student := model.Student{}
 	dbResult := repo.DatabaseConnection.First(&student, "id = ?", id)
 	if dbResult != nil {

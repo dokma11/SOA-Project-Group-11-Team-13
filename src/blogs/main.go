@@ -1,12 +1,13 @@
 package main
 
 import (
+	"blogs/handler"
+	"blogs/model"
+	"blogs/repo"
+	"blogs/service"
+	"fmt"
 	"log"
 	"net/http"
-	"tours/handler"
-	"tours/model"
-	"tours/repo"
-	"tours/service"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
@@ -14,38 +15,77 @@ import (
 )
 
 func initDB() *gorm.DB {
-	connectionStr := "host=localhost user=postgres password=super dbname=soa-gorm port=5432 sslmode=disable"
+	connectionStr := "host=localhost user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
 	database, err := gorm.Open(postgres.Open(connectionStr), &gorm.Config{})
 	if err != nil {
 		print(err)
 		return nil
 	}
 
-	database.AutoMigrate(&model.Student{})
-	database.Exec("INSERT INTO students VALUES ('aec7e123-233d-4a09-a289-75308ea5b7e6', 'Marko Markovic', 'Graficki dizajn')")
+	err = database.AutoMigrate(&model.Comment{})
+	if err != nil {
+		_ = fmt.Errorf("comment auto migrations failed")
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.Vote{})
+	if err != nil {
+		_ = fmt.Errorf("vote auto migrations failed")
+		return nil
+	}
+
+	err = database.AutoMigrate(&model.Blog{})
+	if err != nil {
+		_ = fmt.Errorf("blog auto migrations failed")
+		return nil
+	}
+
 	return database
 }
 
-func startServer(handler *handler.StudentHandler) {
+func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.CommentHandler, voteHandler *handler.VoteHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/students/{id}", handler.Get).Methods("GET")
-	router.HandleFunc("/students", handler.Create).Methods("POST")
+	initializeBlogRoutes(router, blogHandler)
+	initializeCommentRoutes(router, commentHandler)
+	initializeVoteRoutes(router, voteHandler)
 
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 	println("Server starting")
 	log.Fatal(http.ListenAndServe(":8081", router))
+}
+
+func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) {
+	router.HandleFunc("/blogs", blogHandler.GetAll).Methods("GET")
+	router.HandleFunc("/blogs/{id}", blogHandler.GetById).Methods("GET")
+}
+
+func initializeCommentRoutes(router *mux.Router, commentHandler *handler.CommentHandler) {
+	router.HandleFunc("/comments", commentHandler.GetAll).Methods("GET")
+	router.HandleFunc("/comments/{id}", commentHandler.GetById).Methods("GET")
+}
+
+func initializeVoteRoutes(router *mux.Router, blogHandler *handler.VoteHandler) {
+	router.HandleFunc("/votes", blogHandler.GetAll).Methods("GET")
+	router.HandleFunc("/votes/{id}", blogHandler.GetById).Methods("GET")
 }
 
 func main() {
 	database := initDB()
 	if database == nil {
-		print("FAILED TO CONNECT TO DB")
+		println("FAILED TO CONNECT TO DB")
 		return
 	}
-	repo := &repo.StudentRepository{DatabaseConnection: database}
-	service := &service.StudentService{StudentRepo: repo}
-	handler := &handler.StudentHandler{StudentService: service}
+	blogRepository := &repo.BlogRepository{DatabaseConnection: database}
+	commentRepository := &repo.CommentRepository{DatabaseConnection: database}
+	voteRepository := &repo.VoteRepository{DatabaseConnection: database}
 
-	startServer(handler)
+	blogService := &service.BlogService{BlogRepository: blogRepository}
+	commentService := &service.CommentService{CommentRepository: commentRepository}
+	voteService := &service.VoteService{VoteRepository: voteRepository}
+
+	blogHandler := &handler.BlogHandler{BlogService: blogService}
+	commentHandler := &handler.CommentHandler{CommentService: commentService}
+	voteHandler := &handler.VoteHandler{VoteService: voteService}
+
+	startServer(blogHandler, commentHandler, voteHandler)
 }
