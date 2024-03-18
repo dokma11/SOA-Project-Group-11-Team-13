@@ -50,8 +50,10 @@ func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.Comme
 	initializeCommentRoutes(router, commentHandler)
 	initializeVoteRoutes(router, voteHandler)
 
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
+
 	println("Server starting")
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Fatal(http.ListenAndServe(":8082", router))
 }
 
 func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) {
