@@ -1,8 +1,6 @@
 package model
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -21,7 +19,6 @@ type Blog struct {
 	ID int		
 	Title string
 	Description string
-	Date time.Time
 	Status BlogStatus
 	AuthorId int
 	ClubId int
@@ -33,7 +30,7 @@ type Blog struct {
 func (blog *Blog) BeforeCreate(scope *gorm.DB) error {
 	if blog.ID == 0 {
 		var maxID int
-		if err := scope.Table("blog").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
+		if err := scope.Table("blogs").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
 			return err
 		}
 		blog.ID = maxID + 1

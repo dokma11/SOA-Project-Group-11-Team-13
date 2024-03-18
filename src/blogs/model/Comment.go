@@ -19,7 +19,7 @@ type Comment struct {
 func (comment *Comment) BeforeCreate(scope *gorm.DB) error {
 	if comment.ID == 0 {
 		var maxID int
-		if err := scope.Table("comment").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
+		if err := scope.Table("comments").Select("COALESCE(MAX(id), 0)").Row().Scan(&maxID); err != nil {
 			return err
 		}
 		comment.ID = maxID + 1
