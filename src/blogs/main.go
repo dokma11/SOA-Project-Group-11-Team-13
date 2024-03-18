@@ -57,6 +57,7 @@ func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.Comme
 }
 
 func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) {
+	router.HandleFunc("/blogs", blogHandler.Create).Methods("POST")
 	router.HandleFunc("/blogs", blogHandler.GetAll).Methods("GET")
 	router.HandleFunc("/blogs/{id}", blogHandler.GetById).Methods("GET")
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"blogs/model"
 	"blogs/service"
 	"encoding/json"
 	"fmt"
@@ -48,4 +49,23 @@ func (handler *BlogHandler) GetAll(writer http.ResponseWriter, req *http.Request
 		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
 		return
 	}
+}
+
+
+func (handler *BlogHandler) Create(writer http.ResponseWriter, req *http.Request) {
+	var blog model.Blog
+	err := json.NewDecoder(req.Body).Decode(&blog)
+	if err != nil {
+		println("Error while parsing json")
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.BlogService.Create(&blog)
+	if err != nil {
+		println("Error while creating a new blog")
+		writer.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
 }
