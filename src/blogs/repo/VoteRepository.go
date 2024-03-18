@@ -22,7 +22,7 @@ func (repo *VoteRepository) GetById(id string) (model.Vote, error) {
 func (repo *VoteRepository) GetAll() ([]model.Vote, error) {
 	var votes []model.Vote
 	dbResult := repo.DatabaseConnection.Find(&votes)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return votes, nil

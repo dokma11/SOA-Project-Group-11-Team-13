@@ -22,8 +22,17 @@ func (repo *BlogRepository) GetById(id string) (model.Blog, error) {
 func (repo *BlogRepository) GetAll() ([]model.Blog, error) {
 	var blogs []model.Blog
 	dbResult := repo.DatabaseConnection.Find(&blogs)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return blogs, nil
+}
+
+func (repo *BlogRepository) Save(blog *model.Blog) error {
+	dbResult := repo.DatabaseConnection.Create(blog)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	println("Rows affected: ", dbResult.RowsAffected)
+	return nil
 }

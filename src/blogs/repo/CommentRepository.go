@@ -22,7 +22,7 @@ func (repo *CommentRepository) GetById(id string) (model.Comment, error) {
 func (repo *CommentRepository) GetAll() ([]model.Comment, error) {
 	var comments []model.Comment
 	dbResult := repo.DatabaseConnection.Find(&comments)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return comments, nil
