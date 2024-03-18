@@ -21,7 +21,7 @@ func (service *VoteService) GetById(id string) (*model.Vote, error) {
 func (service *VoteService) GetAll() (*[]model.Vote, error) {
 	votes, err := service.VoteRepository.GetAll()
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("no votes were found"))
+		return nil, fmt.Errorf("no votes were found")
 	}
 	return &votes, nil
 }

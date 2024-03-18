@@ -21,7 +21,7 @@ func (service *CommentService) GetById(id string) (*model.Comment, error) {
 func (service *CommentService) GetAll() (*[]model.Comment, error) {
 	comments, err := service.CommentRepository.GetAll()
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("no comments were found"))
+		return nil, fmt.Errorf("no comments were found")
 	}
 	return &comments, nil
 }
