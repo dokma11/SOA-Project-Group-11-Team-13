@@ -60,6 +60,7 @@ func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) 
 	router.HandleFunc("/blogs", blogHandler.Create).Methods("POST")
 	router.HandleFunc("/blogs", blogHandler.GetAll).Methods("GET")
 	router.HandleFunc("/blogs/{id}", blogHandler.GetById).Methods("GET")
+	router.HandleFunc("/blogs/search/{name}", blogHandler.SearchByName).Methods("GET")
 }
 
 func initializeCommentRoutes(router *mux.Router, commentHandler *handler.CommentHandler) {

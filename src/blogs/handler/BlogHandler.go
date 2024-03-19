@@ -36,15 +36,15 @@ func (handler *BlogHandler) GetById(writer http.ResponseWriter, req *http.Reques
 
 func (handler *BlogHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
 	log.Printf("Get all blogs")
-	tours, err := handler.BlogService.GetAll()
+	blogs, err := handler.BlogService.GetAll()
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
-
+	
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tours)
+	err = json.NewEncoder(writer).Encode(blogs)
 	if err != nil {
 		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
 		return
@@ -53,6 +53,7 @@ func (handler *BlogHandler) GetAll(writer http.ResponseWriter, req *http.Request
 
 
 func (handler *BlogHandler) Create(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("Create blog")
 	var blog model.Blog
 	err := json.NewDecoder(req.Body).Decode(&blog)
 	if err != nil {
@@ -68,4 +69,22 @@ func (handler *BlogHandler) Create(writer http.ResponseWriter, req *http.Request
 	}
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *BlogHandler) SearchByName(writer http.ResponseWriter, req *http.Request) {
+	name := mux.Vars(req)["name"]
+	log.Printf("Searching blogs with name " + name)
+	blogs, err := handler.BlogService.SearchByName(name)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(blogs)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
+		return
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"blogs/model"
 	"blogs/repo"
 	"fmt"
+	"strings"
 )
 
 type BlogService struct {
@@ -32,4 +33,18 @@ func (service *BlogService) Create(blog *model.Blog) error {
 		return err
 	}
 	return nil
+}
+
+func (service *BlogService) SearchByName(name string) (*[]model.Blog, error) {
+	blogs, err := service.BlogRepository.GetAll()
+	var filteredBlogs []model.Blog
+	for _, blog := range blogs {
+		if strings.Contains(strings.ToLower(blog.Title), strings.ToLower(name)) {
+			filteredBlogs = append(filteredBlogs, blog)
+		}
+	}
+	if err != nil {
+		return nil, fmt.Errorf("no blogs were found")
+	}
+	return &filteredBlogs, nil
 }
