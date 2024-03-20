@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -69,4 +70,22 @@ func (handler *BlogRecommendationHandler) Create(writer http.ResponseWriter, req
 	}
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *BlogRecommendationHandler) GetByReceiverId(writer http.ResponseWriter, req *http.Request) {
+	receiverId, _ := strconv.Atoi(mux.Vars(req)["receiver"])
+	log.Printf("Searching blog recommendations for user with id " + strconv.FormatInt(int64(receiverId), 10))
+	blogs, err := handler.BlogRecommendationService.GetByReceiverId(receiverId)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(blogs)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
+		return
+	}
 }

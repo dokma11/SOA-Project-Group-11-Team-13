@@ -10,6 +10,7 @@ type BlogRecommendation struct {
 	BlogId int
 	RecommenderId int
 	RecommendationReceiverId int
+	Blog Blog
 }
 
 func (blogRecommendation *BlogRecommendation) BeforeCreate(scope *gorm.DB) error {

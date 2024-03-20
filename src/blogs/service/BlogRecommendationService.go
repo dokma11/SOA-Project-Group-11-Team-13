@@ -33,3 +33,8 @@ func (service *BlogRecommendationService) Create(blogRecommendation *model.BlogR
 	}
 	return nil
 }
+
+func (service *BlogRecommendationService) GetByReceiverId(receiverId int) (*[]model.BlogRecommendation, error) {
+	blogRecommendations, _ := service.BlogRecommendationRepository.GetByReceiverId(receiverId)
+	return &blogRecommendations, nil
+}

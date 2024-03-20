@@ -84,6 +84,7 @@ func initializeBlogRecommendationRoutes(router *mux.Router, blogRecommendationHa
 	router.HandleFunc("/blog-recommendations", blogRecommendationHandler.Create).Methods("POST")
 	router.HandleFunc("/blog-recommendations", blogRecommendationHandler.GetAll).Methods("GET")
 	router.HandleFunc("/blog-recommendations/{id}", blogRecommendationHandler.GetById).Methods("GET")
+	router.HandleFunc("/blog-recommendations/by-receiver/{receiver}", blogRecommendationHandler.GetByReceiverId).Methods("GET")
 }
 
 func main() {
