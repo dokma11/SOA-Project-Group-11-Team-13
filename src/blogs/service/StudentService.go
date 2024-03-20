@@ -1,9 +1,9 @@
 package service
 
 import (
+	"blogs/model"
+	"blogs/repo"
 	"fmt"
-	"tours/model"
-	"tours/repo"
 )
 
 type StudentService struct {
@@ -11,7 +11,7 @@ type StudentService struct {
 }
 
 func (service *StudentService) FindStudent(id string) (*model.Student, error) {
-	student, err := service.StudentRepo.FindById(id)
+	student, err := service.StudentRepo.GetById(id)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("menu item with id %s not found", id))
 	}

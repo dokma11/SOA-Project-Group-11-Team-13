@@ -1,11 +1,11 @@
 package handler
 
 import (
+	"blogs/model"
+	"blogs/service"
 	"encoding/json"
 	"log"
 	"net/http"
-	"tours/model"
-	"tours/service"
 
 	"github.com/gorilla/mux"
 )
