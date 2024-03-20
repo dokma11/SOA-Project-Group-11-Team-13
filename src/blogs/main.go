@@ -22,6 +22,12 @@ func initDB() *gorm.DB {
 		return nil
 	}
 
+	err = database.AutoMigrate(&model.Blog{})
+	if err != nil {
+		_ = fmt.Errorf("blog auto migrations failed")
+		return nil
+	}
+
 	err = database.AutoMigrate(&model.Comment{})
 	if err != nil {
 		_ = fmt.Errorf("comment auto migrations failed")
@@ -34,21 +40,22 @@ func initDB() *gorm.DB {
 		return nil
 	}
 
-	err = database.AutoMigrate(&model.Blog{})
+	err = database.AutoMigrate(&model.BlogRecommendation{})
 	if err != nil {
-		_ = fmt.Errorf("blog auto migrations failed")
+		_ = fmt.Errorf("blog_recommendation auto migrations failed")
 		return nil
 	}
 
 	return database
 }
 
-func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.CommentHandler, voteHandler *handler.VoteHandler) {
+func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.CommentHandler, voteHandler *handler.VoteHandler, blogRecommendationHandler *handler.BlogRecommendationHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	initializeBlogRoutes(router, blogHandler)
 	initializeCommentRoutes(router, commentHandler)
 	initializeVoteRoutes(router, voteHandler)
+	initializeBlogRecommendationRoutes(router, blogRecommendationHandler)
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 
@@ -73,6 +80,12 @@ func initializeVoteRoutes(router *mux.Router, blogHandler *handler.VoteHandler) 
 	router.HandleFunc("/votes/{id}", blogHandler.GetById).Methods("GET")
 }
 
+func initializeBlogRecommendationRoutes(router *mux.Router, blogRecommendationHandler *handler.BlogRecommendationHandler) {
+	router.HandleFunc("/blog-recommendations", blogRecommendationHandler.Create).Methods("POST")
+	router.HandleFunc("/blog-recommendations", blogRecommendationHandler.GetAll).Methods("GET")
+	router.HandleFunc("/blog-recommendations/{id}", blogRecommendationHandler.GetById).Methods("GET")
+}
+
 func main() {
 	database := initDB()
 	if database == nil {
@@ -82,14 +95,17 @@ func main() {
 	blogRepository := &repo.BlogRepository{DatabaseConnection: database}
 	commentRepository := &repo.CommentRepository{DatabaseConnection: database}
 	voteRepository := &repo.VoteRepository{DatabaseConnection: database}
+	blogRecommendationRepository := &repo.BlogRecommendationRepository{DatabaseConnection: database}
 
 	blogService := &service.BlogService{BlogRepository: blogRepository}
 	commentService := &service.CommentService{CommentRepository: commentRepository}
 	voteService := &service.VoteService{VoteRepository: voteRepository}
+	blogRecommendationService := &service.BlogRecommendationService{BlogRecommendationRepository: blogRecommendationRepository}
 
 	blogHandler := &handler.BlogHandler{BlogService: blogService}
 	commentHandler := &handler.CommentHandler{CommentService: commentService}
 	voteHandler := &handler.VoteHandler{VoteService: voteService}
+	blogRecommendationHandler := &handler.BlogRecommendationHandler{BlogRecommendationService: blogRecommendationService}
 
-	startServer(blogHandler, commentHandler, voteHandler)
+	startServer(blogHandler, commentHandler, voteHandler, blogRecommendationHandler)
 }
