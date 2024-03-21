@@ -3,6 +3,7 @@ package model
 import "gorm.io/gorm"
 
 type VoteType int
+
 const (
 	Downvote VoteType = iota
 	Upvote
@@ -10,10 +11,18 @@ const (
 
 type Vote struct {
 	gorm.Model
-	ID int
+	ID     int
 	UserId int
 	BlogId int
-	Type VoteType
+	Type   VoteType
+}
+
+func NewVote(userId, blogId int, voteType VoteType) Vote {
+	return Vote{
+		UserId: userId,
+		BlogId: blogId,
+		Type:   voteType,
+	}
 }
 
 func (vote *Vote) BeforeCreate(scope *gorm.DB) error {
