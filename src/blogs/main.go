@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
@@ -17,7 +16,6 @@ import (
 
 func initDB() *gorm.DB {
 	connectionStr := "host=blogs-database user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
-	time.Sleep(5 * time.Second) // zbog docker-compose mora da se saceka da se pokrene kontejner za bazu
 	database, err := gorm.Open(postgres.Open(connectionStr), &gorm.Config{})
 	if err != nil {
 		print(err)

@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+
+  tours:
+    build: tours/ # sam ce build-ovati prvi put, svaki drugi put ce koristiti postojecu sliku koju je build-ovao
+    image: tours # naziv slike koju build-uje
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - toursdb # pre pokretanja ovog kontejnera treba prvo da se pokrene baza
+
+  blogs:
+    build: blogs/
+    image: blogs
+    restart: always
+    ports:
+      - 8082:8082
+    depends_on:
+      - blogsdb
   
   toursdb:
     image: postgres
@@ -11,33 +29,29 @@ services:
       - POSTGRES_DB=soa-gorm
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=super
+    volumes:
+      - tours-data:/var/lib/postgresql/data
   
   blogsdb:
     image: postgres
     container_name: blogs-database
     ports:
-      - 5434:5432 # na pgAdmin-u se moze povezati na bazu na port 5434
+      - 5434:5432
     environment:
       - POSTGRES_DB=soa-blogs
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=super
+    volumes:
+      - blogs-data:/var/lib/postgresql/data
 
-  tours:
-    build: tours/ # sam ce build-ovati prvi put, svaki drugi put ce koristiti postojecu sliku koju je build-ovao
-    # image: tours # ako vec postoji build-ovana slika (image), komanda za build: go build -t tours tours/
-    ports:
-      - 8081:8081
-    depends_on:
-      - toursdb # pre pokretanja ovog kontejnera treba prvo da se pokrene baza
-
-  blogs:
-    build: blogs/ # sam ce build-ovati prvi put, svaki drugi put ce koristiti postojecu sliku koju je build-ovao
-    # image: blogs # ako vec postoji build-ovana slika (image), komanda za build: go build -t blogs blogs/
-    ports:
-      - 8082:8082
-    depends_on:
-      - blogsdb # pre pokretanja ovog kontejnera treba prvo da se pokrene baza
+volumes:
+  tours-data:
+    driver: local
+    name: tours-data
+  blogs-data:
+    driver: local
+    name: blogs-data
 
 # Slike koje postoje se mogu izlistati komandom: docker images
 # Build-ovane slike se mogu izbrisati komandom: docker rmi <slika> (npr. docker rmi tours)
-# Slike sa tagom <none> se mogu izbrisati komandom: docker rmi $(docker images --fiter "dangling=true" -q --no-trunc)
+# Slike sa tagom <none> se mogu izbrisati komandom: docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
