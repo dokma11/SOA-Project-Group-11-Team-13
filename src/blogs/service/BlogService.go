@@ -48,3 +48,15 @@ func (service *BlogService) SearchByName(name string) (*[]model.Blog, error) {
 	}
 	return &filteredBlogs, nil
 }
+
+func (service *BlogService) IsBlogClosed(blogId string) (bool, error) {
+	blog, err := service.BlogRepository.GetById(blogId)
+	if err != nil {
+		return false, fmt.Errorf("failed to get blog: %v", err)
+	}
+
+	if blog.Status == model.Closed {
+		return true, nil
+	}
+	return false, nil
+}
