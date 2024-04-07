@@ -54,7 +54,7 @@ func (ur *UserRepository) Create(user *model.User) error {
 	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
 	defer session.Close(ctx)
 
-	savedMovie, err := session.ExecuteWrite(ctx,
+	savedUser, err := session.ExecuteWrite(ctx,
 		func(transaction neo4j.ManagedTransaction) (any, error) {
 			result, err := transaction.Run(ctx,
 				"CREATE (u:User) SET u.username = $username, u.password = $password, u.isActive = $isActive"+
@@ -74,6 +74,35 @@ func (ur *UserRepository) Create(user *model.User) error {
 		ur.logger.Println("Error inserting User:", err)
 		return err
 	}
-	ur.logger.Println(savedMovie.(string))
+	ur.logger.Println(savedUser.(string))
+	return nil
+}
+
+func (ur *UserRepository) CreateFollowConnectionBetweenUsers(user1 *model.User, user2 *model.User) error {
+	ctx := context.Background()
+	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
+	defer session.Close(ctx)
+
+	savedUser, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (any, error) {
+			result, err := transaction.Run(ctx,
+				"MATCH (u1:User), (u2:User) WHERE u1.username = $username1 AND u2.username = $username2 "+
+					"CREATE (u1)-[r:FOLLOWS]->(u2) RETURN type(r)",
+				map[string]any{"username1": user1.Username, "username2": user2.Username})
+			if err != nil {
+				return nil, err
+			}
+
+			if result.Next(ctx) {
+				return result.Record().Values[0], nil
+			}
+
+			return nil, result.Err()
+		})
+	if err != nil {
+		ur.logger.Println("Error while creating a follow branch", err)
+		return err
+	}
+	ur.logger.Println(savedUser.(string))
 	return nil
 }
