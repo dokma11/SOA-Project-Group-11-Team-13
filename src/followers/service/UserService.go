@@ -24,3 +24,12 @@ func (service *UserService) Create(user *model.User) error {
 	}
 	return nil
 }
+
+func (service *UserService) FollowUser(user1 *model.User, user2 *model.User) error {
+	err := service.UserRepository.CreateFollowConnectionBetweenUsers(user1, user2)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no follow connections were created"))
+		return err
+	}
+	return nil
+}
