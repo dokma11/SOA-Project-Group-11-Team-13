@@ -15,7 +15,7 @@ import (
 )
 
 func initDB() *gorm.DB {
-	connectionStr := "host=localhost user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
+	connectionStr := "host=blogs-database user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
 	database, err := gorm.Open(postgres.Open(connectionStr), &gorm.Config{})
 	if err != nil {
 		print(err)
@@ -68,6 +68,7 @@ func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) 
 	router.HandleFunc("/blogs", blogHandler.GetAll).Methods("GET")
 	router.HandleFunc("/blogs/{id}", blogHandler.GetById).Methods("GET")
 	router.HandleFunc("/blogs/search/{name}", blogHandler.SearchByName).Methods("GET")
+	router.HandleFunc("/blogs/publish/{id}", blogHandler.Publish).Methods("PATCH")
 }
 
 func initializeCommentRoutes(router *mux.Router, commentHandler *handler.CommentHandler) {

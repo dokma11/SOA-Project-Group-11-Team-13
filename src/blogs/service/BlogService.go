@@ -48,3 +48,11 @@ func (service *BlogService) SearchByName(name string) (*[]model.Blog, error) {
 	}
 	return &filteredBlogs, nil
 }
+
+func (service *BlogService) Publish(id string) (model.Blog, error) {
+	blog, err := service.BlogRepository.UpdateStatus(id, model.BlogStatus(model.Published))
+	if err != nil {
+		return blog, err
+	}
+	return blog, nil
+}

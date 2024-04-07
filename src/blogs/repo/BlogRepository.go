@@ -36,3 +36,17 @@ func (repo *BlogRepository) Save(blog *model.Blog) error {
 	println("Rows affected: ", dbResult.RowsAffected)
 	return nil
 }
+
+func (repo *BlogRepository) UpdateStatus(id string, status model.BlogStatus) (model.Blog, error) {
+	var blog model.Blog
+	dbResult := repo.DatabaseConnection.Where("id = ?", id).First(&blog)
+	if dbResult.Error != nil {
+		return blog, dbResult.Error
+	}
+	blog.Status = status
+	updateDbResult := repo.DatabaseConnection.Model(&model.Blog{}).Where("id = ?", id).Updates(blog)
+	if updateDbResult.Error != nil {
+		return blog, dbResult.Error
+	}
+	return blog, nil
+}

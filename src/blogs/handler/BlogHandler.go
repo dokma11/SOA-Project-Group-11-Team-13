@@ -88,3 +88,24 @@ func (handler *BlogHandler) SearchByName(writer http.ResponseWriter, req *http.R
 		return
 	}
 }
+
+func (handler *BlogHandler) Publish(writer http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+	log.Printf("Publish blog with id %s", id)
+
+	blog, err := handler.BlogService.Publish(id)
+
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(blog)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode blogs in method Publish")
+		return
+	}
+}
