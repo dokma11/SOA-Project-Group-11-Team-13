@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"followers/model"
 	"followers/service"
 	"log"
@@ -30,6 +31,17 @@ func (handler *UserHandler) Create(rw http.ResponseWriter, h *http.Request) {
 	rw.WriteHeader(http.StatusCreated)
 }
 
+func (handler *UserHandler) FollowUser(rw http.ResponseWriter, h *http.Request) {
+	userList := h.Context().Value(KeyProduct{}).([]*model.User)
+	err := handler.UserService.FollowUser(userList[0], userList[1])
+	if err != nil {
+		handler.logger.Print("Database exception: ", err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	rw.WriteHeader(http.StatusCreated)
+}
+
 func (handler *UserHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		handler.logger.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)
@@ -50,6 +62,21 @@ func (handler *UserHandler) MiddlewareUserDeserialization(next http.Handler) htt
 			return
 		}
 		ctx := context.WithValue(h.Context(), KeyProduct{}, user)
+		h = h.WithContext(ctx)
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func (handler *UserHandler) MiddlewareUserFollowDeserialization(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		var users []*model.User
+		err := json.NewDecoder(h.Body).Decode(&users)
+		if err != nil {
+			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+			handler.logger.Fatal(err)
+			return
+		}
+		ctx := context.WithValue(h.Context(), KeyProduct{}, users)
 		h = h.WithContext(ctx)
 		next.ServeHTTP(rw, h)
 	})
