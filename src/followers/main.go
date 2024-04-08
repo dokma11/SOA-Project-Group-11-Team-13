@@ -5,19 +5,20 @@ import (
 	"followers/handler"
 	"followers/repo"
 	"followers/service"
-	gorillaHandlers "github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	gorillaHandlers "github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
-		port = "8081"
+		port = "8084"
 	}
 
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)

@@ -3,8 +3,10 @@ package repo
 import (
 	"context"
 	"followers/model"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"log"
+	"os"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 type UserRepository struct {
@@ -13,17 +15,17 @@ type UserRepository struct {
 }
 
 func New(logger *log.Logger) (*UserRepository, error) {
-	//uri := os.Getenv("NEO4J_DB")
-	//user := os.Getenv("NEO4J_USERNAME")
-	//pass := os.Getenv("NEO4J_PASS")
+	uri := os.Getenv("NEO4J_DB")
+	user := os.Getenv("NEO4J_USERNAME")
+	pass := os.Getenv("NEO4J_PASS")
 
 	//uri := os.Getenv("neo4j://localhost:7687")
 	//user := os.Getenv("neo4j")
 	//pass := os.Getenv("password")
 
-	auth := neo4j.BasicAuth("neo4j", "password", "")
+	auth := neo4j.BasicAuth(user, pass, "")
 
-	driver, err := neo4j.NewDriverWithContext("neo4j://localhost:7687", auth)
+	driver, err := neo4j.NewDriverWithContext(uri, auth)
 	if err != nil {
 		logger.Panic(err)
 		return nil, err
