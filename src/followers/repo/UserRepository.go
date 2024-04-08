@@ -19,10 +19,6 @@ func New(logger *log.Logger) (*UserRepository, error) {
 	user := os.Getenv("NEO4J_USERNAME")
 	pass := os.Getenv("NEO4J_PASS")
 
-	//uri := os.Getenv("neo4j://localhost:7687")
-	//user := os.Getenv("neo4j")
-	//pass := os.Getenv("password")
-
 	auth := neo4j.BasicAuth(user, pass, "")
 
 	driver, err := neo4j.NewDriverWithContext(uri, auth)
@@ -107,4 +103,63 @@ func (ur *UserRepository) CreateFollowConnectionBetweenUsers(user1 *model.User, 
 	}
 	ur.logger.Println(savedUser.(string))
 	return nil
+}
+
+func (ur *UserRepository) GetFollowers(userId string) ([]model.User, error) {
+	ctx := context.Background()
+	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
+	defer session.Close(ctx)
+
+	savedUser, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (any, error) {
+			result, err := transaction.Run(ctx,
+				"MATCH (user:User {id: 'user_id'})"+
+					"MATCH (follower)-[:FOLLOWS]->(user)"+
+					"RETURN follower.username AS followerUsername",
+				map[string]any{"user_id": userId})
+			if err != nil {
+				return nil, err
+			}
+
+			if result.Next(ctx) {
+				return result.Record().Values[0], nil
+			}
+
+			return result, result.Err()
+		})
+	if err != nil {
+		ur.logger.Println("Error while retrieving users followers", err)
+		return nil, err
+	}
+	ur.logger.Println(savedUser.(string))
+	return nil, err
+}
+
+func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
+	ctx := context.Background()
+	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
+	defer session.Close(ctx)
+
+	savedUser, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (any, error) {
+			result, err := transaction.Run(ctx,
+				"MATCH (user:User {username: 'user_id'})-[:FOLLOWS]->(following:User)"+
+					"RETURN following.username AS followed_user",
+				map[string]any{"user_id": userId})
+			if err != nil {
+				return nil, err
+			}
+
+			if result.Next(ctx) {
+				return result.Record().Values[0], nil
+			}
+
+			return result, result.Err()
+		})
+	if err != nil {
+		ur.logger.Println("Error while retrieving users followings", err)
+		return nil, err
+	}
+	ur.logger.Println(savedUser.(string))
+	return nil, nil
 }
