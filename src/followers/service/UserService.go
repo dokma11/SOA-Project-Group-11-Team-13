@@ -33,3 +33,19 @@ func (service *UserService) FollowUser(user1 *model.User, user2 *model.User) err
 	}
 	return nil
 }
+
+func (service *UserService) GetFollowers(userId string) (*[]model.User, error) {
+	followers, err := service.UserRepository.GetFollowers(userId)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("no users with given id: %s were found", userId))
+	}
+	return &followers, nil
+}
+
+func (service *UserService) GetFollowings(userId string) (*[]model.User, error) {
+	followings, err := service.UserRepository.GetFollowings(userId)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("no users with given id: %s were found", userId))
+	}
+	return &followings, nil
+}
