@@ -98,7 +98,37 @@ func (ur *UserRepository) CreateFollowConnectionBetweenUsers(user1 *model.User, 
 			return nil, result.Err()
 		})
 	if err != nil {
-		ur.logger.Println("Error while creating a follow branch", err)
+		ur.logger.Println("Error while creating a follow relationship", err)
+		return err
+	}
+	ur.logger.Println(savedUser.(string))
+	return nil
+}
+
+func (ur *UserRepository) DeleteFollowConnectionBetweenUsers(userId string, followingId string) error {
+	ctx := context.Background()
+	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
+	defer session.Close(ctx)
+
+	savedUser, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (any, error) {
+			result, err := transaction.Run(ctx,
+				`MATCH (node1:User)-[r:relationship]->(node2:User)
+						WHERE ID(node1) = $user1_id AND ID(node2) = $user2_id
+						DELETE r;`,
+				map[string]any{"user1_id": userId, "user2_id": followingId})
+			if err != nil {
+				return nil, err
+			}
+
+			if result.Next(ctx) {
+				return result.Record().Values[0], nil
+			}
+
+			return nil, result.Err()
+		})
+	if err != nil {
+		ur.logger.Println("Error while deleting a follow relationship", err)
 		return err
 	}
 	ur.logger.Println(savedUser.(string))
@@ -143,7 +173,7 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 	savedUser, err := session.ExecuteWrite(ctx,
 		func(transaction neo4j.ManagedTransaction) (any, error) {
 			result, err := transaction.Run(ctx,
-				"MATCH (user:User {username: 'user_id'})-[:FOLLOWS]->(following:User)"+
+				"MATCH (user:User {id: 'user_id'})-[:FOLLOWS]->(following:User)"+
 					"RETURN following.username AS followed_user",
 				map[string]any{"user_id": userId})
 			if err != nil {
