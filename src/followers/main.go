@@ -50,6 +50,11 @@ func main() {
 	postUserFollowNode.HandleFunc("/users/follow", userHandler.FollowUser)
 	postUserFollowNode.Use(userHandler.MiddlewareUserFollowDeserialization)
 
+	getUserFollowersNode := router.Methods(http.MethodGet).Subrouter()
+	getUserFollowersNode.HandleFunc("/users/followers", userHandler.GetFollowers)
+	getUserFollowersNode.HandleFunc("/users/followings", userHandler.GetFollowings)
+	getUserFollowersNode.Use(userHandler.MiddlewareUserDeserialization)
+
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
 	server := http.Server{
