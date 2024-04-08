@@ -47,7 +47,8 @@ func main() {
 	postUserNode.Use(userHandler.MiddlewareUserDeserialization)
 
 	postUserFollowNode := router.Methods(http.MethodPost).Subrouter()
-	postUserFollowNode.HandleFunc("/users/follow", userHandler.FollowUser)
+	postUserFollowNode.HandleFunc("/users/follow", userHandler.Follow)
+	postUserFollowNode.HandleFunc("/users/unfollow", userHandler.Unfollow)
 	postUserFollowNode.Use(userHandler.MiddlewareUserFollowDeserialization)
 
 	getUserFollowersNode := router.Methods(http.MethodGet).Subrouter()
