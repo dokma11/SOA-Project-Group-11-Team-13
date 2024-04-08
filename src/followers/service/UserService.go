@@ -25,7 +25,16 @@ func (service *UserService) Create(user *model.User) error {
 	return nil
 }
 
-func (service *UserService) FollowUser(user1 *model.User, user2 *model.User) error {
+func (service *UserService) Unfollow(userId string, followingId string) error {
+	err := service.UserRepository.DeleteFollowConnectionBetweenUsers(userId, followingId)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("no users were unfollowed"))
+		return err
+	}
+	return nil
+}
+
+func (service *UserService) Follow(user1 *model.User, user2 *model.User) error {
 	err := service.UserRepository.CreateFollowConnectionBetweenUsers(user1, user2)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no follow connections were created"))

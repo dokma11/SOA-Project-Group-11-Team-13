@@ -33,9 +33,20 @@ func (handler *UserHandler) Create(rw http.ResponseWriter, h *http.Request) {
 	rw.WriteHeader(http.StatusCreated)
 }
 
-func (handler *UserHandler) FollowUser(rw http.ResponseWriter, h *http.Request) {
+func (handler *UserHandler) Follow(rw http.ResponseWriter, h *http.Request) {
 	userList := h.Context().Value(KeyProduct{}).([]*model.User)
-	err := handler.UserService.FollowUser(userList[0], userList[1])
+	err := handler.UserService.Follow(userList[0], userList[1])
+	if err != nil {
+		handler.logger.Print("Database exception: ", err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	rw.WriteHeader(http.StatusCreated)
+}
+
+func (handler *UserHandler) Unfollow(rw http.ResponseWriter, h *http.Request) {
+	userList := h.Context().Value(KeyProduct{}).([]string)
+	err := handler.UserService.Unfollow(userList[0], userList[1])
 	if err != nil {
 		handler.logger.Print("Database exception: ", err)
 		rw.WriteHeader(http.StatusInternalServerError)
