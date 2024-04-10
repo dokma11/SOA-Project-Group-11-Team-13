@@ -56,7 +56,7 @@ func (handler *UserHandler) Unfollow(rw http.ResponseWriter, h *http.Request) {
 }
 
 func (handler *UserHandler) GetFollowers(writer http.ResponseWriter, req *http.Request) {
-	userId := mux.Vars(req)["userId"]
+	userId := mux.Vars(req)["id"]
 	log.Printf("User with id %s", userId)
 
 	followers, err := handler.UserService.GetFollowers(userId)
@@ -76,7 +76,7 @@ func (handler *UserHandler) GetFollowers(writer http.ResponseWriter, req *http.R
 }
 
 func (handler *UserHandler) GetFollowings(writer http.ResponseWriter, req *http.Request) {
-	userId := mux.Vars(req)["userId"]
+	userId := mux.Vars(req)["id"]
 	log.Printf("User with id %s", userId)
 
 	followers, err := handler.UserService.GetFollowings(userId)
