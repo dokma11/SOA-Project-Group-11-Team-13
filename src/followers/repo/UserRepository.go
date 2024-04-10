@@ -6,6 +6,7 @@ import (
 	"followers/model"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"log"
+	"os"
 )
 
 type UserRepository struct {
@@ -14,13 +15,13 @@ type UserRepository struct {
 }
 
 func New(logger *log.Logger) (*UserRepository, error) {
-	//uri := os.Getenv("NEO4J_DB")
-	//user := os.Getenv("NEO4J_USERNAME")
-	//pass := os.Getenv("NEO4J_PASS")
+	uri := os.Getenv("NEO4J_DB")
+	user := os.Getenv("NEO4J_USERNAME")
+	pass := os.Getenv("NEO4J_PASS")
 
-	//auth := neo4j.BasicAuth(user, pass, "")
+	auth := neo4j.BasicAuth(user, pass, "")
 
-	driver, err := neo4j.NewDriverWithContext("neo4j://localhost:7687", neo4j.BasicAuth("neo4j", "password", ""))
+	driver, err := neo4j.NewDriverWithContext(uri, auth)
 	if err != nil {
 		logger.Panic(err)
 		return nil, err
@@ -141,28 +142,57 @@ func (ur *UserRepository) GetFollowers(userId string) ([]model.User, error) {
 	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
 	defer session.Close(ctx)
 
-	savedUser, err := session.ExecuteWrite(ctx,
-		func(transaction neo4j.ManagedTransaction) (any, error) {
+	var followers []model.User
+
+	_, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (interface{}, error) {
 			result, err := transaction.Run(ctx,
-				`MATCH (user:User {id: 'user_id'}) MATCH (follower)-[:FOLLOWS]->(user)
-					RETURN follower.username AS followerUsername`,
+				"MATCH (user:User {id:"+userId+"}) MATCH (follower)-[:FOLLOWS]->(user) RETURN follower",
 				map[string]any{"user_id": userId})
 			if err != nil {
 				return nil, err
 			}
 
-			if result.Next(ctx) {
-				return result.Record().Values[0], nil
+			for result.Next(ctx) {
+				node, ok := result.Record().Get("follower")
+				if !ok {
+					return nil, fmt.Errorf("follower node not found")
+				}
+
+				userNode, ok := node.(neo4j.Node)
+				if !ok {
+					return nil, fmt.Errorf("follower node not found or not of expected type")
+				}
+
+				id, _ := userNode.Props["id"].(int64)
+				username, _ := userNode.Props["username"].(string)
+				password, _ := userNode.Props["password"].(string)
+				role, _ := userNode.Props["role"].(model.UserRole)
+				profilePicture, _ := userNode.Props["profilePicture"].(string)
+				isActive, _ := userNode.Props["isActive"].(bool)
+
+				follower := model.User{
+					ID:             id,
+					Username:       username,
+					Password:       password,
+					Role:           role,
+					ProfilePicture: profilePicture,
+					IsActive:       isActive,
+				}
+				followers = append(followers, follower)
+			}
+			if err := result.Err(); err != nil {
+				return nil, err
 			}
 
-			return result, result.Err()
+			return nil, nil
 		})
 	if err != nil {
 		ur.logger.Println("Error while retrieving users followers", err)
 		return nil, err
 	}
-	ur.logger.Println(savedUser.(string))
-	return nil, err
+
+	return followers, nil
 }
 
 func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
