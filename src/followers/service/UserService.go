@@ -66,3 +66,11 @@ func (service *UserService) GetByUsername(username string) (*model.User, error) 
 	}
 	return &user, nil
 }
+
+func (service *UserService) GetRecommendedUsers(userId string) (*[]model.User, error) {
+	users, err := service.UserRepository.GetRecommendedUsers(userId)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("no users with given id: %s were found", userId))
+	}
+	return &users, nil
+}

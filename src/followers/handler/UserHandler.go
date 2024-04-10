@@ -119,6 +119,26 @@ func (handler *UserHandler) GetByUsername(writer http.ResponseWriter, req *http.
 	}
 }
 
+func (handler *UserHandler) GetRecommendedUsers(writer http.ResponseWriter, req *http.Request) {
+	userId := mux.Vars(req)["id"]
+	log.Printf("User with username %s", userId)
+
+	users, err := handler.UserService.GetRecommendedUsers(userId)
+
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(users)
+	if err != nil {
+		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode user in method GetByUsername"))
+		return
+	}
+}
+
 func (handler *UserHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		handler.logger.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)

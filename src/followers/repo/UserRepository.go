@@ -308,3 +308,64 @@ func (ur *UserRepository) GetByUsername(username string) (model.User, error) {
 
 	return savedUser, nil
 }
+
+func (ur *UserRepository) GetRecommendedUsers(userId string) ([]model.User, error) {
+	ctx := context.Background()
+	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
+	defer session.Close(ctx)
+
+	var recommendedUsers []model.User
+
+	_, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (interface{}, error) {
+			result, err := transaction.Run(ctx,
+				"MATCH (me:User {id:"+userId+"})-[:FOLLOWS]->(myFollowing:User)-[:FOLLOWS]->(recommended:User) "+
+					"WHERE NOT (me)-[:FOLLOWS]->(recommended) AND recommended <> me "+
+					"RETURN recommended LIMIT 10",
+				map[string]interface{}{})
+			if err != nil {
+				return nil, err
+			}
+
+			for result.Next(ctx) {
+				node, ok := result.Record().Get("recommended")
+				if !ok {
+					return nil, fmt.Errorf("users not found")
+				}
+
+				userNode, ok := node.(neo4j.Node)
+				if !ok {
+					return nil, fmt.Errorf("unexpected type for user node")
+				}
+
+				id, _ := userNode.Props["id"].(int64)
+				username, _ := userNode.Props["username"].(string)
+				password, _ := userNode.Props["password"].(string)
+				role, _ := userNode.Props["role"].(model.UserRole)
+				profilePicture, _ := userNode.Props["profilePicture"].(string)
+				isActive, _ := userNode.Props["isActive"].(bool)
+
+				recommended := model.User{
+					ID:             id,
+					Username:       username,
+					Password:       password,
+					Role:           role,
+					ProfilePicture: profilePicture,
+					IsActive:       isActive,
+				}
+				recommendedUsers = append(recommendedUsers, recommended)
+			}
+			if err := result.Err(); err != nil {
+				return nil, err
+			}
+
+			return nil, nil
+		})
+
+	if err != nil {
+		ur.logger.Println("Error while finding recommended users", err)
+		return nil, err
+	}
+
+	return recommendedUsers, nil
+}
