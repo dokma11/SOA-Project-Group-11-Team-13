@@ -44,15 +44,19 @@ func (handler *UserHandler) Follow(rw http.ResponseWriter, h *http.Request) {
 	rw.WriteHeader(http.StatusCreated)
 }
 
-func (handler *UserHandler) Unfollow(rw http.ResponseWriter, h *http.Request) {
-	userList := h.Context().Value(KeyProduct{}).([]string)
-	err := handler.UserService.Unfollow(userList[0], userList[1])
+func (handler *UserHandler) Unfollow(writer http.ResponseWriter, req *http.Request) {
+	followerId := mux.Vars(req)["followerId"]
+	followingId := mux.Vars(req)["followingId"]
+
+	fmt.Println()
+
+	err := handler.UserService.Unfollow(followerId, followingId)
 	if err != nil {
 		handler.logger.Print("Database exception: ", err)
-		rw.WriteHeader(http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	rw.WriteHeader(http.StatusCreated)
+	writer.WriteHeader(http.StatusCreated)
 }
 
 func (handler *UserHandler) GetFollowers(writer http.ResponseWriter, req *http.Request) {

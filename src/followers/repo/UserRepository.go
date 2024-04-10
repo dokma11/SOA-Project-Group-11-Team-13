@@ -112,13 +112,11 @@ func (ur *UserRepository) DeleteFollowConnectionBetweenUsers(userId string, foll
 	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
 	defer session.Close(ctx)
 
-	savedUser, err := session.ExecuteWrite(ctx,
-		func(transaction neo4j.ManagedTransaction) (any, error) {
+	_, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (interface{}, error) {
 			result, err := transaction.Run(ctx,
-				`MATCH (node1:User)-[r:relationship]->(node2:User)
-						WHERE ID(node1) = $user1_id AND ID(node2) = $user2_id
-						DELETE r;`,
-				map[string]any{"user1_id": userId, "user2_id": followingId})
+				"MATCH (node1:User {id:"+userId+"})-[f:FOLLOWS]->(node2:User {id:"+followingId+"}) DELETE f",
+				map[string]any{})
 			if err != nil {
 				return nil, err
 			}
@@ -133,7 +131,6 @@ func (ur *UserRepository) DeleteFollowConnectionBetweenUsers(userId string, foll
 		ur.logger.Println("Error while deleting a follow relationship", err)
 		return err
 	}
-	ur.logger.Println(savedUser.(string))
 	return nil
 }
 
