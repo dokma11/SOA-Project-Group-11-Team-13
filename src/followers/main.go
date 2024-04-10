@@ -47,13 +47,14 @@ func main() {
 	postUserNode.Use(userHandler.MiddlewareUserDeserialization)
 
 	postUserFollowNode := router.Methods(http.MethodPost).Subrouter()
-	postUserFollowNode.HandleFunc("/users/follow", userHandler.Follow)
+	postUserFollowNode.HandleFunc("/users/follow/{followerId}/{followingId}", userHandler.Follow)
 	postUserFollowNode.Use(userHandler.MiddlewareUserFollowDeserialization)
-	
+
 	getNode := router.Methods(http.MethodGet).Subrouter()
 	getNode.HandleFunc("/users/{username}", userHandler.GetByUsername)
 	getNode.HandleFunc("/users/followers/{id}", userHandler.GetFollowers)
 	getNode.HandleFunc("/users/followings/{id}", userHandler.GetFollowings)
+	getNode.HandleFunc("/users/recommended/{id}", userHandler.GetRecommendedUsers)
 
 	postNode := router.Methods(http.MethodPost).Subrouter()
 	postNode.HandleFunc("/users/unfollow/{followerId}/{followingId}", userHandler.Unfollow)
