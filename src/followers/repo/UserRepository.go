@@ -2,11 +2,11 @@ package repo
 
 import (
 	"context"
+	"fmt"
 	"followers/model"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"log"
 	"os"
-
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 type UserRepository struct {
@@ -55,9 +55,11 @@ func (ur *UserRepository) Create(user *model.User) error {
 	savedUser, err := session.ExecuteWrite(ctx,
 		func(transaction neo4j.ManagedTransaction) (any, error) {
 			result, err := transaction.Run(ctx,
-				"CREATE (u:User) SET u.username = $username, u.password = $password, u.isActive = $isActive"+
-					" RETURN u.username + ', from node ' + id(u)",
-				map[string]any{"username": user.Username, "password": user.Password, "isActive": user.IsActive})
+				`CREATE (u:User) SET u.id = $id, u.username = $username, u.password = $password,
+ 					    u.isActive = $isActive, u.profilePicture = $profilePicture, u.role = $role 
+						RETURN u.username + ', from node ' + id(u)`,
+				map[string]any{"id": user.ID, "username": user.Username, "password": user.Password,
+					"isActive": user.IsActive, "profilePicture": user.ProfilePicture, "role": user.Role})
 			if err != nil {
 				return nil, err
 			}
@@ -192,4 +194,60 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 	}
 	ur.logger.Println(savedUser.(string))
 	return nil, nil
+}
+
+func (ur *UserRepository) GetByUsername(username string) (model.User, error) {
+	ctx := context.Background()
+	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
+	defer session.Close(ctx)
+
+	var savedUser model.User
+
+	_, err := session.ExecuteWrite(ctx,
+		func(transaction neo4j.ManagedTransaction) (interface{}, error) {
+			result, err := transaction.Run(ctx,
+				`MATCH (user:User {username: $user_username}) RETURN user`,
+				map[string]interface{}{"user_username": username})
+			if err != nil {
+				return nil, err
+			}
+
+			if result.Next(ctx) {
+				node, ok := result.Record().Get("user")
+				if !ok {
+					return nil, fmt.Errorf("user not found")
+				}
+
+				userNode, ok := node.(neo4j.Node)
+				if !ok {
+					return nil, fmt.Errorf("unexpected type for user node")
+				}
+
+				id, _ := userNode.Props["id"].(int64)
+				username, _ := userNode.Props["username"].(string)
+				password, _ := userNode.Props["password"].(string)
+				role, _ := userNode.Props["role"].(model.UserRole)
+				profilePicture, _ := userNode.Props["profilePicture"].(string)
+				isActive, _ := userNode.Props["isActive"].(bool)
+
+				savedUser = model.User{
+					ID:             id,
+					Username:       username,
+					Password:       password,
+					Role:           role,
+					ProfilePicture: profilePicture,
+					IsActive:       isActive,
+				}
+				return savedUser, nil
+			}
+
+			return nil, result.Err()
+		})
+
+	if err != nil {
+		ur.logger.Println("Error while finding user by his/her username", err)
+		return model.User{}, err
+	}
+
+	return savedUser, nil
 }

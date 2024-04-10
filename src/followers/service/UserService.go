@@ -58,3 +58,11 @@ func (service *UserService) GetFollowings(userId string) (*[]model.User, error) 
 	}
 	return &followings, nil
 }
+
+func (service *UserService) GetByUsername(username string) (*model.User, error) {
+	user, err := service.UserRepository.GetByUsername(username)
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("no users with given username: %s were found", username))
+	}
+	return &user, nil
+}
