@@ -38,7 +38,7 @@ func main() {
 
 	userHandler := handler.NewUserHandler(logger, userService)
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 
 	router.Use(userHandler.MiddlewareContentTypeSet)
 
@@ -55,6 +55,9 @@ func main() {
 	getUserFollowersNode.HandleFunc("/users/followers", userHandler.GetFollowers)
 	getUserFollowersNode.HandleFunc("/users/followings", userHandler.GetFollowings)
 	getUserFollowersNode.Use(userHandler.MiddlewareUserDeserialization)
+
+	getNode := router.Methods(http.MethodGet).Subrouter()
+	getNode.HandleFunc("/users/{username}", userHandler.GetByUsername)
 
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
