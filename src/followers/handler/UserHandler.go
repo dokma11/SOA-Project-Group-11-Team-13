@@ -34,8 +34,10 @@ func (handler *UserHandler) Create(rw http.ResponseWriter, h *http.Request) {
 }
 
 func (handler *UserHandler) Follow(rw http.ResponseWriter, h *http.Request) {
-	userList := h.Context().Value(KeyProduct{}).([]*model.User)
-	err := handler.UserService.Follow(userList[0], userList[1])
+	userId := mux.Vars(h)["userId"]
+	followedById := mux.Vars(h)["followedById"]
+
+	err := handler.UserService.Follow(userId, followedById)
 	if err != nil {
 		handler.logger.Print("Database exception: ", err)
 		rw.WriteHeader(http.StatusInternalServerError)

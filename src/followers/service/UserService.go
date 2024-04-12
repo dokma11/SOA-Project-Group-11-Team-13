@@ -34,8 +34,8 @@ func (service *UserService) Unfollow(userId string, followingId string) error {
 	return nil
 }
 
-func (service *UserService) Follow(user1 *model.User, user2 *model.User) error {
-	err := service.UserRepository.CreateFollowConnectionBetweenUsers(user1, user2)
+func (service *UserService) Follow(userId string, followedById string) error {
+	err := service.UserRepository.CreateFollowConnectionBetweenUsers(userId, followedById)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no follow connections were created"))
 		return err

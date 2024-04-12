@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"followers/model"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"log"
 	"os"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 type UserRepository struct {
@@ -78,7 +79,7 @@ func (ur *UserRepository) Create(user *model.User) error {
 	return nil
 }
 
-func (ur *UserRepository) CreateFollowConnectionBetweenUsers(user1 *model.User, user2 *model.User) error {
+func (ur *UserRepository) CreateFollowConnectionBetweenUsers(userId string, followedById string) error {
 	ctx := context.Background()
 	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
 	defer session.Close(ctx)
@@ -86,9 +87,9 @@ func (ur *UserRepository) CreateFollowConnectionBetweenUsers(user1 *model.User, 
 	savedUser, err := session.ExecuteWrite(ctx,
 		func(transaction neo4j.ManagedTransaction) (any, error) {
 			result, err := transaction.Run(ctx,
-				`MATCH (u1:User), (u2:User) WHERE u1.username = $username1 AND u2.username = $username2
-						CREATE (u1)-[r:FOLLOWS]->(u2) RETURN type(r)`,
-				map[string]any{"username1": user1.Username, "username2": user2.Username})
+				"MATCH (u1:User {id:"+followedById+"}), (u2:User {id:"+userId+"})"+
+					"CREATE (u1)-[r:FOLLOWS]->(u2) RETURN type(r)",
+				map[string]any{})
 			if err != nil {
 				return nil, err
 			}
