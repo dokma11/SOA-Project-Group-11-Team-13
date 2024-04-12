@@ -47,17 +47,22 @@ func main() {
 	postUserNode.Use(userHandler.MiddlewareUserDeserialization)
 
 	postUserFollowNode := router.Methods(http.MethodPost).Subrouter()
-	postUserFollowNode.HandleFunc("/users/follow/{followerId}/{followingId}", userHandler.Follow)
-	postUserFollowNode.Use(userHandler.MiddlewareUserFollowDeserialization)
+	postUserFollowNode.HandleFunc("/users/follow/{userId}/{followedById}", userHandler.Follow)
 
 	getNode := router.Methods(http.MethodGet).Subrouter()
 	getNode.HandleFunc("/users/{username}", userHandler.GetByUsername)
-	getNode.HandleFunc("/users/followers/{id}", userHandler.GetFollowers)
-	getNode.HandleFunc("/users/followings/{id}", userHandler.GetFollowings)
-	getNode.HandleFunc("/users/recommended/{id}", userHandler.GetRecommendedUsers)
 
-	postNode := router.Methods(http.MethodPost).Subrouter()
-	postNode.HandleFunc("/users/unfollow/{followerId}/{followingId}", userHandler.Unfollow)
+	getFollowersNode := router.Methods(http.MethodGet).Subrouter()
+	getFollowersNode.HandleFunc("/users/followers/{id}", userHandler.GetFollowers)
+
+	getFollowingsNode := router.Methods(http.MethodGet).Subrouter()
+	getFollowingsNode.HandleFunc("/users/followings/{id}", userHandler.GetFollowings)
+
+	getRecommendedNode := router.Methods(http.MethodGet).Subrouter()
+	getRecommendedNode.HandleFunc("/users/recommended/{id}", userHandler.GetRecommendedUsers)
+
+	deleteNode := router.Methods(http.MethodDelete).Subrouter()
+	deleteNode.HandleFunc("/users/unfollow/{followerId}/{followingId}", userHandler.Unfollow)
 
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
 
