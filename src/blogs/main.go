@@ -5,17 +5,21 @@ import (
 	"blogs/model"
 	"blogs/repo"
 	"blogs/service"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func initDB() *gorm.DB {
-	connectionStr := "host=blogs-database user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
+	connectionStr := "host=localhost user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
 	database, err := gorm.Open(postgres.Open(connectionStr), &gorm.Config{})
 	if err != nil {
 		print(err)
@@ -49,6 +53,29 @@ func initDB() *gorm.DB {
 	return database
 }
 
+func initMongoDB() *mongo.Client {
+	// Set up MongoDB connection options
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Connect to MongoDB
+	client, err := mongo.Connect(ctx , options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		return nil
+	}
+
+	// Check the connection
+	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+
+	println("Connected to MongoDB!")
+
+	return client
+}
+
 func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.CommentHandler, voteHandler *handler.VoteHandler, blogRecommendationHandler *handler.BlogRecommendationHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -67,6 +94,7 @@ func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) 
 	router.HandleFunc("/blogs", blogHandler.Create).Methods("POST")
 	router.HandleFunc("/blogs", blogHandler.GetAll).Methods("GET")
 	router.HandleFunc("/blogs/{id}", blogHandler.GetById).Methods("GET")
+	router.HandleFunc("/blogs/authors/{authorIds}", blogHandler.GetByAuthorIds).Methods("GET")
 	router.HandleFunc("/blogs/search/{name}", blogHandler.SearchByName).Methods("GET")
 	router.HandleFunc("/blogs/publish/{id}", blogHandler.Publish).Methods("PATCH")
 }
@@ -82,27 +110,28 @@ func initializeVoteRoutes(router *mux.Router, blogHandler *handler.VoteHandler) 
 }
 
 func initializeBlogRecommendationRoutes(router *mux.Router, blogRecommendationHandler *handler.BlogRecommendationHandler) {
-	router.HandleFunc("/blog-recommendations", blogRecommendationHandler.Create).Methods("POST")
-	router.HandleFunc("/blog-recommendations", blogRecommendationHandler.GetAll).Methods("GET")
-	router.HandleFunc("/blog-recommendations/{id}", blogRecommendationHandler.GetById).Methods("GET")
-	router.HandleFunc("/blog-recommendations/by-receiver/{receiver}", blogRecommendationHandler.GetByReceiverId).Methods("GET")
+	router.HandleFunc("/blog/recommendations", blogRecommendationHandler.Create).Methods("POST")
+	router.HandleFunc("/blog/recommendations", blogRecommendationHandler.GetAll).Methods("GET")
+	router.HandleFunc("/blog/recommendations/{id}", blogRecommendationHandler.GetById).Methods("GET")
+	router.HandleFunc("/blog/recommendations/by-receiver/{receiver}", blogRecommendationHandler.GetByReceiverId).Methods("GET")
 }
 
 func main() {
 	database := initDB()
+	blogsMongoDB := initMongoDB();
 	if database == nil {
 		println("FAILED TO CONNECT TO DB")
 		return
 	}
-	blogRepository := &repo.BlogRepository{DatabaseConnection: database}
+	blogRepository := &repo.BlogRepository{DatabaseConnection: blogsMongoDB}
 	commentRepository := &repo.CommentRepository{DatabaseConnection: database}
 	voteRepository := &repo.VoteRepository{DatabaseConnection: database}
-	blogRecommendationRepository := &repo.BlogRecommendationRepository{DatabaseConnection: database}
+	blogRecommendationRepository := &repo.BlogRecommendationRepository{DatabaseConnection: blogsMongoDB}
 
-	blogService := &service.BlogService{BlogRepository: blogRepository}
+	blogService := &service.BlogService{BlogRepository: blogRepository, BlogRecommendationRepository: blogRecommendationRepository}
 	commentService := &service.CommentService{CommentRepository: commentRepository}
 	voteService := &service.VoteService{VoteRepository: voteRepository}
-	blogRecommendationService := &service.BlogRecommendationService{BlogRecommendationRepository: blogRecommendationRepository}
+	blogRecommendationService := &service.BlogRecommendationService{BlogRecommendationRepository: blogRecommendationRepository, BlogRepository: blogRepository}
 
 	blogHandler := &handler.BlogHandler{BlogService: blogService}
 	commentHandler := &handler.CommentHandler{CommentService: commentService}

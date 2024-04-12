@@ -52,6 +52,15 @@ services:
     volumes:
       - blogs-data:/var/lib/postgresql/data
 
+  blogs-mongodb:
+    image: mongo
+    container_name: blogs-mongodb
+    networks:
+      - database
+    volumes:
+      - blogs-mongodb-data:/data/db
+      
+
 volumes:
   tours-data:
     driver: local
@@ -59,6 +68,9 @@ volumes:
   blogs-data:
     driver: local
     name: blogs-data
+  blogs-mongodb-data:
+    driver: local
+    name: blogs-mongodb-data
 
 networks:
   database:
