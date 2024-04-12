@@ -28,8 +28,8 @@ services:
     build: followers/
     image: followers
     restart: always
-    container_name: "follower-server"
-    hostname: "follower-server"
+    networks:
+      - database
     #Mapping ports
     ports:
       # <port_on_local>:<port_in_machine>
@@ -81,6 +81,8 @@ services:
   neo4j:
     image: neo4j
     restart: always
+    networks:
+      - database
     ports:
       # bolt
       - "7687:7687"
