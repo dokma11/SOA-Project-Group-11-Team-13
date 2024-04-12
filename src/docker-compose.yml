@@ -27,6 +27,7 @@ services:
   followers:
     build: followers/
     image: followers
+    container_name: followers-service
     restart: always
     networks:
       - database

@@ -50,7 +50,7 @@ func main() {
 	postUserFollowNode.HandleFunc("/users/follow/{userId}/{followedById}", userHandler.Follow)
 
 	getNode := router.Methods(http.MethodGet).Subrouter()
-	getNode.HandleFunc("/users/{username}", userHandler.GetByUsername)
+	getNode.HandleFunc("/users/{username}", userHandler.GetByUsername).Methods("GET")
 
 	getFollowersNode := router.Methods(http.MethodGet).Subrouter()
 	getFollowersNode.HandleFunc("/users/followers/{id}", userHandler.GetFollowers)
@@ -64,8 +64,7 @@ func main() {
 	deleteNode := router.Methods(http.MethodDelete).Subrouter()
 	deleteNode.HandleFunc("/users/unfollow/{followerId}/{followingId}", userHandler.Unfollow)
 
-	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
-
+	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}), gorillaHandlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"}))
 	server := http.Server{
 		Addr:         ":" + port,
 		Handler:      cors(router),
