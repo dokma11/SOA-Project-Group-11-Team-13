@@ -55,6 +55,8 @@ services:
   blogs-mongodb:
     image: mongo
     container_name: blogs-mongodb
+    ports:
+      - 27017:27017
     networks:
       - database
     volumes:

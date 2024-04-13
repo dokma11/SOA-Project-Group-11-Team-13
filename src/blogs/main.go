@@ -19,7 +19,7 @@ import (
 )
 
 func initDB() *gorm.DB {
-	connectionStr := "host=localhost user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
+	connectionStr := "host=blogsdb user=postgres password=super dbname=soa-blogs port=5432 sslmode=disable"
 	database, err := gorm.Open(postgres.Open(connectionStr), &gorm.Config{})
 	if err != nil {
 		print(err)
@@ -59,7 +59,7 @@ func initMongoDB() *mongo.Client {
 	defer cancel()
 
 	// Connect to MongoDB
-	client, err := mongo.Connect(ctx , options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(ctx , options.Client().ApplyURI("mongodb://blogs-mongodb:27017"))
 	if err != nil {
 		return nil
 	}
@@ -130,7 +130,7 @@ func main() {
 		return
 	}
 	blogRepository := &repo.BlogRepository{DatabaseConnection: blogsMongoDB}
-	commentRepository := &repo.CommentRepository{DatabaseConnection: database}
+	commentRepository := &repo.CommentRepository{MongoConnection: blogsMongoDB}
 	voteRepository := &repo.VoteRepository{DatabaseConnection: database}
 	blogRecommendationRepository := &repo.BlogRecommendationRepository{DatabaseConnection: blogsMongoDB}
 

@@ -2,80 +2,144 @@ package repo
 
 import (
 	"blogs/model"
-	"errors"
+	"context"
+	"strconv"
 
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type CommentRepository struct {
-	DatabaseConnection *gorm.DB
+	MongoConnection *mongo.Client
 }
 
 func (repo *CommentRepository) GetById(id string) (model.Comment, error) {
-	var blog model.Comment
-	dbResult := repo.DatabaseConnection.Where("id = ?", id).First(&blog)
-	if dbResult.Error != nil {
-		return blog, dbResult.Error
+	var comment model.Comment
+	converted, _ := strconv.Atoi(id)
+	filter := bson.D{{Key: "id", Value: converted}}
+	commentsCollection := repo.getCollection();
+	err := commentsCollection.FindOne(context.Background(), filter).Decode(&comment)
+	if err != nil {
+		return comment, err
 	}
-	return blog, nil
+	return comment, nil
 }
 
 func (repo *CommentRepository) GetByBlogId(id string, page int, pageSize int) ([]model.Comment, int, error) {
-	var comments []model.Comment
+	var comments []model.Comment = make([]model.Comment, 0)
 	var totalCount int64
 
-	// First, get the total count of comments
-	repo.DatabaseConnection.Model(&model.Comment{}).Where("blog_id = ?", id).Count(&totalCount)
+	converted, _ := strconv.Atoi(id)
+	filter := bson.D{{Key: "blogid", Value: converted}}
+	commentsCollection := repo.getCollection();
+	cur, err := commentsCollection.Find(context.Background(), filter)
 
-	// Then, get the paginated list of comments
-	result := repo.DatabaseConnection.Where("blog_id = ?", id).Find(&comments)
+	if err != nil {
+		return nil, 0, err
+	}
 
-	if result.Error != nil {
-		return nil, 0, result.Error
+	for cur.Next(context.Background()) {
+		var comment model.Comment
+		err := cur.Decode(&comment)
+		if err != nil {
+			return nil, 0, err
+		}
+		comments = append(comments, comment)
+	}
+	if err := cur.Err(); err != nil {
+		return nil, 0, err
 	}
 
 	return comments, int(totalCount), nil
 }
 
 func (repo *CommentRepository) GetAll() ([]model.Comment, error) {
-	var comments []model.Comment
-	dbResult := repo.DatabaseConnection.Find(&comments)
-	if dbResult.Error != nil {
-		return nil, dbResult.Error
+	var comments []model.Comment = make([]model.Comment, 0)
+
+	commentsCollection := repo.getCollection();
+	cur, err := commentsCollection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		return nil, err
 	}
+
+	for cur.Next(context.Background()) {
+		var comment model.Comment
+		err := cur.Decode(&comment)
+		if err != nil {
+			return nil, err
+		}
+		comments = append(comments, comment)
+	}
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
 	return comments, nil
 }
 
 func (repo *CommentRepository) Create(comment *model.Comment) error {
-	dbResult := repo.DatabaseConnection.Create(comment)
-	if dbResult.Error != nil {
-		return dbResult.Error
+
+	commentsCollection := repo.getCollection();
+	comment.ID = repo.nextId()
+	_, err := commentsCollection.InsertOne(context.Background(), comment)
+	if err != nil {
+		return err
 	}
-	println("Rows affected: ", dbResult.RowsAffected)
 	return nil
 }
 
 func (repo *CommentRepository) Delete(id string) error {
-	dbResult := repo.DatabaseConnection.Where("id = ?", id).Delete(&model.Comment{})
-	if dbResult.Error != nil {
-		return dbResult.Error
+
+	commentsCollection := repo.getCollection()
+	converted, _ := strconv.Atoi(id)
+	filter := bson.M{"id": converted}
+
+	// Find the comment by ID
+	var comment model.Comment
+	err := commentsCollection.FindOne(context.Background(), filter).Decode(&comment)
+	if err != nil {
+		return err
 	}
-	if dbResult.RowsAffected == 0 {
-		return errors.New("no comment found for deletion")
+
+	// Delete the blog
+	_, err = commentsCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
 	}
+
 	return nil
 }
 
 func (repo *CommentRepository) Update(comment *model.Comment) error {
-	println(comment)
-	dbResult := repo.DatabaseConnection.Model(&model.Comment{}).Where("id = ?", comment.ID).Updates(comment)
-	if dbResult.Error != nil {
-		println("error se pojavio u bazi")
-		return dbResult.Error
-	}
-	if dbResult.RowsAffected == 0 {
-		println("Nista nije promenjeno")
-		return errors.New("no key point found for update")
+	commentsCollection := repo.getCollection();
+	filter := bson.M{"id": comment.ID}
+	update := bson.M{"$set": bson.M{"text": comment.Text}}
+	commentsCollection.UpdateOne(context.Background(), filter, update)
+	var updatedComment model.Comment
+	err := commentsCollection.FindOneAndUpdate(context.Background(), filter, update).Decode(&updatedComment)
+
+	if err != nil {
+		return err
 	}
 	return nil
+}
+
+func (repo *CommentRepository) getCollection() *mongo.Collection {
+	patientDatabase := repo.MongoConnection.Database("soa")
+	patientsCollection := patientDatabase.Collection("comments")
+	return patientsCollection
+}
+
+func (repo *CommentRepository) nextId() int {
+	blogs, _ := repo.GetAll();
+
+	maxId := 0;
+	for _, blog := range blogs {
+		if blog.ID > maxId {
+			maxId = blog.ID
+		}
+	}
+
+	return maxId + 1
 }

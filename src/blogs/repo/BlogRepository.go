@@ -80,7 +80,7 @@ func (repo *BlogRepository) GetById(id string) (model.Blog, error) {
 }
 
 func (repo *BlogRepository) GetAll() ([]model.Blog, error) {
-	var blogs []model.Blog
+	var blogs = make([]model.Blog, 0)
 	blogsCollection := repo.getCollection();
 	cur, err := blogsCollection.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -157,7 +157,8 @@ func (repo *BlogRepository) Save(blog *model.Blog) error {
 
 func (repo *BlogRepository) UpdateStatus(id string, status model.BlogStatus) (model.Blog, error) {
 	blogsCollection := repo.getCollection();
-	filter := bson.M{"_id": id}
+	converted, _ := strconv.Atoi(id)
+	filter := bson.M{"id": converted}
 	update := bson.M{"$set": bson.M{"status": status}}
 	var updatedBlog model.Blog
 	err := blogsCollection.FindOneAndUpdate(context.Background(), filter, update).Decode(&updatedBlog)
@@ -184,4 +185,25 @@ func (repo *BlogRepository) nextId() int {
 	}
 
 	return maxId + 1
+}
+
+func (repo *BlogRepository) Delete(id string) error {
+	blogsCollection := repo.getCollection()
+	converted, _ := strconv.Atoi(id)
+	filter := bson.M{"id": converted}
+
+	// Find the blog by ID
+	var blog model.Blog
+	err := blogsCollection.FindOne(context.Background(), filter).Decode(&blog)
+	if err != nil {
+		return err
+	}
+
+	// Delete the blog
+	_, err = blogsCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

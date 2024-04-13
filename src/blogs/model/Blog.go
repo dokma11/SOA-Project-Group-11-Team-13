@@ -21,7 +21,6 @@ type Blog struct {
 	Description string
 	Status BlogStatus
 	AuthorId int
-	// ClubId int - verovatno ne mora
 	Comments []Comment `gorm:"foreignKey:BlogId"`
 	Votes []Vote `gorm:"foreignKey:BlogId"`
 	Recommendations []BlogRecommendation
