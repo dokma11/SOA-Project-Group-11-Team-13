@@ -97,11 +97,17 @@ func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) 
 	router.HandleFunc("/blogs/authors/{authorIds}", blogHandler.GetByAuthorIds).Methods("GET")
 	router.HandleFunc("/blogs/search/{name}", blogHandler.SearchByName).Methods("GET")
 	router.HandleFunc("/blogs/publish/{id}", blogHandler.Publish).Methods("PATCH")
+	router.HandleFunc("/blogs/{id}", blogHandler.Delete).Methods("DELETE")
 }
 
 func initializeCommentRoutes(router *mux.Router, commentHandler *handler.CommentHandler) {
 	router.HandleFunc("/comments", commentHandler.GetAll).Methods("GET")
 	router.HandleFunc("/comments/{id}", commentHandler.GetById).Methods("GET")
+	router.HandleFunc("/comments/byBlog/{id}", commentHandler.GetByBlogId).Methods("GET")
+	router.HandleFunc("/comments", commentHandler.Create).Methods("POST")
+	router.HandleFunc("/comments/{id}", commentHandler.Delete).Methods("DELETE")
+	router.HandleFunc("/comments", commentHandler.Update).Methods("PUT")
+
 }
 
 func initializeVoteRoutes(router *mux.Router, blogHandler *handler.VoteHandler) {
