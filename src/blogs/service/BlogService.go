@@ -56,3 +56,12 @@ func (service *BlogService) Publish(id string) (model.Blog, error) {
 	}
 	return blog, nil
 }
+
+func (service *BlogService) Delete(id string) error {
+	err := service.BlogRepository.Delete(id)
+	if err != nil {
+		_ = fmt.Errorf("no blogs were deleted")
+		return err
+	}
+	return nil
+}

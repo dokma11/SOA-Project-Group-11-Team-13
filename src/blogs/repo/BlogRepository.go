@@ -2,6 +2,7 @@ package repo
 
 import (
 	"blogs/model"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -49,4 +50,30 @@ func (repo *BlogRepository) UpdateStatus(id string, status model.BlogStatus) (mo
 		return blog, dbResult.Error
 	}
 	return blog, nil
+}
+
+func (repo *BlogRepository) Delete(id string) error {
+	var blog model.Blog
+	result := repo.DatabaseConnection.Preload("Comments").Where("id = ?", id).First(&blog)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	dbResult := repo.DatabaseConnection.Delete(&blog)
+	if dbResult.Error != nil {
+		return dbResult.Error
+	}
+	if dbResult.RowsAffected == 0 {
+		return errors.New("no blog found for deletion")
+	}
+
+	for _, comment := range blog.Comments {
+		dbResult := repo.DatabaseConnection.Delete(&comment)
+		if dbResult.Error != nil {
+			return dbResult.Error
+		}
+	}
+
+	return nil
 }
