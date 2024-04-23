@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"followers/model"
 	"followers/service"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type UserHandler struct {
@@ -87,6 +88,7 @@ func (handler *UserHandler) GetFollowings(writer http.ResponseWriter, req *http.
 
 	followers, err := handler.UserService.GetFollowings(userId)
 
+	log.Printf("evo me ")
 	writer.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
