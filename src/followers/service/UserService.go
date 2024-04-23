@@ -53,9 +53,7 @@ func (service *UserService) GetFollowers(userId string) (*[]model.User, error) {
 
 func (service *UserService) GetFollowings(userId string) (*[]model.User, error) {
 	followings, err := service.UserRepository.GetFollowings(userId)
-	log.Printf("evo me 1")
 	if err != nil {
-		log.Printf("evo me 2 ")
 		return nil, fmt.Errorf(fmt.Sprintf("no users with given id: %s were found", userId))
 	}
 	return &followings, nil

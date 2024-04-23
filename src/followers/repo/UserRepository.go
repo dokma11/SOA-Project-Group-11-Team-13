@@ -198,33 +198,28 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 	ctx := context.Background()
 	session := ur.driver.NewSession(ctx, neo4j.SessionConfig{DatabaseName: "neo4j"})
 	defer session.Close(ctx)
-	log.Printf("evo me 3")
 
 	var followedUsers []model.User
-
-	log.Printf("evo me 4")
 
 	_, err := session.ExecuteWrite(ctx,
 		func(transaction neo4j.ManagedTransaction) (interface{}, error) {
 			cypherQuery := "MATCH (user:User {id: $userId})-[:FOLLOWS]->(following:User) RETURN following"
-			log.Printf(cypherQuery)
 			intUserId, err := strconv.Atoi(userId)
+
 			if err != nil {
-				// Handle error where userId is not a valid integer string.
 				log.Printf("Error converting userId to integer: %v", err)
 				return nil, err
 			}
+
 			result, err := transaction.Run(ctx, cypherQuery, map[string]interface{}{"userId": intUserId})
-			log.Printf("evo me 6")
+
 			if err != nil {
-				log.Printf("Err1")
 				return nil, err
 			}
-			log.Printf("evo me 7")
+
 			for result.Next(ctx) {
 				node, ok := result.Record().Get("following")
 				if !ok {
-					log.Printf("evo me 8")
 					return nil, fmt.Errorf("following node not found")
 				}
 
@@ -239,8 +234,6 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 				role, _ := userNode.Props["role"].(model.UserRole)
 				profilePicture, _ := userNode.Props["profilePicture"].(string)
 				isActive, _ := userNode.Props["isActive"].(bool)
-
-				log.Printf("petlja")
 
 				following := model.User{
 					ID:             id,
@@ -262,7 +255,6 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 		})
 
 	if err != nil {
-		log.Printf("error final, no followings")
 		return nil, err
 	}
 
