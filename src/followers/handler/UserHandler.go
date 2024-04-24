@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"followers/model"
 	"followers/service"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type UserHandler struct {

@@ -6,6 +6,7 @@ import (
 	"followers/model"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -202,10 +203,16 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 
 	_, err := session.ExecuteWrite(ctx,
 		func(transaction neo4j.ManagedTransaction) (interface{}, error) {
-			result, err := transaction.Run(ctx,
-				"MATCH (user:User {id:"+userId+"})-[:FOLLOWS]->(following:User) "+
-					"RETURN following",
-				map[string]interface{}{"user_id": userId})
+			cypherQuery := "MATCH (user:User {id: $userId})-[:FOLLOWS]->(following:User) RETURN following"
+			intUserId, err := strconv.Atoi(userId)
+
+			if err != nil {
+				log.Printf("Error converting userId to integer: %v", err)
+				return nil, err
+			}
+
+			result, err := transaction.Run(ctx, cypherQuery, map[string]interface{}{"userId": intUserId})
+
 			if err != nil {
 				return nil, err
 			}
@@ -240,6 +247,7 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 			}
 
 			if err := result.Err(); err != nil {
+				ur.logger.Println("Error while retrieving users' followings", err)
 				return nil, err
 			}
 
@@ -247,7 +255,6 @@ func (ur *UserRepository) GetFollowings(userId string) ([]model.User, error) {
 		})
 
 	if err != nil {
-		ur.logger.Println("Error while retrieving users followings", err)
 		return nil, err
 	}
 
