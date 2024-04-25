@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -42,7 +43,7 @@ func (handler *BlogHandler) GetAll(writer http.ResponseWriter, req *http.Request
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
-	
+
 	writer.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(writer).Encode(blogs)
 	if err != nil {
@@ -50,7 +51,6 @@ func (handler *BlogHandler) GetAll(writer http.ResponseWriter, req *http.Request
 		return
 	}
 }
-
 
 func (handler *BlogHandler) Create(writer http.ResponseWriter, req *http.Request) {
 	log.Printf("Create blog")
@@ -69,6 +69,23 @@ func (handler *BlogHandler) Create(writer http.ResponseWriter, req *http.Request
 	}
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *BlogHandler) Delete(writer http.ResponseWriter, req *http.Request) {
+	log.Printf("usao")
+	id := mux.Vars(req)["id"]
+	log.Printf("Delete blog with id %s", id)
+
+	blog := handler.BlogService.Delete(id)
+
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	err := json.NewEncoder(writer).Encode(blog)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode blogs in method Delete")
+		return
+	}
+
 }
 
 func (handler *BlogHandler) SearchByName(writer http.ResponseWriter, req *http.Request) {
@@ -106,6 +123,43 @@ func (handler *BlogHandler) Publish(writer http.ResponseWriter, req *http.Reques
 	err = json.NewEncoder(writer).Encode(blog)
 	if err != nil {
 		_ = fmt.Errorf("error encountered while trying to encode blogs in method Publish")
+		return
+	}
+}
+
+func (handler *BlogHandler) GetByAuthorId(writer http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+	log.Printf("Blogs with author id " + id)
+	blogs, err := handler.BlogService.GetByAuthorId(id)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(blogs)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
+		return
+	}
+}
+
+func (handler *BlogHandler) GetByAuthorIds(writer http.ResponseWriter, req *http.Request) {
+	authorIdsString := mux.Vars(req)["authorIds"]
+	authorIds := strings.Split(authorIdsString, ",")
+	log.Printf("Blogs with author ids " + authorIdsString)
+	blogs, err := handler.BlogService.GetByAuthorIds(authorIds)
+	writer.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+	
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(blogs)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
 		return
 	}
 }

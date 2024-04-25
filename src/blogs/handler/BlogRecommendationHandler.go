@@ -14,6 +14,7 @@ import (
 
 type BlogRecommendationHandler struct {
 	BlogRecommendationService *service.BlogRecommendationService
+	BlogService *service.BlogService
 }
 
 func (handler *BlogRecommendationHandler) GetById(writer http.ResponseWriter, req *http.Request) {

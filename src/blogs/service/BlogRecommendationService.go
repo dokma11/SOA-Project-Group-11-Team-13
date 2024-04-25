@@ -4,10 +4,12 @@ import (
 	"blogs/model"
 	"blogs/repo"
 	"fmt"
+	"strconv"
 )
 
 type BlogRecommendationService struct {
 	BlogRecommendationRepository *repo.BlogRecommendationRepository
+	BlogRepository *repo.BlogRepository
 }
 
 func (service *BlogRecommendationService) GetById(id string) (*model.BlogRecommendation, error) {
@@ -27,7 +29,12 @@ func (service *BlogRecommendationService) GetAll() (*[]model.BlogRecommendation,
 }
 
 func (service *BlogRecommendationService) Create(blogRecommendation *model.BlogRecommendation) error {
-	err := service.BlogRecommendationRepository.Save(blogRecommendation)
+	blog, err := service.BlogRepository.GetById(strconv.Itoa(blogRecommendation.BlogId))
+	if err != nil {
+		return err
+	}
+	blogRecommendation.Blog = blog;
+	err = service.BlogRecommendationRepository.Save(blogRecommendation)
 	if err != nil {
 		return err
 	}

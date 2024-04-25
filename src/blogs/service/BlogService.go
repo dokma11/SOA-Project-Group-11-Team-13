@@ -9,6 +9,7 @@ import (
 
 type BlogService struct {
 	BlogRepository *repo.BlogRepository
+	BlogRecommendationRepository *repo.BlogRecommendationRepository
 }
 
 func (service *BlogService) GetById(id string) (*model.Blog, error) {
@@ -55,4 +56,44 @@ func (service *BlogService) Publish(id string) (model.Blog, error) {
 		return blog, err
 	}
 	return blog, nil
+}
+
+func (service *BlogService) Delete(id string) error {
+	err := service.BlogRepository.Delete(id)
+	if err != nil {
+		_ = fmt.Errorf("no blogs were deleted")
+		return err
+	}
+	return nil
+}
+
+
+func (service *BlogService) GetByAuthorId(id string) (*[]model.Blog, error) {
+	blogs, err := service.BlogRepository.GetByAuthorId(id)
+	if err != nil {
+		return nil, fmt.Errorf("no blogs were found")
+	}
+	return &blogs, nil
+}
+
+func (service *BlogService) GetByAuthorIds(authorIds []string) (*[]model.Blog, error) {
+	blogs, err := service.BlogRepository.GetByAuthorIds(authorIds)
+	if err != nil {
+		return nil, fmt.Errorf("no blogs were found")
+	}
+	return &blogs, nil
+}
+
+func (service *BlogService) GetRecommendationsByReceiverId(receiverId int) (*[]model.BlogRecommendation, error) {
+	blogs, _ := service.BlogRepository.GetAll()
+	var brs []model.BlogRecommendation
+	for _, blog := range blogs {
+		for _, br := range blog.Recommendations {
+			if br.RecommendationReceiverId == receiverId {
+				brs = append(brs, br)
+			}
+		}
+	}
+
+	return &brs, nil
 }

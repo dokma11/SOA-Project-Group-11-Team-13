@@ -87,7 +87,7 @@ func (facility *Facility) BeforeCreate(scope *gorm.DB) error {
 }
 
 func (facility *Facility) String() string {
-	return fmt.Sprintf("KeyPoint{ID: %d, AuthorId: %d, Name: %s, Description: %s, "+
+	return fmt.Sprintf("Facility{ID: %d, AuthorId: %d, Name: %s, Description: %s, "+
 		"Longitude: %f, Latitude: %f, ImagePath: %s, Category: %d}",
 		facility.ID, facility.AuthorId, facility.Name, facility.Description, facility.Longitude,
 		facility.Latitude, facility.ImagePath, facility.Category)

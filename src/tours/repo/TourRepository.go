@@ -17,6 +17,7 @@ func (repo *TourRepository) GetById(id string) (model.Tour, error) {
 	var tour model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
+		Preload("Equipment").
 		Where("id = ?", id).
 		Omit("Durations").
 		First(&tour)
@@ -30,6 +31,7 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]model.Tour, error)
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
+		Preload("Equipment").
 		Where("author_id = ?", authorId).
 		Omit("Durations").
 		Find(&tours)
@@ -41,7 +43,10 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]model.Tour, error)
 
 func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 	var tours []model.Tour
-	dbResult := repo.DatabaseConnection.Preload("KeyPoints").Find(&tours)
+	dbResult := repo.DatabaseConnection.
+		Preload("KeyPoints").
+		Preload("Equipment").
+		Find(&tours)
 	if dbResult != nil {
 		return nil, dbResult.Error
 	}
@@ -52,6 +57,7 @@ func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
+		Preload("Equipment").
 		Where("status = ?", int64(model.Published)).
 		Omit("Durations").
 		Find(&tours)
@@ -74,6 +80,7 @@ func (repo *TourRepository) Delete(id string) error {
 	var tour model.Tour
 	result := repo.DatabaseConnection.
 		Preload("KeyPoints").
+		Preload("Equipment").
 		Where("id = ?", id).
 		Omit("Durations").
 		First(&tour)
@@ -93,6 +100,16 @@ func (repo *TourRepository) Delete(id string) error {
 		dbResult := repo.DatabaseConnection.Delete(&keyPoint)
 		if dbResult.Error != nil {
 			return dbResult.Error
+		}
+	}
+
+	for _, equipment := range tour.Equipment {
+		err := repo.DatabaseConnection.
+			Model(&tour).
+			Association("Equipment").
+			Delete(&equipment)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -179,6 +196,7 @@ func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) e
 
 	dbResult := repo.DatabaseConnection.
 		Where("id = ?", tourId).
+		Preload("Equipment").
 		Omit("Durations").
 		First(&tour)
 
@@ -194,7 +212,10 @@ func (repo *TourRepository) DeleteEquipment(tourId string, equipmentId string) e
 	}
 	tour.Equipment = updatedEquipment
 
-	err := repo.DatabaseConnection.Model(&tour).Association("Equipment").Delete(&equipment)
+	err := repo.DatabaseConnection.
+		Model(&tour).
+		Association("Equipment").
+		Delete(&equipment)
 	if err != nil {
 		return errors.New("error while deleting tours equipment")
 	}
