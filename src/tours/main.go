@@ -86,10 +86,8 @@ func main() {
 	facilityRepository := &repo.FacilityRepository{DatabaseConnection: database}
 	facilityService := &service.FacilityService{FacilityRepository: facilityRepository}
 	facilityHandler := &handler.FacilityHandler{FacilityService: facilityService}
-	//
-	//startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler, facilityHandler)
 
-	listener, err := net.Listen("tcp", "followers:8084")
+	listener, err := net.Listen("tcp", "tours:8081")
 	if err != nil {
 		log.Fatalln(err)
 	}
