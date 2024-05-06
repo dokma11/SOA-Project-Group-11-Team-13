@@ -2,16 +2,21 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"tours/handler"
-	"tours/model"
-	"tours/repo"
-	"tours/service"
-
-	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"net"
+	"tours/handler"
+	"tours/model"
+	"tours/proto/equipment"
+	"tours/proto/facilities"
+	"tours/proto/keypoints"
+	"tours/proto/reviews"
+	"tours/proto/tours"
+	"tours/repo"
+	"tours/service"
 )
 
 func initDB() *gorm.DB {
@@ -55,81 +60,6 @@ func initDB() *gorm.DB {
 	return database
 }
 
-func startServer(tourHandler *handler.TourHandler, keyPointHandler *handler.KeyPointHandler,
-	reviewHandler *handler.ReviewHandler, equipmentHandler *handler.EquipmentHandler, facilityHandler *handler.FacilityHandler) {
-	router := mux.NewRouter().StrictSlash(true)
-
-	initializeTourRoutes(router, tourHandler)
-	initializeKeyPointRoutes(router, keyPointHandler)
-	initializeReviewRoutes(router, reviewHandler)
-	initializeEquipmentRoutes(router, equipmentHandler)
-	initializeFacilityRoutes(router, facilityHandler)
-
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
-	println("Server starting")
-	log.Fatal(http.ListenAndServe(":8081", router))
-}
-
-func initializeTourRoutes(router *mux.Router, tourHandler *handler.TourHandler) {
-	router.HandleFunc("/tours/published", tourHandler.GetPublished).Methods("GET")
-	router.HandleFunc("/tours/{id}", tourHandler.GetById).Methods("GET")
-	router.HandleFunc("/tours/authors/{authorId}", tourHandler.GetByAuthorId).Methods("GET")
-	router.HandleFunc("/tours", tourHandler.GetAll).Methods("GET")
-	router.HandleFunc("/tours/{tourId}/equipment", tourHandler.GetEquipment).Methods("GET")
-
-	router.HandleFunc("/tours", tourHandler.Create).Methods("POST")
-	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.AddEquipment).Methods("POST")
-
-	router.HandleFunc("/tours", tourHandler.Update).Methods("PUT")
-	router.HandleFunc("/tours/durations", tourHandler.AddDurations).Methods("PUT")
-	router.HandleFunc("/tours/publish/{id}", tourHandler.Publish).Methods("PUT")
-	router.HandleFunc("/tours/archive/{id}", tourHandler.Archive).Methods("PUT")
-
-	router.HandleFunc("/tours/{id}", tourHandler.Delete).Methods("DELETE")
-	router.HandleFunc("/tours/{tourId}/equipment/{equipmentId}", tourHandler.DeleteEquipment).Methods("DELETE")
-}
-
-func initializeReviewRoutes(router *mux.Router, reviewHandler *handler.ReviewHandler) {
-	router.HandleFunc("/reviews/{id}", reviewHandler.GetById).Methods("GET")
-	router.HandleFunc("/reviews", reviewHandler.GetAll).Methods("GET")
-
-	router.HandleFunc("/reviews", reviewHandler.Create).Methods("POST")
-
-	router.HandleFunc("/reviews", reviewHandler.Update).Methods("PUT")
-
-	router.HandleFunc("/reviews/{id}", reviewHandler.Delete).Methods("DELETE")
-}
-
-func initializeKeyPointRoutes(router *mux.Router, keyPointHandler *handler.KeyPointHandler) {
-	router.HandleFunc("/keyPoints/{id}", keyPointHandler.GetById).Methods("GET")
-	router.HandleFunc("/keyPoints", keyPointHandler.GetAll).Methods("GET")
-	router.HandleFunc("/keyPoints/tour/{tourId}", keyPointHandler.GetAllByTourId).Methods("GET")
-
-	router.HandleFunc("/keyPoints", keyPointHandler.Create).Methods("POST")
-
-	router.HandleFunc("/keyPoints", keyPointHandler.Update).Methods("PUT")
-
-	router.HandleFunc("/keyPoints/{id}", keyPointHandler.Delete).Methods("DELETE")
-}
-
-func initializeEquipmentRoutes(router *mux.Router, equipmentHandler *handler.EquipmentHandler) {
-	router.HandleFunc("/equipment/{id}", equipmentHandler.GetById).Methods("GET")
-	router.HandleFunc("/equipment", equipmentHandler.GetAll).Methods("GET")
-
-	router.HandleFunc("/equipment", equipmentHandler.Create).Methods("POST")
-}
-
-func initializeFacilityRoutes(router *mux.Router, facilityHandler *handler.FacilityHandler) {
-	router.HandleFunc("/facilities", facilityHandler.GetAll).Methods("GET")
-	router.HandleFunc("/facilities/author/{authorId}", facilityHandler.GetAllByAuthorId).Methods("GET")
-
-	router.HandleFunc("/facilities", facilityHandler.Create).Methods("POST")
-
-	router.HandleFunc("/facilities", facilityHandler.Update).Methods("PUT")
-
-	router.HandleFunc("/facilities/{id}", facilityHandler.Delete).Methods("DELETE")
-}
-
 func main() {
 	database := initDB()
 	if database == nil {
@@ -156,6 +86,31 @@ func main() {
 	facilityRepository := &repo.FacilityRepository{DatabaseConnection: database}
 	facilityService := &service.FacilityService{FacilityRepository: facilityRepository}
 	facilityHandler := &handler.FacilityHandler{FacilityService: facilityService}
+	//
+	//startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler, facilityHandler)
 
-	startServer(tourHandler, keyPointHandler, reviewHandler, equipmentHandler, facilityHandler)
+	listener, err := net.Listen("tcp", "followers:8084")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer func(listener net.Listener) {
+		err := listener.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(listener)
+
+	grpcServer := grpc.NewServer()
+	reflection.Register(grpcServer)
+
+	tours.RegisterToursServiceServer(grpcServer, tourHandler)
+	equipment.RegisterEquipmentServiceServer(grpcServer, equipmentHandler)
+	facilities.RegisterFacilitiesServiceServer(grpcServer, facilityHandler)
+	keyPoints.RegisterKeyPointsServiceServer(grpcServer, keyPointHandler)
+	reviews.RegisterReviewsServiceServer(grpcServer, reviewHandler)
+
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatal("server error: ", err)
+	}
+
 }
