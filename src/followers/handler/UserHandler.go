@@ -38,26 +38,32 @@ func (handler UserHandler) GetByUsername(ctx context.Context, request *followers
 
 func (handler UserHandler) GetFollowers(ctx context.Context, request *followers.GetFollowersRequest) (*followers.GetFollowersResponse, error) {
 	users, _ := handler.UserService.GetFollowers(request.ID)
-	var userResponse []*followers.User
+	userResponse := make([]*followers.User, len(*users))
 
-	for i, user := range *users {
-		userResponse[i].ID = user.ID
-		userResponse[i].Username = user.Username
-		userResponse[i].Password = user.Password
-		userResponse[i].IsActive = user.IsActive
-		userResponse[i].ProfilePicture = user.ProfilePicture
-		userResponse[i].Role = followers.User_Role(user.Role)
+	if users != nil && len(*users) > 0 {
+		for i, user := range *users {
+			userResponse[i] = &followers.User{
+				ID:             user.ID,
+				Username:       user.Username,
+				Password:       user.Password,
+				IsActive:       user.IsActive,
+				ProfilePicture: user.ProfilePicture,
+				Role:           followers.User_Role(user.Role),
+			}
+		}
 	}
 
-	return &followers.GetFollowersResponse{
+	ret := &followers.GetFollowersResponse{
 		Users: userResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
 func (handler UserHandler) GetFollowings(ctx context.Context, request *followers.GetFollowingsRequest) (*followers.GetFollowingsResponse, error) {
 	users, _ := handler.UserService.GetFollowings(request.ID)
 
-	var userResponse []*followers.User
+	userResponse := make([]*followers.User, len(*users))
 
 	for i, user := range *users {
 		userResponse[i].ID = user.ID
