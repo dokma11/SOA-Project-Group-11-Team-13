@@ -65,48 +65,58 @@ func (handler UserHandler) GetFollowings(ctx context.Context, request *followers
 
 	userResponse := make([]*followers.User, len(*users))
 
-	for i, user := range *users {
-		userResponse[i].ID = user.ID
-		userResponse[i].Username = user.Username
-		userResponse[i].Password = user.Password
-		userResponse[i].IsActive = user.IsActive
-		userResponse[i].ProfilePicture = user.ProfilePicture
-		userResponse[i].Role = followers.User_Role(user.Role)
+	if users != nil && len(*users) > 0 {
+		for i, user := range *users {
+			userResponse[i] = &followers.User{
+				ID:             user.ID,
+				Username:       user.Username,
+				Password:       user.Password,
+				IsActive:       user.IsActive,
+				ProfilePicture: user.ProfilePicture,
+				Role:           followers.User_Role(user.Role),
+			}
+		}
 	}
 
-	return &followers.GetFollowingsResponse{
+	ret := &followers.GetFollowingsResponse{
 		Users: userResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
 func (handler UserHandler) GetRecommendedUsers(ctx context.Context, request *followers.GetRecommendedUsersRequest) (*followers.GetRecommendedUsersResponse, error) {
 	users, _ := handler.UserService.GetRecommendedUsers(request.ID)
 
-	var userResponse []*followers.User
+	userResponse := make([]*followers.User, len(*users))
 
-	for i, user := range *users {
-		userResponse[i].ID = user.ID
-		userResponse[i].Username = user.Username
-		userResponse[i].Password = user.Password
-		userResponse[i].IsActive = user.IsActive
-		userResponse[i].ProfilePicture = user.ProfilePicture
-		userResponse[i].Role = followers.User_Role(user.Role)
+	if users != nil && len(*users) > 0 {
+		for i, user := range *users {
+			userResponse[i] = &followers.User{
+				ID:             user.ID,
+				Username:       user.Username,
+				Password:       user.Password,
+				IsActive:       user.IsActive,
+				ProfilePicture: user.ProfilePicture,
+				Role:           followers.User_Role(user.Role),
+			}
+		}
 	}
 
-	return &followers.GetRecommendedUsersResponse{
+	ret := &followers.GetRecommendedUsersResponse{
 		Users: userResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
 func (handler UserHandler) Follow(ctx context.Context, request *followers.FollowRequest) (*followers.FollowResponse, error) {
 	handler.UserService.Follow(request.FollowingId, request.FollowerId)
-
 	return &followers.FollowResponse{}, nil
 }
 
 func (handler UserHandler) Unfollow(ctx context.Context, request *followers.UnfollowRequest) (*followers.UnfollowResponse, error) {
 	handler.UserService.Unfollow(request.FollowerId, request.FollowingId)
-
 	return &followers.UnfollowResponse{}, nil
 }
 
