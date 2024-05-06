@@ -16,10 +16,10 @@ import (
 )
 
 func main() {
-	//port := os.Getenv("PORT")
-	//if len(port) == 0 {
-	//	port = "8084"
-	//}
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "8084"
+	}
 
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -50,28 +50,12 @@ func main() {
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
 
-	logger.Println("Server starting with rpc")
+	logger.Println("Server starting at port 8084")
 
 	userHandler := handler.NewUserHandler(logger, userService)
 	followers.RegisterFollowersServiceServer(grpcServer, userHandler)
 
-	//cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}), gorillaHandlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"}))
-	//server := http.Server{
-	//	Addr: ":" + port,
-	//	//Handler:      cors(router),
-	//	IdleTimeout:  120 * time.Second,
-	//	ReadTimeout:  5 * time.Second,
-	//	WriteTimeout: 5 * time.Second,
-	//}
-
-	//logger.Println("Server starting", port)
-	//logger.Println("Server listening on port", port)
 	go func() {
-		//err := server.ListenAndServe()
-		//if err != nil {
-		//	logger.Fatal(err)
-		//}
-
 		if err := grpcServer.Serve(listener); err != nil {
 			log.Fatal("server error: ", err)
 		}
@@ -84,10 +68,5 @@ func main() {
 	sig := <-sigCh
 	logger.Println("Received terminate, graceful shutdown", sig)
 
-	//if server.Shutdown(timeoutContext) != nil {
-	//	logger.Fatal("Cannot gracefully shutdown...")
-	//}
-	//logger.Println("Server stopped")
 	grpcServer.Stop()
-
 }
