@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+option go_package = "proto/followers";
+
+service FollowersService {
+      rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse) {}
+      rpc GetFollowers(GetFollowersRequest) returns (GetFollowersResponse) {}
+      rpc GetFollowings(GetFollowingsRequest) returns (GetFollowingsResponse) {}
+      rpc GetRecommendedUsers(GetRecommendedUsersRequest) returns (GetRecommendedUsersResponse) {}
+      rpc Unfollow(UnfollowRequest) returns (UnfollowResponse) {}
+      rpc Follow(FollowRequest) returns (FollowResponse) {}
+      rpc Create(CreateRequest) returns (CreateResponse) {}
+}
+
+message User {
+    int64 ID = 1;
+    string Username = 2;
+    string Password = 3;
+    enum Role {
+        Administrator = 0;
+        Author = 1;
+        Tourist = 2;
+    };
+    Role role = 4;
+    string ProfilePicture = 5;
+    bool IsActive = 6;
+}
+
+message Users {
+    repeated User objects = 1;
+}
+
+message GetUserByUsernameRequest {
+    string Username = 1;
+}
+
+message GetUserByUsernameResponse {
+    User user = 1;
+}
+
+message GetFollowersRequest {
+    string ID = 1;
+}
+
+message GetFollowersResponse {
+    repeated User users = 1;
+}
+
+message GetFollowingsRequest {
+    string ID = 1;
+}
+
+message GetFollowingsResponse {
+    repeated User users = 1;
+}
+
+message GetRecommendedUsersRequest {
+    string ID = 1;
+}
+
+message GetRecommendedUsersResponse {
+    repeated User users = 1;
+}
+
+message UnfollowRequest {
+    string followerId = 1;
+    string followingId = 2;
+}
+
+message UnfollowResponse {
+}
+
+message FollowRequest {
+    string followerId = 1;
+    string followingId = 2;
+}
+
+message FollowResponse {
+}
+
+message CreateRequest {
+    User user = 1;
+}
+
+message CreateResponse {
+}
