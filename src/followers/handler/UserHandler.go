@@ -17,10 +17,10 @@ type UserHandler struct {
 type KeyProduct struct{}
 
 func NewUserHandler(l *log.Logger, s *service.UserService) *UserHandler {
-	return &UserHandler{s, l, followers.UnimplementedFollowersServiceServer{}} //Proveriti samo sus je
+	return &UserHandler{s, l, followers.UnimplementedFollowersServiceServer{}}
 }
 
-func (handler UserHandler) GetByUsername(ctx context.Context, request *followers.GetUserByUsernameRequest) (*followers.GetUserByUsernameResponse, error) {
+func (handler UserHandler) GetUserByUsername(ctx context.Context, request *followers.GetUserByUsernameRequest) (*followers.GetUserByUsernameResponse, error) {
 	user, _ := handler.UserService.GetByUsername(request.Username)
 
 	userResponse := followers.User{}
@@ -31,9 +31,11 @@ func (handler UserHandler) GetByUsername(ctx context.Context, request *followers
 	userResponse.ProfilePicture = user.ProfilePicture
 	userResponse.Role = followers.User_Role(user.Role)
 
-	return &followers.GetUserByUsernameResponse{
+	ret := &followers.GetUserByUsernameResponse{
 		User: &userResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
 func (handler UserHandler) GetFollowers(ctx context.Context, request *followers.GetFollowersRequest) (*followers.GetFollowersResponse, error) {
