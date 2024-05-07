@@ -4,7 +4,7 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "proto/blogs";
 
-service BlogRecommendationService {
+service BlogsService {
   rpc Create(CreateRequest) returns (CreateResponse) {}
   rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
   rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}

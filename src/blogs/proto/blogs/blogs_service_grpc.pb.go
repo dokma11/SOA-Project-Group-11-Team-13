@@ -19,19 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BlogRecommendationService_Create_FullMethodName          = "/BlogRecommendationService/Create"
-	BlogRecommendationService_GetAll_FullMethodName          = "/BlogRecommendationService/GetAll"
-	BlogRecommendationService_GetById_FullMethodName         = "/BlogRecommendationService/GetById"
-	BlogRecommendationService_GetByReceiverId_FullMethodName = "/BlogRecommendationService/GetByReceiverId"
-	BlogRecommendationService_SearchByName_FullMethodName    = "/BlogRecommendationService/SearchByName"
-	BlogRecommendationService_Publish_FullMethodName         = "/BlogRecommendationService/Publish"
-	BlogRecommendationService_Delete_FullMethodName          = "/BlogRecommendationService/Delete"
+	BlogsService_Create_FullMethodName          = "/BlogsService/Create"
+	BlogsService_GetAll_FullMethodName          = "/BlogsService/GetAll"
+	BlogsService_GetById_FullMethodName         = "/BlogsService/GetById"
+	BlogsService_GetByReceiverId_FullMethodName = "/BlogsService/GetByReceiverId"
+	BlogsService_SearchByName_FullMethodName    = "/BlogsService/SearchByName"
+	BlogsService_Publish_FullMethodName         = "/BlogsService/Publish"
+	BlogsService_Delete_FullMethodName          = "/BlogsService/Delete"
 )
 
-// BlogRecommendationServiceClient is the client API for BlogRecommendationService service.
+// BlogsServiceClient is the client API for BlogsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type BlogRecommendationServiceClient interface {
+type BlogsServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error)
@@ -41,81 +41,81 @@ type BlogRecommendationServiceClient interface {
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
 
-type blogRecommendationServiceClient struct {
+type blogsServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewBlogRecommendationServiceClient(cc grpc.ClientConnInterface) BlogRecommendationServiceClient {
-	return &blogRecommendationServiceClient{cc}
+func NewBlogsServiceClient(cc grpc.ClientConnInterface) BlogsServiceClient {
+	return &blogsServiceClient{cc}
 }
 
-func (c *blogRecommendationServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
+func (c *blogsServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_Create_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_Create_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
+func (c *blogsServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
 	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_GetAll_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_GetAll_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error) {
+func (c *blogsServiceClient) GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error) {
 	out := new(GetByIdResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_GetById_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_GetById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) GetByReceiverId(ctx context.Context, in *GetByAuthorsIdRequest, opts ...grpc.CallOption) (*GetByAuthorsIdResponse, error) {
+func (c *blogsServiceClient) GetByReceiverId(ctx context.Context, in *GetByAuthorsIdRequest, opts ...grpc.CallOption) (*GetByAuthorsIdResponse, error) {
 	out := new(GetByAuthorsIdResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_GetByReceiverId_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_GetByReceiverId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) SearchByName(ctx context.Context, in *SearchByNameRequest, opts ...grpc.CallOption) (*SearchByNameResponse, error) {
+func (c *blogsServiceClient) SearchByName(ctx context.Context, in *SearchByNameRequest, opts ...grpc.CallOption) (*SearchByNameResponse, error) {
 	out := new(SearchByNameResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_SearchByName_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_SearchByName_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error) {
+func (c *blogsServiceClient) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error) {
 	out := new(PublishResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_Publish_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_Publish_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+func (c *blogsServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_Delete_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, BlogsService_Delete_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// BlogRecommendationServiceServer is the server API for BlogRecommendationService service.
-// All implementations must embed UnimplementedBlogRecommendationServiceServer
+// BlogsServiceServer is the server API for BlogsService service.
+// All implementations must embed UnimplementedBlogsServiceServer
 // for forward compatibility
-type BlogRecommendationServiceServer interface {
+type BlogsServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error)
@@ -123,208 +123,207 @@ type BlogRecommendationServiceServer interface {
 	SearchByName(context.Context, *SearchByNameRequest) (*SearchByNameResponse, error)
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
-	mustEmbedUnimplementedBlogRecommendationServiceServer()
+	mustEmbedUnimplementedBlogsServiceServer()
 }
 
-// UnimplementedBlogRecommendationServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedBlogRecommendationServiceServer struct {
+// UnimplementedBlogsServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedBlogsServiceServer struct {
 }
 
-func (UnimplementedBlogRecommendationServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
+func (UnimplementedBlogsServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+func (UnimplementedBlogsServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error) {
+func (UnimplementedBlogsServiceServer) GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) GetByReceiverId(context.Context, *GetByAuthorsIdRequest) (*GetByAuthorsIdResponse, error) {
+func (UnimplementedBlogsServiceServer) GetByReceiverId(context.Context, *GetByAuthorsIdRequest) (*GetByAuthorsIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByReceiverId not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) SearchByName(context.Context, *SearchByNameRequest) (*SearchByNameResponse, error) {
+func (UnimplementedBlogsServiceServer) SearchByName(context.Context, *SearchByNameRequest) (*SearchByNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchByName not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) Publish(context.Context, *PublishRequest) (*PublishResponse, error) {
+func (UnimplementedBlogsServiceServer) Publish(context.Context, *PublishRequest) (*PublishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Publish not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+func (UnimplementedBlogsServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) mustEmbedUnimplementedBlogRecommendationServiceServer() {
-}
+func (UnimplementedBlogsServiceServer) mustEmbedUnimplementedBlogsServiceServer() {}
 
-// UnsafeBlogRecommendationServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to BlogRecommendationServiceServer will
+// UnsafeBlogsServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BlogsServiceServer will
 // result in compilation errors.
-type UnsafeBlogRecommendationServiceServer interface {
-	mustEmbedUnimplementedBlogRecommendationServiceServer()
+type UnsafeBlogsServiceServer interface {
+	mustEmbedUnimplementedBlogsServiceServer()
 }
 
-func RegisterBlogRecommendationServiceServer(s grpc.ServiceRegistrar, srv BlogRecommendationServiceServer) {
-	s.RegisterService(&BlogRecommendationService_ServiceDesc, srv)
+func RegisterBlogsServiceServer(s grpc.ServiceRegistrar, srv BlogsServiceServer) {
+	s.RegisterService(&BlogsService_ServiceDesc, srv)
 }
 
-func _BlogRecommendationService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).Create(ctx, in)
+		return srv.(BlogsServiceServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_Create_FullMethodName,
+		FullMethod: BlogsService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).Create(ctx, req.(*CreateRequest))
+		return srv.(BlogsServiceServer).Create(ctx, req.(*CreateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAllRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).GetAll(ctx, in)
+		return srv.(BlogsServiceServer).GetAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_GetAll_FullMethodName,
+		FullMethod: BlogsService_GetAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).GetAll(ctx, req.(*GetAllRequest))
+		return srv.(BlogsServiceServer).GetAll(ctx, req.(*GetAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).GetById(ctx, in)
+		return srv.(BlogsServiceServer).GetById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_GetById_FullMethodName,
+		FullMethod: BlogsService_GetById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).GetById(ctx, req.(*GetByIdRequest))
+		return srv.(BlogsServiceServer).GetById(ctx, req.(*GetByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_GetByReceiverId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_GetByReceiverId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetByAuthorsIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).GetByReceiverId(ctx, in)
+		return srv.(BlogsServiceServer).GetByReceiverId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_GetByReceiverId_FullMethodName,
+		FullMethod: BlogsService_GetByReceiverId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).GetByReceiverId(ctx, req.(*GetByAuthorsIdRequest))
+		return srv.(BlogsServiceServer).GetByReceiverId(ctx, req.(*GetByAuthorsIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_SearchByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_SearchByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchByNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).SearchByName(ctx, in)
+		return srv.(BlogsServiceServer).SearchByName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_SearchByName_FullMethodName,
+		FullMethod: BlogsService_SearchByName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).SearchByName(ctx, req.(*SearchByNameRequest))
+		return srv.(BlogsServiceServer).SearchByName(ctx, req.(*SearchByNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_Publish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_Publish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PublishRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).Publish(ctx, in)
+		return srv.(BlogsServiceServer).Publish(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_Publish_FullMethodName,
+		FullMethod: BlogsService_Publish_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).Publish(ctx, req.(*PublishRequest))
+		return srv.(BlogsServiceServer).Publish(ctx, req.(*PublishRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlogsService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).Delete(ctx, in)
+		return srv.(BlogsServiceServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_Delete_FullMethodName,
+		FullMethod: BlogsService_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).Delete(ctx, req.(*DeleteRequest))
+		return srv.(BlogsServiceServer).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// BlogRecommendationService_ServiceDesc is the grpc.ServiceDesc for BlogRecommendationService service.
+// BlogsService_ServiceDesc is the grpc.ServiceDesc for BlogsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var BlogRecommendationService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "BlogRecommendationService",
-	HandlerType: (*BlogRecommendationServiceServer)(nil),
+var BlogsService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "BlogsService",
+	HandlerType: (*BlogsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
-			Handler:    _BlogRecommendationService_Create_Handler,
+			Handler:    _BlogsService_Create_Handler,
 		},
 		{
 			MethodName: "GetAll",
-			Handler:    _BlogRecommendationService_GetAll_Handler,
+			Handler:    _BlogsService_GetAll_Handler,
 		},
 		{
 			MethodName: "GetById",
-			Handler:    _BlogRecommendationService_GetById_Handler,
+			Handler:    _BlogsService_GetById_Handler,
 		},
 		{
 			MethodName: "GetByReceiverId",
-			Handler:    _BlogRecommendationService_GetByReceiverId_Handler,
+			Handler:    _BlogsService_GetByReceiverId_Handler,
 		},
 		{
 			MethodName: "SearchByName",
-			Handler:    _BlogRecommendationService_SearchByName_Handler,
+			Handler:    _BlogsService_SearchByName_Handler,
 		},
 		{
 			MethodName: "Publish",
-			Handler:    _BlogRecommendationService_Publish_Handler,
+			Handler:    _BlogsService_Publish_Handler,
 		},
 		{
 			MethodName: "Delete",
-			Handler:    _BlogRecommendationService_Delete_Handler,
+			Handler:    _BlogsService_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
