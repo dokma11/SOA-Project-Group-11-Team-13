@@ -12,7 +12,7 @@ type EquipmentHandler struct {
 	equipment.UnimplementedEquipmentServiceServer
 }
 
-func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment.GetEquipmentByIdRequest) (*equipment.GetEquipmentByIdResponse, error) {
+func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment.GetByIdRequest) (*equipment.GetByIdResponse, error) {
 	equipmentList, _ := handler.EquipmentService.GetById(request.ID)
 
 	equipmentResponse := equipment.Equipment{}
@@ -21,28 +21,37 @@ func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment
 	equipmentResponse.Description = equipmentList.Description
 	//equipmentResponse.Tours = equipmentList.Tours				Treba proveriti
 
-	return &equipment.GetEquipmentByIdResponse{
+	ret := &equipment.GetByIdResponse{
 		Equipment: &equipmentResponse,
-	}, nil
-}
-
-func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.GetAllEquipmentRequest) (*equipment.GetAllEquipmentResponse, error) {
-	equipmentList, _ := handler.EquipmentService.GetAll()
-	var equipmentResponse []*equipment.Equipment
-
-	for i, eq := range *equipmentList {
-		equipmentResponse[i].ID = eq.ID
-		equipmentResponse[i].Name = eq.Name
-		equipmentResponse[i].Description = eq.Description
-		//equipmentResponse[i].Tours = e.Tours				Treba proveriti
 	}
 
-	return &equipment.GetAllEquipmentResponse{
-		Equipment: equipmentResponse,
-	}, nil
+	return ret, nil
 }
 
-func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.CreateEquipmentRequest) (*equipment.CreateEquipmentResponse, error) {
+func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.GetAllRequest) (*equipment.GetAllResponse, error) {
+	equipmentList, _ := handler.EquipmentService.GetAll()
+
+	equipmentResponse := make([]*equipment.Equipment, len(*equipmentList))
+
+	if equipmentList != nil && len(*equipmentList) > 0 {
+		for i, eq := range *equipmentList {
+			equipmentResponse[i] = &equipment.Equipment{
+				ID:          eq.ID,
+				Name:        eq.Name,
+				Description: eq.Description,
+				//Tours: eq.Tours,	Treba proveriti
+			}
+		}
+	}
+
+	ret := &equipment.GetAllResponse{
+		Equipment: equipmentResponse,
+	}
+
+	return ret, nil
+}
+
+func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.CreateRequest) (*equipment.CreateResponse, error) {
 	equipmentResponse := model.Equipment{}
 	equipmentResponse.ID = request.Equipment.ID
 	equipmentResponse.Name = request.Equipment.Name
@@ -51,5 +60,5 @@ func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.
 
 	handler.EquipmentService.Create(&equipmentResponse)
 
-	return &equipment.CreateEquipmentResponse{}, nil
+	return &equipment.CreateResponse{}, nil
 }

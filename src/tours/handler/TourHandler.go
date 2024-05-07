@@ -15,10 +15,10 @@ type TourHandler struct {
 	tours.UnimplementedToursServiceServer
 }
 
-func (handler *TourHandler) GetById(ctx context.Context, request *tours.GetTourByIdRequest) (*tours.GetTourByIdResponse, error) {
+func (handler *TourHandler) GetById(ctx context.Context, request *tours.GetByIdRequest) (*tours.GetByIdResponse, error) {
 	tour, _ := handler.TourService.GetById(request.ID)
 
-	var tourResponse tours.Tour
+	tourResponse := tours.Tour{}
 	tourResponse.ID = tour.ID
 	tourResponse.AuthorId = int32(tour.AuthorId)
 	tourResponse.Name = tour.Name
@@ -37,102 +37,122 @@ func (handler *TourHandler) GetById(ctx context.Context, request *tours.GetTourB
 	//tourResponse.Reviews = tour.Reviews
 	//tourResponse.Durations = tour.Durations
 
-	return &tours.GetTourByIdResponse{
+	ret := &tours.GetByIdResponse{
 		Tour: &tourResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) GetByAuthorId(ctx context.Context, request *tours.GetToursByAuthorIdRequest) (*tours.GetToursByAuthorIdResponse, error) {
+func (handler *TourHandler) GetByAuthorId(ctx context.Context, request *tours.GetByAuthorIdRequest) (*tours.GetByAuthorIdResponse, error) {
 	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId)
 
-	var toursResponse []*tours.Tour
+	toursResponse := make([]*tours.Tour, len(*toursList))
 
-	for i, tour := range *toursList {
-		toursResponse[i].ID = tour.ID
-		toursResponse[i].AuthorId = int32(tour.AuthorId)
-		toursResponse[i].Name = tour.Name
-		toursResponse[i].Description = tour.Description
-		toursResponse[i].Difficulty = int32(tour.Difficulty)
-		toursResponse[i].Tags = tour.Tags
-		toursResponse[i].Status = tours.Tour_TourStatus(tour.Status)
-		toursResponse[i].Price = tour.Price
-		toursResponse[i].Distance = tour.Distance
-		toursResponse[i].PublishDate = TimeToProtoTimestamp(tour.PublishDate)
-		toursResponse[i].ArchiveDate = TimeToProtoTimestamp(tour.ArchiveDate)
-		toursResponse[i].Category = tours.Tour_TourCategory(tour.Category)
-		toursResponse[i].IsDeleted = tour.IsDeleted
-		//toursResponse[i].KeyPoints = tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-		//toursResponse[i].Equipment = tour.Equipment
-		//toursResponse[i].Reviews = tour.Reviews
-		//toursResponse[i].Durations = tour.Durations
+	if toursList != nil && len(*toursList) > 0 {
+		for i, tour := range *toursList {
+			toursResponse[i] = &tours.Tour{
+				ID:          tour.ID,
+				AuthorId:    int32(tour.AuthorId),
+				Name:        tour.Name,
+				Description: tour.Description,
+				Difficulty:  int32(tour.Difficulty),
+				Tags:        tour.Tags,
+				Status:      tours.Tour_TourStatus(tour.Status),
+				Price:       tour.Price,
+				Distance:    tour.Distance,
+				PublishDate: TimeToProtoTimestamp(tour.PublishDate),
+				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
+				Category:    tours.Tour_TourCategory(tour.Category),
+				IsDeleted:   tour.IsDeleted,
+				//KeyPoints : tour.KeyPoints,	PROVERITI SAMO DA LI TREBA I STA TREBA
+				//Equipment : tour.Equipment,
+				//Reviews : tour.Reviews,
+				//Durations : tour.Durations,
+			}
+		}
 	}
 
-	return &tours.GetToursByAuthorIdResponse{
+	ret := &tours.GetByAuthorIdResponse{
 		Tours: toursResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) GetAll(ctx context.Context, request *tours.GetAllToursRequest) (*tours.GetAllToursResponse, error) {
+func (handler *TourHandler) GetAll(ctx context.Context, request *tours.GetAllRequest) (*tours.GetAllResponse, error) {
 	toursList, _ := handler.TourService.GetAll()
 
-	var toursResponse []*tours.Tour
+	toursResponse := make([]*tours.Tour, len(*toursList))
 
-	for i, tour := range *toursList {
-		toursResponse[i].ID = tour.ID
-		toursResponse[i].AuthorId = int32(tour.AuthorId)
-		toursResponse[i].Name = tour.Name
-		toursResponse[i].Description = tour.Description
-		toursResponse[i].Difficulty = int32(tour.Difficulty)
-		toursResponse[i].Tags = tour.Tags
-		toursResponse[i].Status = tours.Tour_TourStatus(tour.Status)
-		toursResponse[i].Price = tour.Price
-		toursResponse[i].Distance = tour.Distance
-		toursResponse[i].PublishDate = TimeToProtoTimestamp(tour.PublishDate)
-		toursResponse[i].ArchiveDate = TimeToProtoTimestamp(tour.ArchiveDate)
-		toursResponse[i].Category = tours.Tour_TourCategory(tour.Category)
-		toursResponse[i].IsDeleted = tour.IsDeleted
-		//toursResponse[i].KeyPoints = tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-		//toursResponse[i].Equipment = tour.Equipment
-		//toursResponse[i].Reviews = tour.Reviews
-		//toursResponse[i].Durations = tour.Durations
+	if toursList != nil && len(*toursList) > 0 {
+		for i, tour := range *toursList {
+			toursResponse[i] = &tours.Tour{
+				ID:          tour.ID,
+				AuthorId:    int32(tour.AuthorId),
+				Name:        tour.Name,
+				Description: tour.Description,
+				Difficulty:  int32(tour.Difficulty),
+				Tags:        tour.Tags,
+				Status:      tours.Tour_TourStatus(tour.Status),
+				Price:       tour.Price,
+				Distance:    tour.Distance,
+				PublishDate: TimeToProtoTimestamp(tour.PublishDate),
+				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
+				Category:    tours.Tour_TourCategory(tour.Category),
+				IsDeleted:   tour.IsDeleted,
+				//KeyPoints : tour.KeyPoints,	PROVERITI SAMO DA LI TREBA I STA TREBA
+				//Equipment : tour.Equipment,
+				//Reviews : tour.Reviews,
+				//Durations : tour.Durations,
+			}
+		}
 	}
 
-	return &tours.GetAllToursResponse{
+	ret := &tours.GetAllResponse{
 		Tours: toursResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) GetPublished(ctx context.Context, request *tours.GetPublishedToursRequest) (*tours.GetPublishedToursResponse, error) {
+func (handler *TourHandler) GetPublished(ctx context.Context, request *tours.GetPublishedRequest) (*tours.GetPublishedResponse, error) {
 	toursList, _ := handler.TourService.GetPublished()
 
-	var toursResponse []*tours.Tour
+	toursResponse := make([]*tours.Tour, len(*toursList))
 
-	for i, tour := range *toursList {
-		toursResponse[i].ID = tour.ID
-		toursResponse[i].AuthorId = int32(tour.AuthorId)
-		toursResponse[i].Name = tour.Name
-		toursResponse[i].Description = tour.Description
-		toursResponse[i].Difficulty = int32(tour.Difficulty)
-		toursResponse[i].Tags = tour.Tags
-		toursResponse[i].Status = tours.Tour_TourStatus(tour.Status)
-		toursResponse[i].Price = tour.Price
-		toursResponse[i].Distance = tour.Distance
-		toursResponse[i].PublishDate = TimeToProtoTimestamp(tour.PublishDate)
-		toursResponse[i].ArchiveDate = TimeToProtoTimestamp(tour.ArchiveDate)
-		toursResponse[i].Category = tours.Tour_TourCategory(tour.Category)
-		toursResponse[i].IsDeleted = tour.IsDeleted
-		//toursResponse[i].KeyPoints = tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-		//toursResponse[i].Equipment = tour.Equipment
-		//toursResponse[i].Reviews = tour.Reviews
-		//toursResponse[i].Durations = tour.Durations
+	if toursList != nil && len(*toursList) > 0 {
+		for i, tour := range *toursList {
+			toursResponse[i] = &tours.Tour{
+				ID:          tour.ID,
+				AuthorId:    int32(tour.AuthorId),
+				Name:        tour.Name,
+				Description: tour.Description,
+				Difficulty:  int32(tour.Difficulty),
+				Tags:        tour.Tags,
+				Status:      tours.Tour_TourStatus(tour.Status),
+				Price:       tour.Price,
+				Distance:    tour.Distance,
+				PublishDate: TimeToProtoTimestamp(tour.PublishDate),
+				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
+				Category:    tours.Tour_TourCategory(tour.Category),
+				IsDeleted:   tour.IsDeleted,
+				//KeyPoints : tour.KeyPoints,	PROVERITI SAMO DA LI TREBA I STA TREBA
+				//Equipment : tour.Equipment,
+				//Reviews : tour.Reviews,
+				//Durations : tour.Durations,
+			}
+		}
 	}
 
-	return &tours.GetPublishedToursResponse{
+	ret := &tours.GetPublishedResponse{
 		Tours: toursResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) Create(ctx context.Context, request *tours.CreateTourRequest) (*tours.CreateTourResponse, error) {
+func (handler *TourHandler) Create(ctx context.Context, request *tours.CreateRequest) (*tours.CreateResponse, error) {
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.ID
@@ -155,15 +175,15 @@ func (handler *TourHandler) Create(ctx context.Context, request *tours.CreateTou
 
 	handler.TourService.Create(&tour)
 
-	return &tours.CreateTourResponse{}, nil
+	return &tours.CreateResponse{}, nil
 }
 
-func (handler *TourHandler) Delete(ctx context.Context, request *tours.DeleteTourRequest) (*tours.DeleteTourResponse, error) {
+func (handler *TourHandler) Delete(ctx context.Context, request *tours.DeleteRequest) (*tours.DeleteResponse, error) {
 	handler.TourService.Delete(request.ID)
-	return &tours.DeleteTourResponse{}, nil
+	return &tours.DeleteResponse{}, nil
 }
 
-func (handler *TourHandler) Update(ctx context.Context, request *tours.UpdateTourRequest) (*tours.UpdateTourResponse, error) {
+func (handler *TourHandler) Update(ctx context.Context, request *tours.UpdateRequest) (*tours.UpdateResponse, error) {
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.ID
@@ -186,10 +206,10 @@ func (handler *TourHandler) Update(ctx context.Context, request *tours.UpdateTou
 
 	handler.TourService.Update(&tour)
 
-	return &tours.UpdateTourResponse{}, nil
+	return &tours.UpdateResponse{}, nil
 }
 
-func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tours.AddToursDurationsRequest) (*tours.AddToursDurationsResponse, error) {
+func (handler *TourHandler) AddDurations(ctx context.Context, request *tours.AddDurationsRequest) (*tours.AddDurationsResponse, error) {
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.ID
@@ -212,44 +232,50 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 
 	handler.TourService.AddDurations(&tour)
 
-	return &tours.AddToursDurationsResponse{}, nil
+	return &tours.AddDurationsResponse{}, nil
 }
 
-func (handler *TourHandler) Publish(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
+func (handler *TourHandler) Publish(ctx context.Context, request *tours.PublishRequest) (*tours.PublishResponse, error) {
 	handler.TourService.Publish(request.ID)
-	return &tours.PublishTourResponse{}, nil
+	return &tours.PublishResponse{}, nil
 }
 
-func (handler *TourHandler) Archive(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
+func (handler *TourHandler) Archive(ctx context.Context, request *tours.ArchiveRequest) (*tours.ArchiveResponse, error) {
 	handler.TourService.Archive(request.ID)
-	return &tours.ArchiveTourResponse{}, nil
+	return &tours.ArchiveResponse{}, nil
 }
 
-func (handler *TourHandler) GetEquipment(ctx context.Context, request *tours.GetToursEquipmentRequest) (*tours.GetToursEquipmentResponse, error) {
+func (handler *TourHandler) GetEquipment(ctx context.Context, request *tours.GetEquipmentRequest) (*tours.GetEquipmentResponse, error) {
 	equipmentList, _ := handler.TourService.GetEquipment(request.TourId)
 
-	var equipmentResponse []*tours.Equipment
+	equipmentResponse := make([]*tours.TourEquipment, len(equipmentList))
 
-	for i, eq := range equipmentList {
-		equipmentResponse[i].ID = eq.ID
-		equipmentResponse[i].Name = eq.Name
-		equipmentResponse[i].Description = eq.Description
-		//equipmentResponse[i].Tours = e.Tours				Treba proveriti
+	if equipmentList != nil && len(equipmentList) > 0 {
+		for i, eq := range equipmentList {
+			equipmentResponse[i] = &tours.TourEquipment{
+				ID:          eq.ID,
+				Name:        eq.Name,
+				Description: eq.Description,
+				//Tours: eq.Tours,	Treba proveriti
+			}
+		}
 	}
 
-	return &tours.GetToursEquipmentResponse{
+	ret := &tours.GetEquipmentResponse{
 		Equipment: equipmentResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) AddEquipment(ctx context.Context, request *tours.AddToursEquipmentRequest) (*tours.AddToursEquipmentResponse, error) {
+func (handler *TourHandler) AddEquipment(ctx context.Context, request *tours.AddEquipmentRequest) (*tours.AddEquipmentResponse, error) {
 	handler.TourService.AddEquipment(request.TourId, request.EquipmentId)
-	return &tours.AddToursEquipmentResponse{}, nil
+	return &tours.AddEquipmentResponse{}, nil
 }
 
-func (handler *TourHandler) DeleteEquipment(ctx context.Context, request *tours.DeleteToursEquipmentRequest) (*tours.DeleteToursEquipmentResponse, error) {
+func (handler *TourHandler) DeleteEquipment(ctx context.Context, request *tours.DeleteEquipmentRequest) (*tours.DeleteEquipmentResponse, error) {
 	handler.TourService.DeleteEquipment(request.TourId, request.EquipmentId)
-	return &tours.DeleteToursEquipmentResponse{}, nil
+	return &tours.DeleteEquipmentResponse{}, nil
 }
 
 func TimeToProtoTimestamp(t time.Time) *timestamp.Timestamp {

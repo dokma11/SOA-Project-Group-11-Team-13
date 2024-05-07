@@ -12,10 +12,10 @@ type ReviewHandler struct {
 	reviews.UnimplementedReviewsServiceServer
 }
 
-func (handler *ReviewHandler) GetById(ctx context.Context, request *reviews.GetReviewByIdRequest) (*reviews.GetReviewByIdResponse, error) {
+func (handler *ReviewHandler) GetById(ctx context.Context, request *reviews.GetByIdRequest) (*reviews.GetByIdResponse, error) {
 	review, _ := handler.ReviewService.GetById(request.ID)
 
-	var reviewResponse reviews.Review
+	reviewResponse := reviews.Review{}
 	reviewResponse.ID = review.ID
 	reviewResponse.Rating = int32(review.Rating)
 	reviewResponse.TourId = review.TourId
@@ -26,34 +26,41 @@ func (handler *ReviewHandler) GetById(ctx context.Context, request *reviews.GetR
 	reviewResponse.CommentDate = TimeToProtoTimestamp(review.CommentDate)
 	reviewResponse.Images = review.Images
 
-	return &reviews.GetReviewByIdResponse{
+	ret := &reviews.GetByIdResponse{
 		Review: &reviewResponse,
-	}, nil
-}
-
-func (handler *ReviewHandler) GetAll(ctx context.Context, request *reviews.GetAllReviewsRequest) (*reviews.GetAllReviewsResponse, error) {
-	reviewList, _ := handler.ReviewService.GetAll()
-
-	var reviewsResponse []*reviews.Review
-
-	for i, review := range *reviewList {
-		reviewsResponse[i].ID = review.ID
-		reviewsResponse[i].Rating = int32(review.Rating)
-		reviewsResponse[i].TourId = review.TourId
-		reviewsResponse[i].Comment = review.Comment
-		reviewsResponse[i].TouristId = int32(review.TouristId)
-		reviewsResponse[i].TourId = review.TourId
-		reviewsResponse[i].TourVisitDate = TimeToProtoTimestamp(review.TourVisitDate)
-		reviewsResponse[i].CommentDate = TimeToProtoTimestamp(review.CommentDate)
-		reviewsResponse[i].Images = review.Images
 	}
 
-	return &reviews.GetAllReviewsResponse{
-		Reviews: reviewsResponse,
-	}, nil
+	return ret, nil
 }
 
-func (handler *ReviewHandler) Create(ctx context.Context, request *reviews.CreateReviewRequest) (*reviews.CreateReviewResponse, error) {
+func (handler *ReviewHandler) GetAll(ctx context.Context, request *reviews.GetAllRequest) (*reviews.GetAllResponse, error) {
+	reviewList, _ := handler.ReviewService.GetAll()
+
+	reviewsResponse := make([]*reviews.Review, len(*reviewList))
+
+	if reviewList != nil && len(*reviewList) > 0 {
+		for i, review := range *reviewList {
+			reviewsResponse[i] = &reviews.Review{
+				ID:            review.ID,
+				Rating:        int32(review.Rating),
+				TourId:        review.TourId,
+				Comment:       review.Comment,
+				TouristId:     int32(review.TouristId),
+				TourVisitDate: TimeToProtoTimestamp(review.TourVisitDate),
+				CommentDate:   TimeToProtoTimestamp(review.CommentDate),
+				Images:        review.Images,
+			}
+		}
+	}
+
+	ret := &reviews.GetAllResponse{
+		Reviews: reviewsResponse,
+	}
+
+	return ret, nil
+}
+
+func (handler *ReviewHandler) Create(ctx context.Context, request *reviews.CreateRequest) (*reviews.CreateResponse, error) {
 	review := model.Review{}
 
 	review.ID = request.Review.ID
@@ -68,15 +75,15 @@ func (handler *ReviewHandler) Create(ctx context.Context, request *reviews.Creat
 
 	handler.ReviewService.Create(&review)
 
-	return &reviews.CreateReviewResponse{}, nil
+	return &reviews.CreateResponse{}, nil
 }
 
-func (handler *ReviewHandler) Delete(ctx context.Context, request *reviews.DeleteReviewRequest) (*reviews.DeleteReviewResponse, error) {
+func (handler *ReviewHandler) Delete(ctx context.Context, request *reviews.DeleteRequest) (*reviews.DeleteResponse, error) {
 	handler.ReviewService.Delete(request.ID)
-	return &reviews.DeleteReviewResponse{}, nil
+	return &reviews.DeleteResponse{}, nil
 }
 
-func (handler *ReviewHandler) Update(ctx context.Context, request *reviews.UpdateReviewRequest) (*reviews.UpdateReviewResponse, error) {
+func (handler *ReviewHandler) Update(ctx context.Context, request *reviews.UpdateRequest) (*reviews.UpdateResponse, error) {
 	review := model.Review{}
 
 	review.ID = request.Review.ID
@@ -91,5 +98,5 @@ func (handler *ReviewHandler) Update(ctx context.Context, request *reviews.Updat
 
 	handler.ReviewService.Update(&review)
 
-	return &reviews.UpdateReviewResponse{}, nil
+	return &reviews.UpdateResponse{}, nil
 }

@@ -12,10 +12,10 @@ type KeyPointHandler struct {
 	keyPoints.UnimplementedKeyPointsServiceServer
 }
 
-func (handler *KeyPointHandler) GetById(ctx context.Context, request *keyPoints.GetKeyPointByIdRequest) (*keyPoints.GetKeyPointByIdResponse, error) {
+func (handler *KeyPointHandler) GetById(ctx context.Context, request *keyPoints.GetByIdRequest) (*keyPoints.GetByIdResponse, error) {
 	keyPoint, _ := handler.KeyPointService.GetById(request.ID)
 
-	var keyPointsResponse keyPoints.KeyPoint
+	keyPointsResponse := keyPoints.KeyPoint{}
 	keyPointsResponse.ID = keyPoint.ID
 	keyPointsResponse.TourId = keyPoint.TourId
 	keyPointsResponse.Name = keyPoint.Name
@@ -26,56 +26,70 @@ func (handler *KeyPointHandler) GetById(ctx context.Context, request *keyPoints.
 	keyPointsResponse.ImagePath = keyPoint.ImagePath
 	keyPointsResponse.Order = keyPoint.Order
 
-	return &keyPoints.GetKeyPointByIdResponse{
+	ret := &keyPoints.GetByIdResponse{
 		KeyPoint: &keyPointsResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *KeyPointHandler) GetAll(ctx context.Context, request *keyPoints.GetAllKeyPointsRequest) (*keyPoints.GetAllKeyPointsResponse, error) {
+func (handler *KeyPointHandler) GetAll(ctx context.Context, request *keyPoints.GetAllRequest) (*keyPoints.GetAllResponse, error) {
 	keyPointList, _ := handler.KeyPointService.GetAll()
 
-	var keyPointsResponse []*keyPoints.KeyPoint
+	keyPointsResponse := make([]*keyPoints.KeyPoint, len(*keyPointList))
 
-	for i, keyPoint := range *keyPointList {
-		keyPointsResponse[i].ID = keyPoint.ID
-		keyPointsResponse[i].TourId = keyPoint.TourId
-		keyPointsResponse[i].Name = keyPoint.Name
-		keyPointsResponse[i].Description = keyPoint.Description
-		keyPointsResponse[i].Longitude = keyPoint.Longitude
-		keyPointsResponse[i].Latitude = keyPoint.Latitude
-		keyPointsResponse[i].LocationAddress = keyPoint.LocationAddress
-		keyPointsResponse[i].ImagePath = keyPoint.ImagePath
-		keyPointsResponse[i].Order = keyPoint.Order
+	if keyPointList != nil && len(*keyPointList) > 0 {
+		for i, keyPoint := range *keyPointList {
+			keyPointsResponse[i] = &keyPoints.KeyPoint{
+				ID:              keyPoint.ID,
+				TourId:          keyPoint.TourId,
+				Name:            keyPoint.Name,
+				Description:     keyPoint.Description,
+				Longitude:       keyPoint.Longitude,
+				Latitude:        keyPoint.Latitude,
+				LocationAddress: keyPoint.LocationAddress,
+				ImagePath:       keyPoint.ImagePath,
+				Order:           keyPoint.Order,
+			}
+		}
 	}
 
-	return &keyPoints.GetAllKeyPointsResponse{
+	ret := &keyPoints.GetAllResponse{
 		KeyPoints: keyPointsResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *KeyPointHandler) GetAllByTourId(ctx context.Context, request *keyPoints.GetKeyPointsByTourIdRequest) (*keyPoints.GetKeyPointsByTourIdResponse, error) {
+func (handler *KeyPointHandler) GetAllByTourId(ctx context.Context, request *keyPoints.GetByTourIdRequest) (*keyPoints.GetByTourIdResponse, error) {
 	keyPointList, _ := handler.KeyPointService.GetAllByTourId(request.TourId)
 
-	var keyPointsResponse []*keyPoints.KeyPoint
+	keyPointsResponse := make([]*keyPoints.KeyPoint, len(*keyPointList))
 
-	for i, keyPoint := range *keyPointList {
-		keyPointsResponse[i].ID = keyPoint.ID
-		keyPointsResponse[i].TourId = keyPoint.TourId
-		keyPointsResponse[i].Name = keyPoint.Name
-		keyPointsResponse[i].Description = keyPoint.Description
-		keyPointsResponse[i].Longitude = keyPoint.Longitude
-		keyPointsResponse[i].Latitude = keyPoint.Latitude
-		keyPointsResponse[i].LocationAddress = keyPoint.LocationAddress
-		keyPointsResponse[i].ImagePath = keyPoint.ImagePath
-		keyPointsResponse[i].Order = keyPoint.Order
+	if keyPointList != nil && len(*keyPointList) > 0 {
+		for i, keyPoint := range *keyPointList {
+			keyPointsResponse[i] = &keyPoints.KeyPoint{
+				ID:              keyPoint.ID,
+				TourId:          keyPoint.TourId,
+				Name:            keyPoint.Name,
+				Description:     keyPoint.Description,
+				Longitude:       keyPoint.Longitude,
+				Latitude:        keyPoint.Latitude,
+				LocationAddress: keyPoint.LocationAddress,
+				ImagePath:       keyPoint.ImagePath,
+				Order:           keyPoint.Order,
+			}
+		}
 	}
 
-	return &keyPoints.GetKeyPointsByTourIdResponse{
+	ret := &keyPoints.GetByTourIdResponse{
 		KeyPoints: keyPointsResponse,
-	}, nil
+	}
+
+	return ret, nil
 }
 
-func (handler *KeyPointHandler) Create(ctx context.Context, request *keyPoints.CreateKeyPointRequest) (*keyPoints.CreateKeyPointResponse, error) {
+func (handler *KeyPointHandler) Create(ctx context.Context, request *keyPoints.CreateRequest) (*keyPoints.CreateResponse, error) {
 	keyPoint := model.KeyPoint{}
 
 	keyPoint.ID = request.KeyPoint.ID
@@ -90,15 +104,15 @@ func (handler *KeyPointHandler) Create(ctx context.Context, request *keyPoints.C
 
 	handler.KeyPointService.Create(&keyPoint)
 
-	return &keyPoints.CreateKeyPointResponse{}, nil
+	return &keyPoints.CreateResponse{}, nil
 }
 
-func (handler *KeyPointHandler) Delete(ctx context.Context, request *keyPoints.DeleteKeyPointRequest) (*keyPoints.DeleteKeyPointResponse, error) {
+func (handler *KeyPointHandler) Delete(ctx context.Context, request *keyPoints.DeleteRequest) (*keyPoints.DeleteResponse, error) {
 	handler.KeyPointService.Delete(request.ID)
-	return &keyPoints.DeleteKeyPointResponse{}, nil
+	return &keyPoints.DeleteResponse{}, nil
 }
 
-func (handler *KeyPointHandler) Update(ctx context.Context, request *keyPoints.UpdateKeyPointRequest) (*keyPoints.UpdateKeyPointResponse, error) {
+func (handler *KeyPointHandler) Update(ctx context.Context, request *keyPoints.UpdateRequest) (*keyPoints.UpdateResponse, error) {
 	keyPoint := model.KeyPoint{}
 
 	keyPoint.ID = request.KeyPoint.ID
@@ -113,5 +127,5 @@ func (handler *KeyPointHandler) Update(ctx context.Context, request *keyPoints.U
 
 	handler.KeyPointService.Update(&keyPoint)
 
-	return &keyPoints.UpdateKeyPointResponse{}, nil
+	return &keyPoints.UpdateResponse{}, nil
 }
