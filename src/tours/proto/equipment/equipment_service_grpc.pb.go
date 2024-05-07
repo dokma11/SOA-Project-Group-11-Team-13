@@ -28,9 +28,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EquipmentServiceClient interface {
-	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error)
-	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	GetById(ctx context.Context, in *EquipmentGetByIdRequest, opts ...grpc.CallOption) (*EquipmentGetByIdResponse, error)
+	GetAll(ctx context.Context, in *EquipmentGetAllRequest, opts ...grpc.CallOption) (*EquipmentGetAllResponse, error)
+	Create(ctx context.Context, in *EquipmentCreateRequest, opts ...grpc.CallOption) (*EquipmentCreateResponse, error)
 }
 
 type equipmentServiceClient struct {
@@ -41,8 +41,8 @@ func NewEquipmentServiceClient(cc grpc.ClientConnInterface) EquipmentServiceClie
 	return &equipmentServiceClient{cc}
 }
 
-func (c *equipmentServiceClient) GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error) {
-	out := new(GetByIdResponse)
+func (c *equipmentServiceClient) GetById(ctx context.Context, in *EquipmentGetByIdRequest, opts ...grpc.CallOption) (*EquipmentGetByIdResponse, error) {
+	out := new(EquipmentGetByIdResponse)
 	err := c.cc.Invoke(ctx, EquipmentService_GetById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,8 +50,8 @@ func (c *equipmentServiceClient) GetById(ctx context.Context, in *GetByIdRequest
 	return out, nil
 }
 
-func (c *equipmentServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
+func (c *equipmentServiceClient) GetAll(ctx context.Context, in *EquipmentGetAllRequest, opts ...grpc.CallOption) (*EquipmentGetAllResponse, error) {
+	out := new(EquipmentGetAllResponse)
 	err := c.cc.Invoke(ctx, EquipmentService_GetAll_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -59,8 +59,8 @@ func (c *equipmentServiceClient) GetAll(ctx context.Context, in *GetAllRequest, 
 	return out, nil
 }
 
-func (c *equipmentServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
+func (c *equipmentServiceClient) Create(ctx context.Context, in *EquipmentCreateRequest, opts ...grpc.CallOption) (*EquipmentCreateResponse, error) {
+	out := new(EquipmentCreateResponse)
 	err := c.cc.Invoke(ctx, EquipmentService_Create_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -72,9 +72,9 @@ func (c *equipmentServiceClient) Create(ctx context.Context, in *CreateRequest, 
 // All implementations must embed UnimplementedEquipmentServiceServer
 // for forward compatibility
 type EquipmentServiceServer interface {
-	GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error)
-	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	GetById(context.Context, *EquipmentGetByIdRequest) (*EquipmentGetByIdResponse, error)
+	GetAll(context.Context, *EquipmentGetAllRequest) (*EquipmentGetAllResponse, error)
+	Create(context.Context, *EquipmentCreateRequest) (*EquipmentCreateResponse, error)
 	mustEmbedUnimplementedEquipmentServiceServer()
 }
 
@@ -82,13 +82,13 @@ type EquipmentServiceServer interface {
 type UnimplementedEquipmentServiceServer struct {
 }
 
-func (UnimplementedEquipmentServiceServer) GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error) {
+func (UnimplementedEquipmentServiceServer) GetById(context.Context, *EquipmentGetByIdRequest) (*EquipmentGetByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
-func (UnimplementedEquipmentServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+func (UnimplementedEquipmentServiceServer) GetAll(context.Context, *EquipmentGetAllRequest) (*EquipmentGetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedEquipmentServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
+func (UnimplementedEquipmentServiceServer) Create(context.Context, *EquipmentCreateRequest) (*EquipmentCreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
 func (UnimplementedEquipmentServiceServer) mustEmbedUnimplementedEquipmentServiceServer() {}
@@ -105,7 +105,7 @@ func RegisterEquipmentServiceServer(s grpc.ServiceRegistrar, srv EquipmentServic
 }
 
 func _EquipmentService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByIdRequest)
+	in := new(EquipmentGetByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -117,13 +117,13 @@ func _EquipmentService_GetById_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: EquipmentService_GetById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EquipmentServiceServer).GetById(ctx, req.(*GetByIdRequest))
+		return srv.(EquipmentServiceServer).GetById(ctx, req.(*EquipmentGetByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _EquipmentService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllRequest)
+	in := new(EquipmentGetAllRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -135,13 +135,13 @@ func _EquipmentService_GetAll_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: EquipmentService_GetAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EquipmentServiceServer).GetAll(ctx, req.(*GetAllRequest))
+		return srv.(EquipmentServiceServer).GetAll(ctx, req.(*EquipmentGetAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _EquipmentService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
+	in := new(EquipmentCreateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -153,7 +153,7 @@ func _EquipmentService_Create_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: EquipmentService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EquipmentServiceServer).Create(ctx, req.(*CreateRequest))
+		return srv.(EquipmentServiceServer).Create(ctx, req.(*EquipmentCreateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

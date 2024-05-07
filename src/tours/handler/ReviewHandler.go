@@ -12,7 +12,7 @@ type ReviewHandler struct {
 	reviews.UnimplementedReviewsServiceServer
 }
 
-func (handler *ReviewHandler) GetById(ctx context.Context, request *reviews.GetByIdRequest) (*reviews.GetByIdResponse, error) {
+func (handler *ReviewHandler) GetReviewById(ctx context.Context, request *reviews.GetReviewByIdRequest) (*reviews.GetReviewByIdResponse, error) {
 	review, _ := handler.ReviewService.GetById(request.ID)
 
 	reviewResponse := reviews.Review{}
@@ -26,14 +26,14 @@ func (handler *ReviewHandler) GetById(ctx context.Context, request *reviews.GetB
 	reviewResponse.CommentDate = TimeToProtoTimestamp(review.CommentDate)
 	reviewResponse.Images = review.Images
 
-	ret := &reviews.GetByIdResponse{
+	ret := &reviews.GetReviewByIdResponse{
 		Review: &reviewResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *ReviewHandler) GetAll(ctx context.Context, request *reviews.GetAllRequest) (*reviews.GetAllResponse, error) {
+func (handler *ReviewHandler) GetAllReviews(ctx context.Context, request *reviews.GetAllReviewsRequest) (*reviews.GetAllReviewsResponse, error) {
 	reviewList, _ := handler.ReviewService.GetAll()
 
 	reviewsResponse := make([]*reviews.Review, len(*reviewList))
@@ -53,14 +53,14 @@ func (handler *ReviewHandler) GetAll(ctx context.Context, request *reviews.GetAl
 		}
 	}
 
-	ret := &reviews.GetAllResponse{
+	ret := &reviews.GetAllReviewsResponse{
 		Reviews: reviewsResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *ReviewHandler) Create(ctx context.Context, request *reviews.CreateRequest) (*reviews.CreateResponse, error) {
+func (handler *ReviewHandler) CreateReview(ctx context.Context, request *reviews.CreateReviewRequest) (*reviews.CreateReviewResponse, error) {
 	review := model.Review{}
 
 	review.ID = request.Review.ID
@@ -75,15 +75,15 @@ func (handler *ReviewHandler) Create(ctx context.Context, request *reviews.Creat
 
 	handler.ReviewService.Create(&review)
 
-	return &reviews.CreateResponse{}, nil
+	return &reviews.CreateReviewResponse{}, nil
 }
 
-func (handler *ReviewHandler) Delete(ctx context.Context, request *reviews.DeleteRequest) (*reviews.DeleteResponse, error) {
+func (handler *ReviewHandler) DeleteReview(ctx context.Context, request *reviews.DeleteReviewRequest) (*reviews.DeleteReviewResponse, error) {
 	handler.ReviewService.Delete(request.ID)
-	return &reviews.DeleteResponse{}, nil
+	return &reviews.DeleteReviewResponse{}, nil
 }
 
-func (handler *ReviewHandler) Update(ctx context.Context, request *reviews.UpdateRequest) (*reviews.UpdateResponse, error) {
+func (handler *ReviewHandler) UpdateReview(ctx context.Context, request *reviews.UpdateReviewRequest) (*reviews.UpdateReviewResponse, error) {
 	review := model.Review{}
 
 	review.ID = request.Review.ID
@@ -98,5 +98,5 @@ func (handler *ReviewHandler) Update(ctx context.Context, request *reviews.Updat
 
 	handler.ReviewService.Update(&review)
 
-	return &reviews.UpdateResponse{}, nil
+	return &reviews.UpdateReviewResponse{}, nil
 }

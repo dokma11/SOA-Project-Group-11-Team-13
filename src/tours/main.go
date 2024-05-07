@@ -104,7 +104,7 @@ func main() {
 	tours.RegisterToursServiceServer(grpcServer, tourHandler)
 	equipment.RegisterEquipmentServiceServer(grpcServer, equipmentHandler)
 	facilities.RegisterFacilitiesServiceServer(grpcServer, facilityHandler)
-	keyPoints.RegisterKeyPointsServiceServer(grpcServer, keyPointHandler)
+	keypoints.RegisterKeyPointsServiceServer(grpcServer, keyPointHandler)
 	reviews.RegisterReviewsServiceServer(grpcServer, reviewHandler)
 
 	if err := grpcServer.Serve(listener); err != nil {

@@ -12,7 +12,7 @@ type EquipmentHandler struct {
 	equipment.UnimplementedEquipmentServiceServer
 }
 
-func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment.GetByIdRequest) (*equipment.GetByIdResponse, error) {
+func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment.EquipmentGetByIdRequest) (*equipment.EquipmentGetByIdResponse, error) {
 	equipmentList, _ := handler.EquipmentService.GetById(request.ID)
 
 	equipmentResponse := equipment.Equipment{}
@@ -21,14 +21,14 @@ func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment
 	equipmentResponse.Description = equipmentList.Description
 	//equipmentResponse.Tours = equipmentList.Tours				Treba proveriti
 
-	ret := &equipment.GetByIdResponse{
+	ret := &equipment.EquipmentGetByIdResponse{
 		Equipment: &equipmentResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.GetAllRequest) (*equipment.GetAllResponse, error) {
+func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.EquipmentGetAllRequest) (*equipment.EquipmentGetAllResponse, error) {
 	equipmentList, _ := handler.EquipmentService.GetAll()
 
 	equipmentResponse := make([]*equipment.Equipment, len(*equipmentList))
@@ -44,14 +44,14 @@ func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.
 		}
 	}
 
-	ret := &equipment.GetAllResponse{
+	ret := &equipment.EquipmentGetAllResponse{
 		Equipment: equipmentResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.CreateRequest) (*equipment.CreateResponse, error) {
+func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.EquipmentCreateRequest) (*equipment.EquipmentCreateResponse, error) {
 	equipmentResponse := model.Equipment{}
 	equipmentResponse.ID = request.Equipment.ID
 	equipmentResponse.Name = request.Equipment.Name
@@ -60,5 +60,5 @@ func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.
 
 	handler.EquipmentService.Create(&equipmentResponse)
 
-	return &equipment.CreateResponse{}, nil
+	return &equipment.EquipmentCreateResponse{}, nil
 }

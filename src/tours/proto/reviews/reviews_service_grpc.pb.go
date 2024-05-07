@@ -19,22 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ReviewsService_GetById_FullMethodName = "/ReviewsService/GetById"
-	ReviewsService_GetAll_FullMethodName  = "/ReviewsService/GetAll"
-	ReviewsService_Create_FullMethodName  = "/ReviewsService/Create"
-	ReviewsService_Update_FullMethodName  = "/ReviewsService/Update"
-	ReviewsService_Delete_FullMethodName  = "/ReviewsService/Delete"
+	ReviewsService_GetReviewById_FullMethodName = "/ReviewsService/GetReviewById"
+	ReviewsService_GetAllReviews_FullMethodName = "/ReviewsService/GetAllReviews"
+	ReviewsService_CreateReview_FullMethodName  = "/ReviewsService/CreateReview"
+	ReviewsService_UpdateReview_FullMethodName  = "/ReviewsService/UpdateReview"
+	ReviewsService_DeleteReview_FullMethodName  = "/ReviewsService/DeleteReview"
 )
 
 // ReviewsServiceClient is the client API for ReviewsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ReviewsServiceClient interface {
-	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error)
-	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
-	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	GetReviewById(ctx context.Context, in *GetReviewByIdRequest, opts ...grpc.CallOption) (*GetReviewByIdResponse, error)
+	GetAllReviews(ctx context.Context, in *GetAllReviewsRequest, opts ...grpc.CallOption) (*GetAllReviewsResponse, error)
+	CreateReview(ctx context.Context, in *CreateReviewRequest, opts ...grpc.CallOption) (*CreateReviewResponse, error)
+	UpdateReview(ctx context.Context, in *UpdateReviewRequest, opts ...grpc.CallOption) (*UpdateReviewResponse, error)
+	DeleteReview(ctx context.Context, in *DeleteReviewRequest, opts ...grpc.CallOption) (*DeleteReviewResponse, error)
 }
 
 type reviewsServiceClient struct {
@@ -45,45 +45,45 @@ func NewReviewsServiceClient(cc grpc.ClientConnInterface) ReviewsServiceClient {
 	return &reviewsServiceClient{cc}
 }
 
-func (c *reviewsServiceClient) GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error) {
-	out := new(GetByIdResponse)
-	err := c.cc.Invoke(ctx, ReviewsService_GetById_FullMethodName, in, out, opts...)
+func (c *reviewsServiceClient) GetReviewById(ctx context.Context, in *GetReviewByIdRequest, opts ...grpc.CallOption) (*GetReviewByIdResponse, error) {
+	out := new(GetReviewByIdResponse)
+	err := c.cc.Invoke(ctx, ReviewsService_GetReviewById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *reviewsServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, ReviewsService_GetAll_FullMethodName, in, out, opts...)
+func (c *reviewsServiceClient) GetAllReviews(ctx context.Context, in *GetAllReviewsRequest, opts ...grpc.CallOption) (*GetAllReviewsResponse, error) {
+	out := new(GetAllReviewsResponse)
+	err := c.cc.Invoke(ctx, ReviewsService_GetAllReviews_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *reviewsServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, ReviewsService_Create_FullMethodName, in, out, opts...)
+func (c *reviewsServiceClient) CreateReview(ctx context.Context, in *CreateReviewRequest, opts ...grpc.CallOption) (*CreateReviewResponse, error) {
+	out := new(CreateReviewResponse)
+	err := c.cc.Invoke(ctx, ReviewsService_CreateReview_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *reviewsServiceClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error) {
-	out := new(UpdateResponse)
-	err := c.cc.Invoke(ctx, ReviewsService_Update_FullMethodName, in, out, opts...)
+func (c *reviewsServiceClient) UpdateReview(ctx context.Context, in *UpdateReviewRequest, opts ...grpc.CallOption) (*UpdateReviewResponse, error) {
+	out := new(UpdateReviewResponse)
+	err := c.cc.Invoke(ctx, ReviewsService_UpdateReview_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *reviewsServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
-	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, ReviewsService_Delete_FullMethodName, in, out, opts...)
+func (c *reviewsServiceClient) DeleteReview(ctx context.Context, in *DeleteReviewRequest, opts ...grpc.CallOption) (*DeleteReviewResponse, error) {
+	out := new(DeleteReviewResponse)
+	err := c.cc.Invoke(ctx, ReviewsService_DeleteReview_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,11 +94,11 @@ func (c *reviewsServiceClient) Delete(ctx context.Context, in *DeleteRequest, op
 // All implementations must embed UnimplementedReviewsServiceServer
 // for forward compatibility
 type ReviewsServiceServer interface {
-	GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error)
-	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	Create(context.Context, *CreateRequest) (*CreateResponse, error)
-	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
-	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
+	GetReviewById(context.Context, *GetReviewByIdRequest) (*GetReviewByIdResponse, error)
+	GetAllReviews(context.Context, *GetAllReviewsRequest) (*GetAllReviewsResponse, error)
+	CreateReview(context.Context, *CreateReviewRequest) (*CreateReviewResponse, error)
+	UpdateReview(context.Context, *UpdateReviewRequest) (*UpdateReviewResponse, error)
+	DeleteReview(context.Context, *DeleteReviewRequest) (*DeleteReviewResponse, error)
 	mustEmbedUnimplementedReviewsServiceServer()
 }
 
@@ -106,20 +106,20 @@ type ReviewsServiceServer interface {
 type UnimplementedReviewsServiceServer struct {
 }
 
-func (UnimplementedReviewsServiceServer) GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
+func (UnimplementedReviewsServiceServer) GetReviewById(context.Context, *GetReviewByIdRequest) (*GetReviewByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReviewById not implemented")
 }
-func (UnimplementedReviewsServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+func (UnimplementedReviewsServiceServer) GetAllReviews(context.Context, *GetAllReviewsRequest) (*GetAllReviewsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllReviews not implemented")
 }
-func (UnimplementedReviewsServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedReviewsServiceServer) CreateReview(context.Context, *CreateReviewRequest) (*CreateReviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateReview not implemented")
 }
-func (UnimplementedReviewsServiceServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+func (UnimplementedReviewsServiceServer) UpdateReview(context.Context, *UpdateReviewRequest) (*UpdateReviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateReview not implemented")
 }
-func (UnimplementedReviewsServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedReviewsServiceServer) DeleteReview(context.Context, *DeleteReviewRequest) (*DeleteReviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteReview not implemented")
 }
 func (UnimplementedReviewsServiceServer) mustEmbedUnimplementedReviewsServiceServer() {}
 
@@ -134,92 +134,92 @@ func RegisterReviewsServiceServer(s grpc.ServiceRegistrar, srv ReviewsServiceSer
 	s.RegisterService(&ReviewsService_ServiceDesc, srv)
 }
 
-func _ReviewsService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByIdRequest)
+func _ReviewsService_GetReviewById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReviewByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReviewsServiceServer).GetById(ctx, in)
+		return srv.(ReviewsServiceServer).GetReviewById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ReviewsService_GetById_FullMethodName,
+		FullMethod: ReviewsService_GetReviewById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewsServiceServer).GetById(ctx, req.(*GetByIdRequest))
+		return srv.(ReviewsServiceServer).GetReviewById(ctx, req.(*GetReviewByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ReviewsService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllRequest)
+func _ReviewsService_GetAllReviews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllReviewsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReviewsServiceServer).GetAll(ctx, in)
+		return srv.(ReviewsServiceServer).GetAllReviews(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ReviewsService_GetAll_FullMethodName,
+		FullMethod: ReviewsService_GetAllReviews_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewsServiceServer).GetAll(ctx, req.(*GetAllRequest))
+		return srv.(ReviewsServiceServer).GetAllReviews(ctx, req.(*GetAllReviewsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ReviewsService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
+func _ReviewsService_CreateReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReviewRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReviewsServiceServer).Create(ctx, in)
+		return srv.(ReviewsServiceServer).CreateReview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ReviewsService_Create_FullMethodName,
+		FullMethod: ReviewsService_CreateReview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewsServiceServer).Create(ctx, req.(*CreateRequest))
+		return srv.(ReviewsServiceServer).CreateReview(ctx, req.(*CreateReviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ReviewsService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateRequest)
+func _ReviewsService_UpdateReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateReviewRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReviewsServiceServer).Update(ctx, in)
+		return srv.(ReviewsServiceServer).UpdateReview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ReviewsService_Update_FullMethodName,
+		FullMethod: ReviewsService_UpdateReview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewsServiceServer).Update(ctx, req.(*UpdateRequest))
+		return srv.(ReviewsServiceServer).UpdateReview(ctx, req.(*UpdateReviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ReviewsService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRequest)
+func _ReviewsService_DeleteReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteReviewRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReviewsServiceServer).Delete(ctx, in)
+		return srv.(ReviewsServiceServer).DeleteReview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ReviewsService_Delete_FullMethodName,
+		FullMethod: ReviewsService_DeleteReview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewsServiceServer).Delete(ctx, req.(*DeleteRequest))
+		return srv.(ReviewsServiceServer).DeleteReview(ctx, req.(*DeleteReviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -232,24 +232,24 @@ var ReviewsService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ReviewsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetById",
-			Handler:    _ReviewsService_GetById_Handler,
+			MethodName: "GetReviewById",
+			Handler:    _ReviewsService_GetReviewById_Handler,
 		},
 		{
-			MethodName: "GetAll",
-			Handler:    _ReviewsService_GetAll_Handler,
+			MethodName: "GetAllReviews",
+			Handler:    _ReviewsService_GetAllReviews_Handler,
 		},
 		{
-			MethodName: "Create",
-			Handler:    _ReviewsService_Create_Handler,
+			MethodName: "CreateReview",
+			Handler:    _ReviewsService_CreateReview_Handler,
 		},
 		{
-			MethodName: "Update",
-			Handler:    _ReviewsService_Update_Handler,
+			MethodName: "UpdateReview",
+			Handler:    _ReviewsService_UpdateReview_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _ReviewsService_Delete_Handler,
+			MethodName: "DeleteReview",
+			Handler:    _ReviewsService_DeleteReview_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

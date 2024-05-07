@@ -4,7 +4,7 @@
 // 	protoc        v5.26.1
 // source: keypoints_service.proto
 
-package keyPoints
+package keypoints
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -131,7 +131,7 @@ func (x *KeyPoint) GetOrder() int64 {
 	return 0
 }
 
-type GetByIdRequest struct {
+type KeyPointGetByIdRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -139,8 +139,8 @@ type GetByIdRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *GetByIdRequest) Reset() {
-	*x = GetByIdRequest{}
+func (x *KeyPointGetByIdRequest) Reset() {
+	*x = KeyPointGetByIdRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -148,13 +148,13 @@ func (x *GetByIdRequest) Reset() {
 	}
 }
 
-func (x *GetByIdRequest) String() string {
+func (x *KeyPointGetByIdRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdRequest) ProtoMessage() {}
+func (*KeyPointGetByIdRequest) ProtoMessage() {}
 
-func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
+func (x *KeyPointGetByIdRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -166,19 +166,19 @@ func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdRequest.ProtoReflect.Descriptor instead.
-func (*GetByIdRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointGetByIdRequest.ProtoReflect.Descriptor instead.
+func (*KeyPointGetByIdRequest) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetByIdRequest) GetID() string {
+func (x *KeyPointGetByIdRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type GetByIdResponse struct {
+type KeyPointGetByIdResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -186,8 +186,8 @@ type GetByIdResponse struct {
 	KeyPoint *KeyPoint `protobuf:"bytes,1,opt,name=keyPoint,proto3" json:"keyPoint,omitempty"`
 }
 
-func (x *GetByIdResponse) Reset() {
-	*x = GetByIdResponse{}
+func (x *KeyPointGetByIdResponse) Reset() {
+	*x = KeyPointGetByIdResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -195,13 +195,13 @@ func (x *GetByIdResponse) Reset() {
 	}
 }
 
-func (x *GetByIdResponse) String() string {
+func (x *KeyPointGetByIdResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdResponse) ProtoMessage() {}
+func (*KeyPointGetByIdResponse) ProtoMessage() {}
 
-func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
+func (x *KeyPointGetByIdResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -213,26 +213,26 @@ func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdResponse.ProtoReflect.Descriptor instead.
-func (*GetByIdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointGetByIdResponse.ProtoReflect.Descriptor instead.
+func (*KeyPointGetByIdResponse) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetByIdResponse) GetKeyPoint() *KeyPoint {
+func (x *KeyPointGetByIdResponse) GetKeyPoint() *KeyPoint {
 	if x != nil {
 		return x.KeyPoint
 	}
 	return nil
 }
 
-type GetAllRequest struct {
+type KeyPointGetAllRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *GetAllRequest) Reset() {
-	*x = GetAllRequest{}
+func (x *KeyPointGetAllRequest) Reset() {
+	*x = KeyPointGetAllRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -240,13 +240,13 @@ func (x *GetAllRequest) Reset() {
 	}
 }
 
-func (x *GetAllRequest) String() string {
+func (x *KeyPointGetAllRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllRequest) ProtoMessage() {}
+func (*KeyPointGetAllRequest) ProtoMessage() {}
 
-func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
+func (x *KeyPointGetAllRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -258,12 +258,12 @@ func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllRequest.ProtoReflect.Descriptor instead.
-func (*GetAllRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointGetAllRequest.ProtoReflect.Descriptor instead.
+func (*KeyPointGetAllRequest) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{3}
 }
 
-type GetAllResponse struct {
+type KeyPointGetAllResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -271,8 +271,8 @@ type GetAllResponse struct {
 	KeyPoints []*KeyPoint `protobuf:"bytes,1,rep,name=keyPoints,proto3" json:"keyPoints,omitempty"`
 }
 
-func (x *GetAllResponse) Reset() {
-	*x = GetAllResponse{}
+func (x *KeyPointGetAllResponse) Reset() {
+	*x = KeyPointGetAllResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -280,13 +280,13 @@ func (x *GetAllResponse) Reset() {
 	}
 }
 
-func (x *GetAllResponse) String() string {
+func (x *KeyPointGetAllResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllResponse) ProtoMessage() {}
+func (*KeyPointGetAllResponse) ProtoMessage() {}
 
-func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
+func (x *KeyPointGetAllResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -298,19 +298,19 @@ func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllResponse.ProtoReflect.Descriptor instead.
-func (*GetAllResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointGetAllResponse.ProtoReflect.Descriptor instead.
+func (*KeyPointGetAllResponse) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetAllResponse) GetKeyPoints() []*KeyPoint {
+func (x *KeyPointGetAllResponse) GetKeyPoints() []*KeyPoint {
 	if x != nil {
 		return x.KeyPoints
 	}
 	return nil
 }
 
-type GetByTourIdRequest struct {
+type KeyPointGetByTourIdRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -318,8 +318,8 @@ type GetByTourIdRequest struct {
 	TourId string `protobuf:"bytes,1,opt,name=TourId,proto3" json:"TourId,omitempty"`
 }
 
-func (x *GetByTourIdRequest) Reset() {
-	*x = GetByTourIdRequest{}
+func (x *KeyPointGetByTourIdRequest) Reset() {
+	*x = KeyPointGetByTourIdRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -327,13 +327,13 @@ func (x *GetByTourIdRequest) Reset() {
 	}
 }
 
-func (x *GetByTourIdRequest) String() string {
+func (x *KeyPointGetByTourIdRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByTourIdRequest) ProtoMessage() {}
+func (*KeyPointGetByTourIdRequest) ProtoMessage() {}
 
-func (x *GetByTourIdRequest) ProtoReflect() protoreflect.Message {
+func (x *KeyPointGetByTourIdRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -345,19 +345,19 @@ func (x *GetByTourIdRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByTourIdRequest.ProtoReflect.Descriptor instead.
-func (*GetByTourIdRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointGetByTourIdRequest.ProtoReflect.Descriptor instead.
+func (*KeyPointGetByTourIdRequest) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetByTourIdRequest) GetTourId() string {
+func (x *KeyPointGetByTourIdRequest) GetTourId() string {
 	if x != nil {
 		return x.TourId
 	}
 	return ""
 }
 
-type GetByTourIdResponse struct {
+type KeyPointGetByTourIdResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -365,8 +365,8 @@ type GetByTourIdResponse struct {
 	KeyPoints []*KeyPoint `protobuf:"bytes,1,rep,name=keyPoints,proto3" json:"keyPoints,omitempty"`
 }
 
-func (x *GetByTourIdResponse) Reset() {
-	*x = GetByTourIdResponse{}
+func (x *KeyPointGetByTourIdResponse) Reset() {
+	*x = KeyPointGetByTourIdResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -374,13 +374,13 @@ func (x *GetByTourIdResponse) Reset() {
 	}
 }
 
-func (x *GetByTourIdResponse) String() string {
+func (x *KeyPointGetByTourIdResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByTourIdResponse) ProtoMessage() {}
+func (*KeyPointGetByTourIdResponse) ProtoMessage() {}
 
-func (x *GetByTourIdResponse) ProtoReflect() protoreflect.Message {
+func (x *KeyPointGetByTourIdResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -392,19 +392,19 @@ func (x *GetByTourIdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByTourIdResponse.ProtoReflect.Descriptor instead.
-func (*GetByTourIdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointGetByTourIdResponse.ProtoReflect.Descriptor instead.
+func (*KeyPointGetByTourIdResponse) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetByTourIdResponse) GetKeyPoints() []*KeyPoint {
+func (x *KeyPointGetByTourIdResponse) GetKeyPoints() []*KeyPoint {
 	if x != nil {
 		return x.KeyPoints
 	}
 	return nil
 }
 
-type CreateRequest struct {
+type KeyPointCreateRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -412,8 +412,8 @@ type CreateRequest struct {
 	KeyPoint *KeyPoint `protobuf:"bytes,1,opt,name=keyPoint,proto3" json:"keyPoint,omitempty"`
 }
 
-func (x *CreateRequest) Reset() {
-	*x = CreateRequest{}
+func (x *KeyPointCreateRequest) Reset() {
+	*x = KeyPointCreateRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -421,13 +421,13 @@ func (x *CreateRequest) Reset() {
 	}
 }
 
-func (x *CreateRequest) String() string {
+func (x *KeyPointCreateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateRequest) ProtoMessage() {}
+func (*KeyPointCreateRequest) ProtoMessage() {}
 
-func (x *CreateRequest) ProtoReflect() protoreflect.Message {
+func (x *KeyPointCreateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -439,26 +439,26 @@ func (x *CreateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateRequest.ProtoReflect.Descriptor instead.
-func (*CreateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointCreateRequest.ProtoReflect.Descriptor instead.
+func (*KeyPointCreateRequest) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *CreateRequest) GetKeyPoint() *KeyPoint {
+func (x *KeyPointCreateRequest) GetKeyPoint() *KeyPoint {
 	if x != nil {
 		return x.KeyPoint
 	}
 	return nil
 }
 
-type CreateResponse struct {
+type KeyPointCreateResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *CreateResponse) Reset() {
-	*x = CreateResponse{}
+func (x *KeyPointCreateResponse) Reset() {
+	*x = KeyPointCreateResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -466,13 +466,13 @@ func (x *CreateResponse) Reset() {
 	}
 }
 
-func (x *CreateResponse) String() string {
+func (x *KeyPointCreateResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateResponse) ProtoMessage() {}
+func (*KeyPointCreateResponse) ProtoMessage() {}
 
-func (x *CreateResponse) ProtoReflect() protoreflect.Message {
+func (x *KeyPointCreateResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -484,12 +484,12 @@ func (x *CreateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateResponse.ProtoReflect.Descriptor instead.
-func (*CreateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointCreateResponse.ProtoReflect.Descriptor instead.
+func (*KeyPointCreateResponse) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{8}
 }
 
-type UpdateRequest struct {
+type KeyPointUpdateRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -497,8 +497,8 @@ type UpdateRequest struct {
 	KeyPoint *KeyPoint `protobuf:"bytes,1,opt,name=keyPoint,proto3" json:"keyPoint,omitempty"`
 }
 
-func (x *UpdateRequest) Reset() {
-	*x = UpdateRequest{}
+func (x *KeyPointUpdateRequest) Reset() {
+	*x = KeyPointUpdateRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -506,13 +506,13 @@ func (x *UpdateRequest) Reset() {
 	}
 }
 
-func (x *UpdateRequest) String() string {
+func (x *KeyPointUpdateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateRequest) ProtoMessage() {}
+func (*KeyPointUpdateRequest) ProtoMessage() {}
 
-func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
+func (x *KeyPointUpdateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -524,26 +524,26 @@ func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateRequest.ProtoReflect.Descriptor instead.
-func (*UpdateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointUpdateRequest.ProtoReflect.Descriptor instead.
+func (*KeyPointUpdateRequest) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UpdateRequest) GetKeyPoint() *KeyPoint {
+func (x *KeyPointUpdateRequest) GetKeyPoint() *KeyPoint {
 	if x != nil {
 		return x.KeyPoint
 	}
 	return nil
 }
 
-type UpdateResponse struct {
+type KeyPointUpdateResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *UpdateResponse) Reset() {
-	*x = UpdateResponse{}
+func (x *KeyPointUpdateResponse) Reset() {
+	*x = KeyPointUpdateResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -551,13 +551,13 @@ func (x *UpdateResponse) Reset() {
 	}
 }
 
-func (x *UpdateResponse) String() string {
+func (x *KeyPointUpdateResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateResponse) ProtoMessage() {}
+func (*KeyPointUpdateResponse) ProtoMessage() {}
 
-func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
+func (x *KeyPointUpdateResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -569,12 +569,12 @@ func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateResponse.ProtoReflect.Descriptor instead.
-func (*UpdateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointUpdateResponse.ProtoReflect.Descriptor instead.
+func (*KeyPointUpdateResponse) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{10}
 }
 
-type DeleteRequest struct {
+type KeyPointDeleteRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -582,8 +582,8 @@ type DeleteRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *DeleteRequest) Reset() {
-	*x = DeleteRequest{}
+func (x *KeyPointDeleteRequest) Reset() {
+	*x = KeyPointDeleteRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -591,13 +591,13 @@ func (x *DeleteRequest) Reset() {
 	}
 }
 
-func (x *DeleteRequest) String() string {
+func (x *KeyPointDeleteRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteRequest) ProtoMessage() {}
+func (*KeyPointDeleteRequest) ProtoMessage() {}
 
-func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
+func (x *KeyPointDeleteRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -609,26 +609,26 @@ func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteRequest.ProtoReflect.Descriptor instead.
-func (*DeleteRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointDeleteRequest.ProtoReflect.Descriptor instead.
+func (*KeyPointDeleteRequest) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *DeleteRequest) GetID() string {
+func (x *KeyPointDeleteRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type DeleteResponse struct {
+type KeyPointDeleteResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *DeleteResponse) Reset() {
-	*x = DeleteResponse{}
+func (x *KeyPointDeleteResponse) Reset() {
+	*x = KeyPointDeleteResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_keypoints_service_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -636,13 +636,13 @@ func (x *DeleteResponse) Reset() {
 	}
 }
 
-func (x *DeleteResponse) String() string {
+func (x *KeyPointDeleteResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteResponse) ProtoMessage() {}
+func (*KeyPointDeleteResponse) ProtoMessage() {}
 
-func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
+func (x *KeyPointDeleteResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_keypoints_service_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -654,8 +654,8 @@ func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteResponse.ProtoReflect.Descriptor instead.
-func (*DeleteResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyPointDeleteResponse.ProtoReflect.Descriptor instead.
+func (*KeyPointDeleteResponse) Descriptor() ([]byte, []int) {
 	return file_keypoints_service_proto_rawDescGZIP(), []int{12}
 }
 
@@ -679,57 +679,69 @@ var file_keypoints_service_proto_rawDesc = []byte{
 	0x6e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x1c, 0x0a, 0x09, 0x49, 0x6d, 0x61, 0x67,
 	0x65, 0x50, 0x61, 0x74, 0x68, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x49, 0x6d, 0x61,
 	0x67, 0x65, 0x50, 0x61, 0x74, 0x68, 0x12, 0x14, 0x0a, 0x05, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x18,
-	0x09, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x22, 0x20, 0x0a, 0x0e,
-	0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e,
-	0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x38,
-	0x0a, 0x0f, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x09, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x22, 0x28, 0x0a, 0x16,
+	0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x40, 0x0a, 0x17, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69,
+	0x6e, 0x74, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x25, 0x0a, 0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x08,
-	0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22, 0x0f, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x41,
-	0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x39, 0x0a, 0x0e, 0x47, 0x65, 0x74,
+	0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22, 0x17, 0x0a, 0x15, 0x4b, 0x65, 0x79, 0x50,
+	0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x22, 0x41, 0x0a, 0x16, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74,
 	0x41, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x27, 0x0a, 0x09, 0x6b,
 	0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x09,
 	0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x09, 0x6b, 0x65, 0x79, 0x50, 0x6f,
-	0x69, 0x6e, 0x74, 0x73, 0x22, 0x2c, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75,
-	0x72, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x54, 0x6f,
-	0x75, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x54, 0x6f, 0x75, 0x72,
-	0x49, 0x64, 0x22, 0x3e, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49,
+	0x69, 0x6e, 0x74, 0x73, 0x22, 0x34, 0x0a, 0x1a, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74,
+	0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x06, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x22, 0x46, 0x0a, 0x1b, 0x4b, 0x65,
+	0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49,
 	0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x27, 0x0a, 0x09, 0x6b, 0x65, 0x79,
 	0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x4b,
 	0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x09, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e,
-	0x74, 0x73, 0x22, 0x36, 0x0a, 0x0d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x25, 0x0a, 0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74,
-	0x52, 0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22, 0x10, 0x0a, 0x0e, 0x43, 0x72,
-	0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x36, 0x0a, 0x0d,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x25, 0x0a,
-	0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x09, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x08, 0x6b, 0x65, 0x79, 0x50,
-	0x6f, 0x69, 0x6e, 0x74, 0x22, 0x10, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1f, 0x0a, 0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x10, 0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xb2, 0x02, 0x0a, 0x10, 0x4b, 0x65,
-	0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2e,
-	0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x12, 0x0f, 0x2e, 0x47, 0x65, 0x74, 0x42,
-	0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x10, 0x2e, 0x47, 0x65, 0x74,
-	0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b,
-	0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x0e, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c,
-	0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c,
-	0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x0b, 0x47,
-	0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x12, 0x13, 0x2e, 0x47, 0x65, 0x74,
-	0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x14, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x43, 0x72, 0x65, 0x61, 0x74,
-	0x65, 0x12, 0x0e, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x0f, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x12, 0x0e,
-	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f,
-	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x12, 0x2b, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x0e, 0x2e, 0x44, 0x65,
-	0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x44, 0x65,
+	0x74, 0x73, 0x22, 0x3e, 0x0a, 0x15, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x25, 0x0a, 0x08, 0x6b,
+	0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e,
+	0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69,
+	0x6e, 0x74, 0x22, 0x18, 0x0a, 0x16, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x3e, 0x0a, 0x15,
+	0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x25, 0x0a, 0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e,
+	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69,
+	0x6e, 0x74, 0x52, 0x08, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22, 0x18, 0x0a, 0x16,
+	0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x27, 0x0a, 0x15, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69,
+	0x6e, 0x74, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22,
+	0x18, 0x0a, 0x16, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x92, 0x03, 0x0a, 0x10, 0x4b, 0x65,
+	0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3e,
+	0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x12, 0x17, 0x2e, 0x4b, 0x65, 0x79, 0x50,
+	0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x18, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74,
+	0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3b,
+	0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x16, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f,
+	0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x17, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x41, 0x6c,
+	0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x0b, 0x47,
+	0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x12, 0x1b, 0x2e, 0x4b, 0x65, 0x79,
+	0x50, 0x6f, 0x69, 0x6e, 0x74, 0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69,
+	0x6e, 0x74, 0x47, 0x65, 0x74, 0x42, 0x79, 0x54, 0x6f, 0x75, 0x72, 0x49, 0x64, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3b, 0x0a, 0x06, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x12, 0x16, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x4b, 0x65, 0x79, 0x50,
+	0x6f, 0x69, 0x6e, 0x74, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x3b, 0x0a, 0x06, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x12, 0x16,
+	0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e,
+	0x74, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x00, 0x12, 0x3b, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x16, 0x2e, 0x4b, 0x65,
+	0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x4b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x11,
-	0x5a, 0x0f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x6b, 0x65, 0x79, 0x50, 0x6f, 0x69, 0x6e, 0x74,
+	0x5a, 0x0f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x6b, 0x65, 0x79, 0x70, 0x6f, 0x69, 0x6e, 0x74,
 	0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
@@ -747,38 +759,38 @@ func file_keypoints_service_proto_rawDescGZIP() []byte {
 
 var file_keypoints_service_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_keypoints_service_proto_goTypes = []interface{}{
-	(*KeyPoint)(nil),            // 0: KeyPoint
-	(*GetByIdRequest)(nil),      // 1: GetByIdRequest
-	(*GetByIdResponse)(nil),     // 2: GetByIdResponse
-	(*GetAllRequest)(nil),       // 3: GetAllRequest
-	(*GetAllResponse)(nil),      // 4: GetAllResponse
-	(*GetByTourIdRequest)(nil),  // 5: GetByTourIdRequest
-	(*GetByTourIdResponse)(nil), // 6: GetByTourIdResponse
-	(*CreateRequest)(nil),       // 7: CreateRequest
-	(*CreateResponse)(nil),      // 8: CreateResponse
-	(*UpdateRequest)(nil),       // 9: UpdateRequest
-	(*UpdateResponse)(nil),      // 10: UpdateResponse
-	(*DeleteRequest)(nil),       // 11: DeleteRequest
-	(*DeleteResponse)(nil),      // 12: DeleteResponse
+	(*KeyPoint)(nil),                    // 0: KeyPoint
+	(*KeyPointGetByIdRequest)(nil),      // 1: KeyPointGetByIdRequest
+	(*KeyPointGetByIdResponse)(nil),     // 2: KeyPointGetByIdResponse
+	(*KeyPointGetAllRequest)(nil),       // 3: KeyPointGetAllRequest
+	(*KeyPointGetAllResponse)(nil),      // 4: KeyPointGetAllResponse
+	(*KeyPointGetByTourIdRequest)(nil),  // 5: KeyPointGetByTourIdRequest
+	(*KeyPointGetByTourIdResponse)(nil), // 6: KeyPointGetByTourIdResponse
+	(*KeyPointCreateRequest)(nil),       // 7: KeyPointCreateRequest
+	(*KeyPointCreateResponse)(nil),      // 8: KeyPointCreateResponse
+	(*KeyPointUpdateRequest)(nil),       // 9: KeyPointUpdateRequest
+	(*KeyPointUpdateResponse)(nil),      // 10: KeyPointUpdateResponse
+	(*KeyPointDeleteRequest)(nil),       // 11: KeyPointDeleteRequest
+	(*KeyPointDeleteResponse)(nil),      // 12: KeyPointDeleteResponse
 }
 var file_keypoints_service_proto_depIdxs = []int32{
-	0,  // 0: GetByIdResponse.keyPoint:type_name -> KeyPoint
-	0,  // 1: GetAllResponse.keyPoints:type_name -> KeyPoint
-	0,  // 2: GetByTourIdResponse.keyPoints:type_name -> KeyPoint
-	0,  // 3: CreateRequest.keyPoint:type_name -> KeyPoint
-	0,  // 4: UpdateRequest.keyPoint:type_name -> KeyPoint
-	1,  // 5: KeyPointsService.GetById:input_type -> GetByIdRequest
-	3,  // 6: KeyPointsService.GetAll:input_type -> GetAllRequest
-	5,  // 7: KeyPointsService.GetByTourId:input_type -> GetByTourIdRequest
-	7,  // 8: KeyPointsService.Create:input_type -> CreateRequest
-	9,  // 9: KeyPointsService.Update:input_type -> UpdateRequest
-	11, // 10: KeyPointsService.Delete:input_type -> DeleteRequest
-	2,  // 11: KeyPointsService.GetById:output_type -> GetByIdResponse
-	4,  // 12: KeyPointsService.GetAll:output_type -> GetAllResponse
-	6,  // 13: KeyPointsService.GetByTourId:output_type -> GetByTourIdResponse
-	8,  // 14: KeyPointsService.Create:output_type -> CreateResponse
-	10, // 15: KeyPointsService.Update:output_type -> UpdateResponse
-	12, // 16: KeyPointsService.Delete:output_type -> DeleteResponse
+	0,  // 0: KeyPointGetByIdResponse.keyPoint:type_name -> KeyPoint
+	0,  // 1: KeyPointGetAllResponse.keyPoints:type_name -> KeyPoint
+	0,  // 2: KeyPointGetByTourIdResponse.keyPoints:type_name -> KeyPoint
+	0,  // 3: KeyPointCreateRequest.keyPoint:type_name -> KeyPoint
+	0,  // 4: KeyPointUpdateRequest.keyPoint:type_name -> KeyPoint
+	1,  // 5: KeyPointsService.GetById:input_type -> KeyPointGetByIdRequest
+	3,  // 6: KeyPointsService.GetAll:input_type -> KeyPointGetAllRequest
+	5,  // 7: KeyPointsService.GetByTourId:input_type -> KeyPointGetByTourIdRequest
+	7,  // 8: KeyPointsService.Create:input_type -> KeyPointCreateRequest
+	9,  // 9: KeyPointsService.Update:input_type -> KeyPointUpdateRequest
+	11, // 10: KeyPointsService.Delete:input_type -> KeyPointDeleteRequest
+	2,  // 11: KeyPointsService.GetById:output_type -> KeyPointGetByIdResponse
+	4,  // 12: KeyPointsService.GetAll:output_type -> KeyPointGetAllResponse
+	6,  // 13: KeyPointsService.GetByTourId:output_type -> KeyPointGetByTourIdResponse
+	8,  // 14: KeyPointsService.Create:output_type -> KeyPointCreateResponse
+	10, // 15: KeyPointsService.Update:output_type -> KeyPointUpdateResponse
+	12, // 16: KeyPointsService.Delete:output_type -> KeyPointDeleteResponse
 	11, // [11:17] is the sub-list for method output_type
 	5,  // [5:11] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
@@ -805,7 +817,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdRequest); i {
+			switch v := v.(*KeyPointGetByIdRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -817,7 +829,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdResponse); i {
+			switch v := v.(*KeyPointGetByIdResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -829,7 +841,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllRequest); i {
+			switch v := v.(*KeyPointGetAllRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -841,7 +853,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllResponse); i {
+			switch v := v.(*KeyPointGetAllResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -853,7 +865,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByTourIdRequest); i {
+			switch v := v.(*KeyPointGetByTourIdRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -865,7 +877,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByTourIdResponse); i {
+			switch v := v.(*KeyPointGetByTourIdResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -877,7 +889,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRequest); i {
+			switch v := v.(*KeyPointCreateRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -889,7 +901,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateResponse); i {
+			switch v := v.(*KeyPointCreateResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -901,7 +913,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRequest); i {
+			switch v := v.(*KeyPointUpdateRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -913,7 +925,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResponse); i {
+			switch v := v.(*KeyPointUpdateResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -925,7 +937,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRequest); i {
+			switch v := v.(*KeyPointDeleteRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -937,7 +949,7 @@ func file_keypoints_service_proto_init() {
 			}
 		}
 		file_keypoints_service_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteResponse); i {
+			switch v := v.(*KeyPointDeleteResponse); i {
 			case 0:
 				return &v.state
 			case 1:

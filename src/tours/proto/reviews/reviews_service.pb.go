@@ -124,7 +124,7 @@ func (x *Review) GetImages() []string {
 	return nil
 }
 
-type GetByIdRequest struct {
+type GetReviewByIdRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -132,8 +132,8 @@ type GetByIdRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *GetByIdRequest) Reset() {
-	*x = GetByIdRequest{}
+func (x *GetReviewByIdRequest) Reset() {
+	*x = GetReviewByIdRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -141,13 +141,13 @@ func (x *GetByIdRequest) Reset() {
 	}
 }
 
-func (x *GetByIdRequest) String() string {
+func (x *GetReviewByIdRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdRequest) ProtoMessage() {}
+func (*GetReviewByIdRequest) ProtoMessage() {}
 
-func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
+func (x *GetReviewByIdRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -159,19 +159,19 @@ func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdRequest.ProtoReflect.Descriptor instead.
-func (*GetByIdRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetReviewByIdRequest.ProtoReflect.Descriptor instead.
+func (*GetReviewByIdRequest) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetByIdRequest) GetID() string {
+func (x *GetReviewByIdRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type GetByIdResponse struct {
+type GetReviewByIdResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -179,8 +179,8 @@ type GetByIdResponse struct {
 	Review *Review `protobuf:"bytes,1,opt,name=review,proto3" json:"review,omitempty"`
 }
 
-func (x *GetByIdResponse) Reset() {
-	*x = GetByIdResponse{}
+func (x *GetReviewByIdResponse) Reset() {
+	*x = GetReviewByIdResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -188,13 +188,13 @@ func (x *GetByIdResponse) Reset() {
 	}
 }
 
-func (x *GetByIdResponse) String() string {
+func (x *GetReviewByIdResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdResponse) ProtoMessage() {}
+func (*GetReviewByIdResponse) ProtoMessage() {}
 
-func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
+func (x *GetReviewByIdResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -206,26 +206,26 @@ func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdResponse.ProtoReflect.Descriptor instead.
-func (*GetByIdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetReviewByIdResponse.ProtoReflect.Descriptor instead.
+func (*GetReviewByIdResponse) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetByIdResponse) GetReview() *Review {
+func (x *GetReviewByIdResponse) GetReview() *Review {
 	if x != nil {
 		return x.Review
 	}
 	return nil
 }
 
-type GetAllRequest struct {
+type GetAllReviewsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *GetAllRequest) Reset() {
-	*x = GetAllRequest{}
+func (x *GetAllReviewsRequest) Reset() {
+	*x = GetAllReviewsRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -233,13 +233,13 @@ func (x *GetAllRequest) Reset() {
 	}
 }
 
-func (x *GetAllRequest) String() string {
+func (x *GetAllReviewsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllRequest) ProtoMessage() {}
+func (*GetAllReviewsRequest) ProtoMessage() {}
 
-func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
+func (x *GetAllReviewsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -251,12 +251,12 @@ func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllRequest.ProtoReflect.Descriptor instead.
-func (*GetAllRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllReviewsRequest.ProtoReflect.Descriptor instead.
+func (*GetAllReviewsRequest) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{3}
 }
 
-type GetAllResponse struct {
+type GetAllReviewsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -264,8 +264,8 @@ type GetAllResponse struct {
 	Reviews []*Review `protobuf:"bytes,1,rep,name=reviews,proto3" json:"reviews,omitempty"`
 }
 
-func (x *GetAllResponse) Reset() {
-	*x = GetAllResponse{}
+func (x *GetAllReviewsResponse) Reset() {
+	*x = GetAllReviewsResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -273,13 +273,13 @@ func (x *GetAllResponse) Reset() {
 	}
 }
 
-func (x *GetAllResponse) String() string {
+func (x *GetAllReviewsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllResponse) ProtoMessage() {}
+func (*GetAllReviewsResponse) ProtoMessage() {}
 
-func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
+func (x *GetAllReviewsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -291,19 +291,19 @@ func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllResponse.ProtoReflect.Descriptor instead.
-func (*GetAllResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllReviewsResponse.ProtoReflect.Descriptor instead.
+func (*GetAllReviewsResponse) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetAllResponse) GetReviews() []*Review {
+func (x *GetAllReviewsResponse) GetReviews() []*Review {
 	if x != nil {
 		return x.Reviews
 	}
 	return nil
 }
 
-type CreateRequest struct {
+type CreateReviewRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -311,8 +311,8 @@ type CreateRequest struct {
 	Review *Review `protobuf:"bytes,1,opt,name=review,proto3" json:"review,omitempty"`
 }
 
-func (x *CreateRequest) Reset() {
-	*x = CreateRequest{}
+func (x *CreateReviewRequest) Reset() {
+	*x = CreateReviewRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -320,13 +320,13 @@ func (x *CreateRequest) Reset() {
 	}
 }
 
-func (x *CreateRequest) String() string {
+func (x *CreateReviewRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateRequest) ProtoMessage() {}
+func (*CreateReviewRequest) ProtoMessage() {}
 
-func (x *CreateRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateReviewRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -338,26 +338,26 @@ func (x *CreateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateRequest.ProtoReflect.Descriptor instead.
-func (*CreateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateReviewRequest.ProtoReflect.Descriptor instead.
+func (*CreateReviewRequest) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreateRequest) GetReview() *Review {
+func (x *CreateReviewRequest) GetReview() *Review {
 	if x != nil {
 		return x.Review
 	}
 	return nil
 }
 
-type CreateResponse struct {
+type CreateReviewResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *CreateResponse) Reset() {
-	*x = CreateResponse{}
+func (x *CreateReviewResponse) Reset() {
+	*x = CreateReviewResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -365,13 +365,13 @@ func (x *CreateResponse) Reset() {
 	}
 }
 
-func (x *CreateResponse) String() string {
+func (x *CreateReviewResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateResponse) ProtoMessage() {}
+func (*CreateReviewResponse) ProtoMessage() {}
 
-func (x *CreateResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateReviewResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -383,12 +383,12 @@ func (x *CreateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateResponse.ProtoReflect.Descriptor instead.
-func (*CreateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateReviewResponse.ProtoReflect.Descriptor instead.
+func (*CreateReviewResponse) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{6}
 }
 
-type UpdateRequest struct {
+type UpdateReviewRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -396,8 +396,8 @@ type UpdateRequest struct {
 	Review *Review `protobuf:"bytes,1,opt,name=review,proto3" json:"review,omitempty"`
 }
 
-func (x *UpdateRequest) Reset() {
-	*x = UpdateRequest{}
+func (x *UpdateReviewRequest) Reset() {
+	*x = UpdateReviewRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -405,13 +405,13 @@ func (x *UpdateRequest) Reset() {
 	}
 }
 
-func (x *UpdateRequest) String() string {
+func (x *UpdateReviewRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateRequest) ProtoMessage() {}
+func (*UpdateReviewRequest) ProtoMessage() {}
 
-func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateReviewRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -423,26 +423,26 @@ func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateRequest.ProtoReflect.Descriptor instead.
-func (*UpdateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateReviewRequest.ProtoReflect.Descriptor instead.
+func (*UpdateReviewRequest) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateRequest) GetReview() *Review {
+func (x *UpdateReviewRequest) GetReview() *Review {
 	if x != nil {
 		return x.Review
 	}
 	return nil
 }
 
-type UpdateResponse struct {
+type UpdateReviewResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *UpdateResponse) Reset() {
-	*x = UpdateResponse{}
+func (x *UpdateReviewResponse) Reset() {
+	*x = UpdateReviewResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -450,13 +450,13 @@ func (x *UpdateResponse) Reset() {
 	}
 }
 
-func (x *UpdateResponse) String() string {
+func (x *UpdateReviewResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateResponse) ProtoMessage() {}
+func (*UpdateReviewResponse) ProtoMessage() {}
 
-func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateReviewResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -468,12 +468,12 @@ func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateResponse.ProtoReflect.Descriptor instead.
-func (*UpdateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateReviewResponse.ProtoReflect.Descriptor instead.
+func (*UpdateReviewResponse) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{8}
 }
 
-type DeleteRequest struct {
+type DeleteReviewRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -481,8 +481,8 @@ type DeleteRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *DeleteRequest) Reset() {
-	*x = DeleteRequest{}
+func (x *DeleteReviewRequest) Reset() {
+	*x = DeleteReviewRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -490,13 +490,13 @@ func (x *DeleteRequest) Reset() {
 	}
 }
 
-func (x *DeleteRequest) String() string {
+func (x *DeleteReviewRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteRequest) ProtoMessage() {}
+func (*DeleteReviewRequest) ProtoMessage() {}
 
-func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
+func (x *DeleteReviewRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -508,26 +508,26 @@ func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteRequest.ProtoReflect.Descriptor instead.
-func (*DeleteRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteReviewRequest.ProtoReflect.Descriptor instead.
+func (*DeleteReviewRequest) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *DeleteRequest) GetID() string {
+func (x *DeleteReviewRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type DeleteResponse struct {
+type DeleteReviewResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *DeleteResponse) Reset() {
-	*x = DeleteResponse{}
+func (x *DeleteReviewResponse) Reset() {
+	*x = DeleteReviewResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reviews_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -535,13 +535,13 @@ func (x *DeleteResponse) Reset() {
 	}
 }
 
-func (x *DeleteResponse) String() string {
+func (x *DeleteReviewResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteResponse) ProtoMessage() {}
+func (*DeleteReviewResponse) ProtoMessage() {}
 
-func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
+func (x *DeleteReviewResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_reviews_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -553,8 +553,8 @@ func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteResponse.ProtoReflect.Descriptor instead.
-func (*DeleteResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteReviewResponse.ProtoReflect.Descriptor instead.
+func (*DeleteReviewResponse) Descriptor() ([]byte, []int) {
 	return file_reviews_service_proto_rawDescGZIP(), []int{10}
 }
 
@@ -582,45 +582,55 @@ var file_reviews_service_proto_rawDesc = []byte{
 	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b,
 	0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x44, 0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x49,
 	0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x08, 0x20, 0x03, 0x28, 0x09, 0x52, 0x06, 0x49, 0x6d, 0x61,
-	0x67, 0x65, 0x73, 0x22, 0x20, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x32, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x65, 0x76, 0x69,
-	0x65, 0x77, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x52, 0x65, 0x76, 0x69, 0x65,
-	0x77, 0x52, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x22, 0x0f, 0x0a, 0x0d, 0x47, 0x65, 0x74,
-	0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x33, 0x0a, 0x0e, 0x47, 0x65,
-	0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x07,
-	0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x07, 0x2e,
-	0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x07, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x22,
-	0x30, 0x0a, 0x0d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x67, 0x65, 0x73, 0x22, 0x26, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77,
+	0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49,
+	0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x38, 0x0a, 0x15, 0x47,
+	0x65, 0x74, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x06, 0x72,
+	0x65, 0x76, 0x69, 0x65, 0x77, 0x22, 0x16, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52,
+	0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x3a, 0x0a,
+	0x15, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x07, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77,
+	0x52, 0x07, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x22, 0x36, 0x0a, 0x13, 0x43, 0x72, 0x65,
+	0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
 	0x12, 0x1f, 0x0a, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x07, 0x2e, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65,
-	0x77, 0x22, 0x10, 0x0a, 0x0e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x30, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x06, 0x72,
-	0x65, 0x76, 0x69, 0x65, 0x77, 0x22, 0x10, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1f, 0x0a, 0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x10, 0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xf4, 0x01, 0x0a, 0x0e, 0x52,
-	0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2e, 0x0a,
-	0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x12, 0x0f, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79,
-	0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x10, 0x2e, 0x47, 0x65, 0x74, 0x42,
-	0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a,
-	0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x0e, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x43, 0x72,
-	0x65, 0x61, 0x74, 0x65, 0x12, 0x0e, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x55, 0x70, 0x64, 0x61, 0x74,
-	0x65, 0x12, 0x0e, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x0f, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x0e,
-	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f,
-	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x42, 0x0f, 0x5a, 0x0d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x72, 0x65, 0x76, 0x69, 0x65,
-	0x77, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x77, 0x22, 0x16, 0x0a, 0x14, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65,
+	0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x36, 0x0a, 0x13, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x1f, 0x0a, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x07, 0x2e, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x06, 0x72, 0x65, 0x76, 0x69, 0x65,
+	0x77, 0x22, 0x16, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65,
+	0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x25, 0x0a, 0x13, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44,
+	0x22, 0x16, 0x0a, 0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xd1, 0x02, 0x0a, 0x0e, 0x52, 0x65, 0x76,
+	0x69, 0x65, 0x77, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x40, 0x0a, 0x0d, 0x47,
+	0x65, 0x74, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x42, 0x79, 0x49, 0x64, 0x12, 0x15, 0x2e, 0x47,
+	0x65, 0x74, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x42,
+	0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x40, 0x0a,
+	0x0d, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x12, 0x15,
+	0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65,
+	0x76, 0x69, 0x65, 0x77, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
+	0x3d, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x12,
+	0x14, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65,
+	0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3d,
+	0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x12, 0x14,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76,
+	0x69, 0x65, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3d, 0x0a,
+	0x0c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x12, 0x14, 0x2e,
+	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69,
+	0x65, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0f, 0x5a, 0x0d,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -638,35 +648,35 @@ func file_reviews_service_proto_rawDescGZIP() []byte {
 var file_reviews_service_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_reviews_service_proto_goTypes = []interface{}{
 	(*Review)(nil),                // 0: Review
-	(*GetByIdRequest)(nil),        // 1: GetByIdRequest
-	(*GetByIdResponse)(nil),       // 2: GetByIdResponse
-	(*GetAllRequest)(nil),         // 3: GetAllRequest
-	(*GetAllResponse)(nil),        // 4: GetAllResponse
-	(*CreateRequest)(nil),         // 5: CreateRequest
-	(*CreateResponse)(nil),        // 6: CreateResponse
-	(*UpdateRequest)(nil),         // 7: UpdateRequest
-	(*UpdateResponse)(nil),        // 8: UpdateResponse
-	(*DeleteRequest)(nil),         // 9: DeleteRequest
-	(*DeleteResponse)(nil),        // 10: DeleteResponse
+	(*GetReviewByIdRequest)(nil),  // 1: GetReviewByIdRequest
+	(*GetReviewByIdResponse)(nil), // 2: GetReviewByIdResponse
+	(*GetAllReviewsRequest)(nil),  // 3: GetAllReviewsRequest
+	(*GetAllReviewsResponse)(nil), // 4: GetAllReviewsResponse
+	(*CreateReviewRequest)(nil),   // 5: CreateReviewRequest
+	(*CreateReviewResponse)(nil),  // 6: CreateReviewResponse
+	(*UpdateReviewRequest)(nil),   // 7: UpdateReviewRequest
+	(*UpdateReviewResponse)(nil),  // 8: UpdateReviewResponse
+	(*DeleteReviewRequest)(nil),   // 9: DeleteReviewRequest
+	(*DeleteReviewResponse)(nil),  // 10: DeleteReviewResponse
 	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
 }
 var file_reviews_service_proto_depIdxs = []int32{
 	11, // 0: Review.TourVisitDate:type_name -> google.protobuf.Timestamp
 	11, // 1: Review.CommentDate:type_name -> google.protobuf.Timestamp
-	0,  // 2: GetByIdResponse.review:type_name -> Review
-	0,  // 3: GetAllResponse.reviews:type_name -> Review
-	0,  // 4: CreateRequest.review:type_name -> Review
-	0,  // 5: UpdateRequest.review:type_name -> Review
-	1,  // 6: ReviewsService.GetById:input_type -> GetByIdRequest
-	3,  // 7: ReviewsService.GetAll:input_type -> GetAllRequest
-	5,  // 8: ReviewsService.Create:input_type -> CreateRequest
-	7,  // 9: ReviewsService.Update:input_type -> UpdateRequest
-	9,  // 10: ReviewsService.Delete:input_type -> DeleteRequest
-	2,  // 11: ReviewsService.GetById:output_type -> GetByIdResponse
-	4,  // 12: ReviewsService.GetAll:output_type -> GetAllResponse
-	6,  // 13: ReviewsService.Create:output_type -> CreateResponse
-	8,  // 14: ReviewsService.Update:output_type -> UpdateResponse
-	10, // 15: ReviewsService.Delete:output_type -> DeleteResponse
+	0,  // 2: GetReviewByIdResponse.review:type_name -> Review
+	0,  // 3: GetAllReviewsResponse.reviews:type_name -> Review
+	0,  // 4: CreateReviewRequest.review:type_name -> Review
+	0,  // 5: UpdateReviewRequest.review:type_name -> Review
+	1,  // 6: ReviewsService.GetReviewById:input_type -> GetReviewByIdRequest
+	3,  // 7: ReviewsService.GetAllReviews:input_type -> GetAllReviewsRequest
+	5,  // 8: ReviewsService.CreateReview:input_type -> CreateReviewRequest
+	7,  // 9: ReviewsService.UpdateReview:input_type -> UpdateReviewRequest
+	9,  // 10: ReviewsService.DeleteReview:input_type -> DeleteReviewRequest
+	2,  // 11: ReviewsService.GetReviewById:output_type -> GetReviewByIdResponse
+	4,  // 12: ReviewsService.GetAllReviews:output_type -> GetAllReviewsResponse
+	6,  // 13: ReviewsService.CreateReview:output_type -> CreateReviewResponse
+	8,  // 14: ReviewsService.UpdateReview:output_type -> UpdateReviewResponse
+	10, // 15: ReviewsService.DeleteReview:output_type -> DeleteReviewResponse
 	11, // [11:16] is the sub-list for method output_type
 	6,  // [6:11] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
@@ -693,7 +703,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdRequest); i {
+			switch v := v.(*GetReviewByIdRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -705,7 +715,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdResponse); i {
+			switch v := v.(*GetReviewByIdResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -717,7 +727,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllRequest); i {
+			switch v := v.(*GetAllReviewsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -729,7 +739,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllResponse); i {
+			switch v := v.(*GetAllReviewsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -741,7 +751,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRequest); i {
+			switch v := v.(*CreateReviewRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -753,7 +763,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateResponse); i {
+			switch v := v.(*CreateReviewResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -765,7 +775,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRequest); i {
+			switch v := v.(*UpdateReviewRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -777,7 +787,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResponse); i {
+			switch v := v.(*UpdateReviewResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -789,7 +799,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRequest); i {
+			switch v := v.(*DeleteReviewRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -801,7 +811,7 @@ func file_reviews_service_proto_init() {
 			}
 		}
 		file_reviews_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteResponse); i {
+			switch v := v.(*DeleteReviewResponse); i {
 			case 0:
 				return &v.state
 			case 1:

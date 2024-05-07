@@ -15,7 +15,7 @@ type TourHandler struct {
 	tours.UnimplementedToursServiceServer
 }
 
-func (handler *TourHandler) GetById(ctx context.Context, request *tours.GetByIdRequest) (*tours.GetByIdResponse, error) {
+func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetTourByIdRequest) (*tours.GetTourByIdResponse, error) {
 	tour, _ := handler.TourService.GetById(request.ID)
 
 	tourResponse := tours.Tour{}
@@ -37,14 +37,14 @@ func (handler *TourHandler) GetById(ctx context.Context, request *tours.GetByIdR
 	//tourResponse.Reviews = tour.Reviews
 	//tourResponse.Durations = tour.Durations
 
-	ret := &tours.GetByIdResponse{
+	ret := &tours.GetTourByIdResponse{
 		Tour: &tourResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *TourHandler) GetByAuthorId(ctx context.Context, request *tours.GetByAuthorIdRequest) (*tours.GetByAuthorIdResponse, error) {
+func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tours.GetToursByAuthorIdRequest) (*tours.GetToursByAuthorIdResponse, error) {
 	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId)
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
@@ -73,14 +73,14 @@ func (handler *TourHandler) GetByAuthorId(ctx context.Context, request *tours.Ge
 		}
 	}
 
-	ret := &tours.GetByAuthorIdResponse{
+	ret := &tours.GetToursByAuthorIdResponse{
 		Tours: toursResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *TourHandler) GetAll(ctx context.Context, request *tours.GetAllRequest) (*tours.GetAllResponse, error) {
+func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetAllToursRequest) (*tours.GetAllToursResponse, error) {
 	toursList, _ := handler.TourService.GetAll()
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
@@ -109,14 +109,14 @@ func (handler *TourHandler) GetAll(ctx context.Context, request *tours.GetAllReq
 		}
 	}
 
-	ret := &tours.GetAllResponse{
+	ret := &tours.GetAllToursResponse{
 		Tours: toursResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *TourHandler) GetPublished(ctx context.Context, request *tours.GetPublishedRequest) (*tours.GetPublishedResponse, error) {
+func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tours.GetPublishedToursRequest) (*tours.GetPublishedToursResponse, error) {
 	toursList, _ := handler.TourService.GetPublished()
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
@@ -145,14 +145,14 @@ func (handler *TourHandler) GetPublished(ctx context.Context, request *tours.Get
 		}
 	}
 
-	ret := &tours.GetPublishedResponse{
+	ret := &tours.GetPublishedToursResponse{
 		Tours: toursResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *TourHandler) Create(ctx context.Context, request *tours.CreateRequest) (*tours.CreateResponse, error) {
+func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.CreateTourRequest) (*tours.CreateTourResponse, error) {
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.ID
@@ -175,15 +175,15 @@ func (handler *TourHandler) Create(ctx context.Context, request *tours.CreateReq
 
 	handler.TourService.Create(&tour)
 
-	return &tours.CreateResponse{}, nil
+	return &tours.CreateTourResponse{}, nil
 }
 
-func (handler *TourHandler) Delete(ctx context.Context, request *tours.DeleteRequest) (*tours.DeleteResponse, error) {
+func (handler *TourHandler) DeleteTour(ctx context.Context, request *tours.DeleteTourRequest) (*tours.DeleteTourResponse, error) {
 	handler.TourService.Delete(request.ID)
-	return &tours.DeleteResponse{}, nil
+	return &tours.DeleteTourResponse{}, nil
 }
 
-func (handler *TourHandler) Update(ctx context.Context, request *tours.UpdateRequest) (*tours.UpdateResponse, error) {
+func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.UpdateTourRequest) (*tours.UpdateTourResponse, error) {
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.ID
@@ -206,10 +206,10 @@ func (handler *TourHandler) Update(ctx context.Context, request *tours.UpdateReq
 
 	handler.TourService.Update(&tour)
 
-	return &tours.UpdateResponse{}, nil
+	return &tours.UpdateTourResponse{}, nil
 }
 
-func (handler *TourHandler) AddDurations(ctx context.Context, request *tours.AddDurationsRequest) (*tours.AddDurationsResponse, error) {
+func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tours.AddToursDurationsRequest) (*tours.AddToursDurationsResponse, error) {
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.ID
@@ -232,20 +232,20 @@ func (handler *TourHandler) AddDurations(ctx context.Context, request *tours.Add
 
 	handler.TourService.AddDurations(&tour)
 
-	return &tours.AddDurationsResponse{}, nil
+	return &tours.AddToursDurationsResponse{}, nil
 }
 
-func (handler *TourHandler) Publish(ctx context.Context, request *tours.PublishRequest) (*tours.PublishResponse, error) {
+func (handler *TourHandler) PublishTour(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
 	handler.TourService.Publish(request.ID)
-	return &tours.PublishResponse{}, nil
+	return &tours.PublishTourResponse{}, nil
 }
 
-func (handler *TourHandler) Archive(ctx context.Context, request *tours.ArchiveRequest) (*tours.ArchiveResponse, error) {
+func (handler *TourHandler) ArchiveTour(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
 	handler.TourService.Archive(request.ID)
-	return &tours.ArchiveResponse{}, nil
+	return &tours.ArchiveTourResponse{}, nil
 }
 
-func (handler *TourHandler) GetEquipment(ctx context.Context, request *tours.GetEquipmentRequest) (*tours.GetEquipmentResponse, error) {
+func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tours.GetToursEquipmentRequest) (*tours.GetToursEquipmentResponse, error) {
 	equipmentList, _ := handler.TourService.GetEquipment(request.TourId)
 
 	equipmentResponse := make([]*tours.TourEquipment, len(equipmentList))
@@ -261,21 +261,21 @@ func (handler *TourHandler) GetEquipment(ctx context.Context, request *tours.Get
 		}
 	}
 
-	ret := &tours.GetEquipmentResponse{
+	ret := &tours.GetToursEquipmentResponse{
 		Equipment: equipmentResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *TourHandler) AddEquipment(ctx context.Context, request *tours.AddEquipmentRequest) (*tours.AddEquipmentResponse, error) {
+func (handler *TourHandler) AddToursEquipment(ctx context.Context, request *tours.AddToursEquipmentRequest) (*tours.AddToursEquipmentResponse, error) {
 	handler.TourService.AddEquipment(request.TourId, request.EquipmentId)
-	return &tours.AddEquipmentResponse{}, nil
+	return &tours.AddToursEquipmentResponse{}, nil
 }
 
-func (handler *TourHandler) DeleteEquipment(ctx context.Context, request *tours.DeleteEquipmentRequest) (*tours.DeleteEquipmentResponse, error) {
+func (handler *TourHandler) DeleteToursEquipment(ctx context.Context, request *tours.DeleteToursEquipmentRequest) (*tours.DeleteToursEquipmentResponse, error) {
 	handler.TourService.DeleteEquipment(request.TourId, request.EquipmentId)
-	return &tours.DeleteEquipmentResponse{}, nil
+	return &tours.DeleteToursEquipmentResponse{}, nil
 }
 
 func TimeToProtoTimestamp(t time.Time) *timestamp.Timestamp {
