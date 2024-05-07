@@ -47,7 +47,7 @@ func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 		Preload("KeyPoints").
 		Preload("Equipment").
 		Find(&tours)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return tours, nil
@@ -154,6 +154,8 @@ func (repo *TourRepository) AddDurations(tour *model.Tour) error {
 func (repo *TourRepository) GetEquipment(tourId string) ([]model.Equipment, error) {
 	var tour model.Tour
 
+	fmt.Println("TOUR ID U REPO JE: ", tourId)
+
 	dbResult := repo.DatabaseConnection.
 		Preload("Equipment").
 		Where("id = ?", tourId).
@@ -161,6 +163,7 @@ func (repo *TourRepository) GetEquipment(tourId string) ([]model.Equipment, erro
 		First(&tour)
 
 	if dbResult.Error != nil {
+		fmt.Println("USAO JE U EROR ONAJ")
 		return nil, dbResult.Error
 	}
 

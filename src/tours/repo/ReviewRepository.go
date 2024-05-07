@@ -13,7 +13,7 @@ type ReviewRepository struct {
 func (repo *ReviewRepository) GetById(id string) (model.Review, error) {
 	review := model.Review{}
 	dbResult := repo.DatabaseConnection.First(&review, "id = ?", id)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return review, dbResult.Error
 	}
 	return review, nil
@@ -22,7 +22,7 @@ func (repo *ReviewRepository) GetById(id string) (model.Review, error) {
 func (repo *ReviewRepository) GetAll() ([]model.Review, error) {
 	var reviews []model.Review
 	dbResult := repo.DatabaseConnection.Find(&reviews)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return reviews, nil

@@ -24,7 +24,7 @@ func (repo *FacilityRepository) GetAllByAuthorId(authorId string) ([]model.Facil
 	var facilities []model.Facility
 	dbResult := repo.DatabaseConnection.Find(&facilities, "author_id = ?", authorId)
 	if dbResult != nil {
-		return facilities, dbResult.Error
+		return nil, dbResult.Error
 	}
 	return facilities, nil
 }

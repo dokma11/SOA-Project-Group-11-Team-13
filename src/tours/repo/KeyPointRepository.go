@@ -13,7 +13,7 @@ type KeyPointRepository struct {
 func (repo *KeyPointRepository) GetById(id string) (model.KeyPoint, error) {
 	keyPoint := model.KeyPoint{}
 	dbResult := repo.DatabaseConnection.First(&keyPoint, "id = ?", id)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return keyPoint, dbResult.Error
 	}
 	return keyPoint, nil
@@ -22,8 +22,8 @@ func (repo *KeyPointRepository) GetById(id string) (model.KeyPoint, error) {
 func (repo *KeyPointRepository) GetAllByTourId(tourId string) ([]model.KeyPoint, error) {
 	var keyPoints []model.KeyPoint
 	dbResult := repo.DatabaseConnection.Find(&keyPoints, "tour_id = ?", tourId)
-	if dbResult != nil {
-		return keyPoints, dbResult.Error
+	if dbResult.Error != nil {
+		return nil, dbResult.Error
 	}
 	return keyPoints, nil
 }
@@ -31,7 +31,7 @@ func (repo *KeyPointRepository) GetAllByTourId(tourId string) ([]model.KeyPoint,
 func (repo *KeyPointRepository) GetAll() ([]model.KeyPoint, error) {
 	var keyPoints []model.KeyPoint
 	dbResult := repo.DatabaseConnection.Find(&keyPoints)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return keyPoints, nil
