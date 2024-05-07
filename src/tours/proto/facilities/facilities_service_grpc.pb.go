@@ -19,22 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	FacilitiesService_GetAllFacilities_FullMethodName        = "/FacilitiesService/GetAllFacilities"
-	FacilitiesService_GetFacilitiesByAuthorId_FullMethodName = "/FacilitiesService/GetFacilitiesByAuthorId"
-	FacilitiesService_CreateFacility_FullMethodName          = "/FacilitiesService/CreateFacility"
-	FacilitiesService_UpdateFacility_FullMethodName          = "/FacilitiesService/UpdateFacility"
-	FacilitiesService_DeleteFacility_FullMethodName          = "/FacilitiesService/DeleteFacility"
+	FacilitiesService_GetAll_FullMethodName        = "/FacilitiesService/GetAll"
+	FacilitiesService_GetByAuthorId_FullMethodName = "/FacilitiesService/GetByAuthorId"
+	FacilitiesService_Create_FullMethodName        = "/FacilitiesService/Create"
+	FacilitiesService_Update_FullMethodName        = "/FacilitiesService/Update"
+	FacilitiesService_Delete_FullMethodName        = "/FacilitiesService/Delete"
 )
 
 // FacilitiesServiceClient is the client API for FacilitiesService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FacilitiesServiceClient interface {
-	GetAllFacilities(ctx context.Context, in *GetAllFacilitiesRequest, opts ...grpc.CallOption) (*GetAllFacilitiesResponse, error)
-	GetFacilitiesByAuthorId(ctx context.Context, in *GetFacilitiesByAuthorIdRequest, opts ...grpc.CallOption) (*GetFacilitiesByAuthorIdResponse, error)
-	CreateFacility(ctx context.Context, in *CreateFacilityRequest, opts ...grpc.CallOption) (*CreateFacilityResponse, error)
-	UpdateFacility(ctx context.Context, in *UpdateFacilityRequest, opts ...grpc.CallOption) (*UpdateFacilityResponse, error)
-	DeleteFacility(ctx context.Context, in *DeleteFacilityRequest, opts ...grpc.CallOption) (*DeleteFacilityResponse, error)
+	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	GetByAuthorId(ctx context.Context, in *GetByAuthorIdRequest, opts ...grpc.CallOption) (*GetByAuthorIdResponse, error)
+	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
 
 type facilitiesServiceClient struct {
@@ -45,45 +45,45 @@ func NewFacilitiesServiceClient(cc grpc.ClientConnInterface) FacilitiesServiceCl
 	return &facilitiesServiceClient{cc}
 }
 
-func (c *facilitiesServiceClient) GetAllFacilities(ctx context.Context, in *GetAllFacilitiesRequest, opts ...grpc.CallOption) (*GetAllFacilitiesResponse, error) {
-	out := new(GetAllFacilitiesResponse)
-	err := c.cc.Invoke(ctx, FacilitiesService_GetAllFacilities_FullMethodName, in, out, opts...)
+func (c *facilitiesServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
+	out := new(GetAllResponse)
+	err := c.cc.Invoke(ctx, FacilitiesService_GetAll_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *facilitiesServiceClient) GetFacilitiesByAuthorId(ctx context.Context, in *GetFacilitiesByAuthorIdRequest, opts ...grpc.CallOption) (*GetFacilitiesByAuthorIdResponse, error) {
-	out := new(GetFacilitiesByAuthorIdResponse)
-	err := c.cc.Invoke(ctx, FacilitiesService_GetFacilitiesByAuthorId_FullMethodName, in, out, opts...)
+func (c *facilitiesServiceClient) GetByAuthorId(ctx context.Context, in *GetByAuthorIdRequest, opts ...grpc.CallOption) (*GetByAuthorIdResponse, error) {
+	out := new(GetByAuthorIdResponse)
+	err := c.cc.Invoke(ctx, FacilitiesService_GetByAuthorId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *facilitiesServiceClient) CreateFacility(ctx context.Context, in *CreateFacilityRequest, opts ...grpc.CallOption) (*CreateFacilityResponse, error) {
-	out := new(CreateFacilityResponse)
-	err := c.cc.Invoke(ctx, FacilitiesService_CreateFacility_FullMethodName, in, out, opts...)
+func (c *facilitiesServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
+	out := new(CreateResponse)
+	err := c.cc.Invoke(ctx, FacilitiesService_Create_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *facilitiesServiceClient) UpdateFacility(ctx context.Context, in *UpdateFacilityRequest, opts ...grpc.CallOption) (*UpdateFacilityResponse, error) {
-	out := new(UpdateFacilityResponse)
-	err := c.cc.Invoke(ctx, FacilitiesService_UpdateFacility_FullMethodName, in, out, opts...)
+func (c *facilitiesServiceClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error) {
+	out := new(UpdateResponse)
+	err := c.cc.Invoke(ctx, FacilitiesService_Update_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *facilitiesServiceClient) DeleteFacility(ctx context.Context, in *DeleteFacilityRequest, opts ...grpc.CallOption) (*DeleteFacilityResponse, error) {
-	out := new(DeleteFacilityResponse)
-	err := c.cc.Invoke(ctx, FacilitiesService_DeleteFacility_FullMethodName, in, out, opts...)
+func (c *facilitiesServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
+	err := c.cc.Invoke(ctx, FacilitiesService_Delete_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,11 +94,11 @@ func (c *facilitiesServiceClient) DeleteFacility(ctx context.Context, in *Delete
 // All implementations must embed UnimplementedFacilitiesServiceServer
 // for forward compatibility
 type FacilitiesServiceServer interface {
-	GetAllFacilities(context.Context, *GetAllFacilitiesRequest) (*GetAllFacilitiesResponse, error)
-	GetFacilitiesByAuthorId(context.Context, *GetFacilitiesByAuthorIdRequest) (*GetFacilitiesByAuthorIdResponse, error)
-	CreateFacility(context.Context, *CreateFacilityRequest) (*CreateFacilityResponse, error)
-	UpdateFacility(context.Context, *UpdateFacilityRequest) (*UpdateFacilityResponse, error)
-	DeleteFacility(context.Context, *DeleteFacilityRequest) (*DeleteFacilityResponse, error)
+	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
+	GetByAuthorId(context.Context, *GetByAuthorIdRequest) (*GetByAuthorIdResponse, error)
+	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
+	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	mustEmbedUnimplementedFacilitiesServiceServer()
 }
 
@@ -106,20 +106,20 @@ type FacilitiesServiceServer interface {
 type UnimplementedFacilitiesServiceServer struct {
 }
 
-func (UnimplementedFacilitiesServiceServer) GetAllFacilities(context.Context, *GetAllFacilitiesRequest) (*GetAllFacilitiesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllFacilities not implemented")
+func (UnimplementedFacilitiesServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedFacilitiesServiceServer) GetFacilitiesByAuthorId(context.Context, *GetFacilitiesByAuthorIdRequest) (*GetFacilitiesByAuthorIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFacilitiesByAuthorId not implemented")
+func (UnimplementedFacilitiesServiceServer) GetByAuthorId(context.Context, *GetByAuthorIdRequest) (*GetByAuthorIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetByAuthorId not implemented")
 }
-func (UnimplementedFacilitiesServiceServer) CreateFacility(context.Context, *CreateFacilityRequest) (*CreateFacilityResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateFacility not implemented")
+func (UnimplementedFacilitiesServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedFacilitiesServiceServer) UpdateFacility(context.Context, *UpdateFacilityRequest) (*UpdateFacilityResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateFacility not implemented")
+func (UnimplementedFacilitiesServiceServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedFacilitiesServiceServer) DeleteFacility(context.Context, *DeleteFacilityRequest) (*DeleteFacilityResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteFacility not implemented")
+func (UnimplementedFacilitiesServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedFacilitiesServiceServer) mustEmbedUnimplementedFacilitiesServiceServer() {}
 
@@ -134,92 +134,92 @@ func RegisterFacilitiesServiceServer(s grpc.ServiceRegistrar, srv FacilitiesServ
 	s.RegisterService(&FacilitiesService_ServiceDesc, srv)
 }
 
-func _FacilitiesService_GetAllFacilities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllFacilitiesRequest)
+func _FacilitiesService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FacilitiesServiceServer).GetAllFacilities(ctx, in)
+		return srv.(FacilitiesServiceServer).GetAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FacilitiesService_GetAllFacilities_FullMethodName,
+		FullMethod: FacilitiesService_GetAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FacilitiesServiceServer).GetAllFacilities(ctx, req.(*GetAllFacilitiesRequest))
+		return srv.(FacilitiesServiceServer).GetAll(ctx, req.(*GetAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FacilitiesService_GetFacilitiesByAuthorId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFacilitiesByAuthorIdRequest)
+func _FacilitiesService_GetByAuthorId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByAuthorIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FacilitiesServiceServer).GetFacilitiesByAuthorId(ctx, in)
+		return srv.(FacilitiesServiceServer).GetByAuthorId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FacilitiesService_GetFacilitiesByAuthorId_FullMethodName,
+		FullMethod: FacilitiesService_GetByAuthorId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FacilitiesServiceServer).GetFacilitiesByAuthorId(ctx, req.(*GetFacilitiesByAuthorIdRequest))
+		return srv.(FacilitiesServiceServer).GetByAuthorId(ctx, req.(*GetByAuthorIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FacilitiesService_CreateFacility_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateFacilityRequest)
+func _FacilitiesService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FacilitiesServiceServer).CreateFacility(ctx, in)
+		return srv.(FacilitiesServiceServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FacilitiesService_CreateFacility_FullMethodName,
+		FullMethod: FacilitiesService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FacilitiesServiceServer).CreateFacility(ctx, req.(*CreateFacilityRequest))
+		return srv.(FacilitiesServiceServer).Create(ctx, req.(*CreateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FacilitiesService_UpdateFacility_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateFacilityRequest)
+func _FacilitiesService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FacilitiesServiceServer).UpdateFacility(ctx, in)
+		return srv.(FacilitiesServiceServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FacilitiesService_UpdateFacility_FullMethodName,
+		FullMethod: FacilitiesService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FacilitiesServiceServer).UpdateFacility(ctx, req.(*UpdateFacilityRequest))
+		return srv.(FacilitiesServiceServer).Update(ctx, req.(*UpdateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FacilitiesService_DeleteFacility_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteFacilityRequest)
+func _FacilitiesService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FacilitiesServiceServer).DeleteFacility(ctx, in)
+		return srv.(FacilitiesServiceServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FacilitiesService_DeleteFacility_FullMethodName,
+		FullMethod: FacilitiesService_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FacilitiesServiceServer).DeleteFacility(ctx, req.(*DeleteFacilityRequest))
+		return srv.(FacilitiesServiceServer).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -232,24 +232,24 @@ var FacilitiesService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FacilitiesServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetAllFacilities",
-			Handler:    _FacilitiesService_GetAllFacilities_Handler,
+			MethodName: "GetAll",
+			Handler:    _FacilitiesService_GetAll_Handler,
 		},
 		{
-			MethodName: "GetFacilitiesByAuthorId",
-			Handler:    _FacilitiesService_GetFacilitiesByAuthorId_Handler,
+			MethodName: "GetByAuthorId",
+			Handler:    _FacilitiesService_GetByAuthorId_Handler,
 		},
 		{
-			MethodName: "CreateFacility",
-			Handler:    _FacilitiesService_CreateFacility_Handler,
+			MethodName: "Create",
+			Handler:    _FacilitiesService_Create_Handler,
 		},
 		{
-			MethodName: "UpdateFacility",
-			Handler:    _FacilitiesService_UpdateFacility_Handler,
+			MethodName: "Update",
+			Handler:    _FacilitiesService_Update_Handler,
 		},
 		{
-			MethodName: "DeleteFacility",
-			Handler:    _FacilitiesService_DeleteFacility_Handler,
+			MethodName: "Delete",
+			Handler:    _FacilitiesService_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
