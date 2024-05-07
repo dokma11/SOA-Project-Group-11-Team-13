@@ -8,7 +8,8 @@ service BlogsService {
   rpc Create(CreateRequest) returns (CreateResponse) {}
   rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
   rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}
-  rpc GetByReceiverId(GetByAuthorsIdRequest) returns (GetByAuthorsIdResponse) {}
+  rpc GetByAuthorsId(GetByAuthorsIdRequest) returns (GetByAuthorsIdResponse) {}
+  rpc GetByAuthorsIds(GetByAuthorsIdsRequest) returns (GetByAuthorsIdsResponse) {}
   rpc SearchByName(SearchByNameRequest) returns (SearchByNameResponse) {}
   rpc Publish(PublishRequest) returns (PublishResponse) {}
   rpc Delete(DeleteRequest) returns (DeleteResponse) {}
@@ -83,10 +84,18 @@ message GetAllResponse {
 }
 
 message GetByAuthorsIdRequest {
-  int32 AuthorId = 1;
+  string AuthorId = 1;
 }
 
 message GetByAuthorsIdResponse {
+  repeated Blog blogs = 1;
+}
+
+message GetByAuthorsIdsRequest {
+  string AuthorsIds = 1;
+}
+
+message GetByAuthorsIdsResponse {
   repeated Blog blogs = 1;
 }
 

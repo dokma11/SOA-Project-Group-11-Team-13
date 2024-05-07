@@ -39,6 +39,8 @@ message GetAllResponse {
 
 message GetByBlogIdRequest {
   string BlogId = 1;
+  int32 Page = 2;
+  int32 PageSize = 3;
 }
 
 message GetByBlogIdResponse {
