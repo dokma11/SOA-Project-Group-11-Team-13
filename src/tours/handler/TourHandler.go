@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"time"
@@ -51,6 +52,34 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 
 	if toursList != nil && len(*toursList) > 0 {
 		for i, tour := range *toursList {
+
+			keypointList := make([]*tours.TourKeyPoint, len(tour.KeyPoints))
+			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+				for index, kp := range tour.KeyPoints {
+					keypointList[index] = &tours.TourKeyPoint{
+						ID:              kp.ID,
+						TourId:          kp.TourId,
+						Name:            kp.Name,
+						Description:     kp.Description,
+						Longitude:       kp.Longitude,
+						Latitude:        kp.Latitude,
+						LocationAddress: kp.LocationAddress,
+						ImagePath:       kp.ImagePath,
+						Order:           kp.Order,
+					}
+				}
+			}
+
+			durationsList := make([]*tours.TourDuration, len(tour.Durations))
+			if tour.Durations != nil && len(tour.Durations) > 0 {
+				for index, duration := range tour.Durations {
+					durationsList[index] = &tours.TourDuration{
+						Duration:      int32(duration.Duration),
+						TransportType: tours.TourDuration_TransportType(duration.TransportType),
+					}
+				}
+			}
+
 			toursResponse[i] = &tours.Tour{
 				ID:          tour.ID,
 				AuthorId:    int32(tour.AuthorId),
@@ -65,10 +94,10 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
 				Category:    tours.Tour_TourCategory(tour.Category),
 				IsDeleted:   tour.IsDeleted,
-				//KeyPoints : tour.KeyPoints,	PROVERITI SAMO DA LI TREBA I STA TREBA
-				//Equipment : tour.Equipment,
+				KeyPoints:   keypointList,
+				Durations:   durationsList,
+				//Equipment:   tour.Equipment,
 				//Reviews : tour.Reviews,
-				//Durations : tour.Durations,
 			}
 		}
 	}
@@ -87,6 +116,34 @@ func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetA
 
 	if toursList != nil && len(*toursList) > 0 {
 		for i, tour := range *toursList {
+
+			keypointList := make([]*tours.TourKeyPoint, len(tour.KeyPoints))
+			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+				for index, kp := range tour.KeyPoints {
+					keypointList[index] = &tours.TourKeyPoint{
+						ID:              kp.ID,
+						TourId:          kp.TourId,
+						Name:            kp.Name,
+						Description:     kp.Description,
+						Longitude:       kp.Longitude,
+						Latitude:        kp.Latitude,
+						LocationAddress: kp.LocationAddress,
+						ImagePath:       kp.ImagePath,
+						Order:           kp.Order,
+					}
+				}
+			}
+
+			durationsList := make([]*tours.TourDuration, len(tour.Durations))
+			if tour.Durations != nil && len(tour.Durations) > 0 {
+				for index, duration := range tour.Durations {
+					durationsList[index] = &tours.TourDuration{
+						Duration:      int32(duration.Duration),
+						TransportType: tours.TourDuration_TransportType(duration.TransportType),
+					}
+				}
+			}
+
 			toursResponse[i] = &tours.Tour{
 				ID:          tour.ID,
 				AuthorId:    int32(tour.AuthorId),
@@ -101,10 +158,10 @@ func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetA
 				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
 				Category:    tours.Tour_TourCategory(tour.Category),
 				IsDeleted:   tour.IsDeleted,
-				//KeyPoints : tour.KeyPoints,	PROVERITI SAMO DA LI TREBA I STA TREBA
+				KeyPoints:   keypointList,
+				Durations:   durationsList,
 				//Equipment : tour.Equipment,
 				//Reviews : tour.Reviews,
-				//Durations : tour.Durations,
 			}
 		}
 	}
@@ -123,6 +180,34 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 
 	if toursList != nil && len(*toursList) > 0 {
 		for i, tour := range *toursList {
+
+			keypointList := make([]*tours.TourKeyPoint, len(tour.KeyPoints))
+			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+				for index, kp := range tour.KeyPoints {
+					keypointList[index] = &tours.TourKeyPoint{
+						ID:              kp.ID,
+						TourId:          kp.TourId,
+						Name:            kp.Name,
+						Description:     kp.Description,
+						Longitude:       kp.Longitude,
+						Latitude:        kp.Latitude,
+						LocationAddress: kp.LocationAddress,
+						ImagePath:       kp.ImagePath,
+						Order:           kp.Order,
+					}
+				}
+			}
+
+			durationsList := make([]*tours.TourDuration, len(tour.Durations))
+			if tour.Durations != nil && len(tour.Durations) > 0 {
+				for index, duration := range tour.Durations {
+					durationsList[index] = &tours.TourDuration{
+						Duration:      int32(duration.Duration),
+						TransportType: tours.TourDuration_TransportType(duration.TransportType),
+					}
+				}
+			}
+
 			toursResponse[i] = &tours.Tour{
 				ID:          tour.ID,
 				AuthorId:    int32(tour.AuthorId),
@@ -137,10 +222,10 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
 				Category:    tours.Tour_TourCategory(tour.Category),
 				IsDeleted:   tour.IsDeleted,
-				//KeyPoints : tour.KeyPoints,	PROVERITI SAMO DA LI TREBA I STA TREBA
+				KeyPoints:   keypointList,
+				Durations:   durationsList,
 				//Equipment : tour.Equipment,
 				//Reviews : tour.Reviews,
-				//Durations : tour.Durations,
 			}
 		}
 	}
@@ -168,8 +253,36 @@ func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.Creat
 	tour.ArchiveDate, _ = ProtoTimestampToTime(request.Tour.ArchiveDate)
 	tour.Category = model.TourCategory(request.Tour.Category)
 	tour.IsDeleted = request.Tour.IsDeleted
-	//tourResponse.KeyPoints = request.Tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-	//tourResponse.Equipment = request.Tour.Equipment
+
+	keypointList := make([]model.KeyPoint, len(tour.KeyPoints))
+	if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+		for index, kp := range tour.KeyPoints {
+			keypointList[index] = model.KeyPoint{
+				ID:              kp.ID,
+				TourId:          kp.TourId,
+				Name:            kp.Name,
+				Description:     kp.Description,
+				Longitude:       kp.Longitude,
+				Latitude:        kp.Latitude,
+				LocationAddress: kp.LocationAddress,
+				ImagePath:       kp.ImagePath,
+				Order:           kp.Order,
+			}
+		}
+	}
+
+	durationsList := make([]model.TourDuration, len(tour.Durations))
+	if tour.Durations != nil && len(tour.Durations) > 0 {
+		for index, duration := range tour.Durations {
+			durationsList[index] = model.TourDuration{
+				Duration:      duration.Duration,
+				TransportType: duration.TransportType,
+			}
+		}
+	}
+
+	tour.KeyPoints = keypointList
+	tour.Durations = durationsList
 	//tourResponse.Reviews = request.Tour.Reviews
 	//tourResponse.Durations = request.Tour.Durations
 
@@ -199,8 +312,36 @@ func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.Updat
 	tour.ArchiveDate, _ = ProtoTimestampToTime(request.Tour.ArchiveDate)
 	tour.Category = model.TourCategory(request.Tour.Category)
 	tour.IsDeleted = request.Tour.IsDeleted
-	//tourResponse.KeyPoints = request.Tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-	//tourResponse.Equipment = request.Tour.Equipment
+
+	keypointList := make([]model.KeyPoint, len(request.Tour.KeyPoints))
+	if request.Tour.KeyPoints != nil && len(request.Tour.KeyPoints) > 0 {
+		for index, kp := range request.Tour.KeyPoints {
+			keypointList[index] = model.KeyPoint{
+				ID:              kp.ID,
+				TourId:          kp.TourId,
+				Name:            kp.Name,
+				Description:     kp.Description,
+				Longitude:       kp.Longitude,
+				Latitude:        kp.Latitude,
+				LocationAddress: kp.LocationAddress,
+				ImagePath:       kp.ImagePath,
+				Order:           kp.Order,
+			}
+		}
+	}
+
+	durationsList := make([]model.TourDuration, len(request.Tour.Durations))
+	if request.Tour.Durations != nil && len(request.Tour.Durations) > 0 {
+		for index, duration := range request.Tour.Durations {
+			durationsList[index] = model.TourDuration{
+				Duration:      int(duration.Duration),
+				TransportType: model.TransportType(duration.TransportType),
+			}
+		}
+	}
+
+	tour.KeyPoints = keypointList
+	tour.Durations = durationsList
 	//tourResponse.Reviews = request.Tour.Reviews
 	//tourResponse.Durations = request.Tour.Durations
 
@@ -225,8 +366,38 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 	tour.ArchiveDate, _ = ProtoTimestampToTime(request.Tour.ArchiveDate)
 	tour.Category = model.TourCategory(request.Tour.Category)
 	tour.IsDeleted = request.Tour.IsDeleted
-	//tourResponse.KeyPoints = request.Tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-	//tourResponse.Equipment = request.Tour.Equipment
+
+	keypointList := make([]model.KeyPoint, len(request.Tour.KeyPoints))
+	if request.Tour.KeyPoints != nil && len(request.Tour.KeyPoints) > 0 {
+		for index, kp := range request.Tour.KeyPoints {
+			keypointList[index] = model.KeyPoint{
+				ID:              kp.ID,
+				TourId:          kp.TourId,
+				Name:            kp.Name,
+				Description:     kp.Description,
+				Longitude:       kp.Longitude,
+				Latitude:        kp.Latitude,
+				LocationAddress: kp.LocationAddress,
+				ImagePath:       kp.ImagePath,
+				Order:           kp.Order,
+			}
+		}
+	}
+
+	fmt.Println("DUzina durations je: ", len(request.Tour.Durations))
+
+	durationsList := make([]model.TourDuration, len(request.Tour.Durations))
+	if request.Tour.Durations != nil && len(request.Tour.Durations) > 0 {
+		for index, duration := range request.Tour.Durations {
+			durationsList[index] = model.TourDuration{
+				Duration:      int(duration.Duration),
+				TransportType: model.TransportType(duration.TransportType),
+			}
+		}
+	}
+
+	tour.KeyPoints = keypointList
+	tour.Durations = durationsList
 	//tourResponse.Reviews = request.Tour.Reviews
 	//tourResponse.Durations = request.Tour.Durations
 
@@ -236,17 +407,28 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) PublishTour(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
+
+	fmt.Println("publish ", request.ID)
+
 	handler.TourService.Publish(request.ID)
 	return &tours.PublishTourResponse{}, nil
 }
 
 func (handler *TourHandler) ArchiveTour(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
+
+	fmt.Println("archive ", request.ID)
+
 	handler.TourService.Archive(request.ID)
 	return &tours.ArchiveTourResponse{}, nil
 }
 
 func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tours.GetToursEquipmentRequest) (*tours.GetToursEquipmentResponse, error) {
+
+	fmt.Println("TOUR ID ZA GET EQUIPMENT JE: ", request.TourId)
+
 	equipmentList, _ := handler.TourService.GetEquipment(request.TourId)
+
+	fmt.Println("DUZINA LISTE EKVIPEMTA JE ", len(equipmentList))
 
 	equipmentResponse := make([]*tours.TourEquipment, len(equipmentList))
 
