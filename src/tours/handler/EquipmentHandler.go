@@ -19,7 +19,6 @@ func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment
 	equipmentResponse.ID = equipmentList.ID
 	equipmentResponse.Name = equipmentList.Name
 	equipmentResponse.Description = equipmentList.Description
-	//equipmentResponse.Tours = equipmentList.Tours				Treba proveriti
 
 	ret := &equipment.EquipmentGetByIdResponse{
 		Equipment: &equipmentResponse,
@@ -39,7 +38,6 @@ func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.
 				ID:          eq.ID,
 				Name:        eq.Name,
 				Description: eq.Description,
-				//Tours: eq.Tours,	Treba proveriti
 			}
 		}
 	}
@@ -56,7 +54,6 @@ func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.
 	equipmentResponse.ID = request.Equipment.ID
 	equipmentResponse.Name = request.Equipment.Name
 	equipmentResponse.Description = request.Equipment.Description
-	//equipmentResponse.Tours = request.Equipment.Tours				Treba proveriti
 
 	handler.EquipmentService.Create(&equipmentResponse)
 

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"time"
@@ -33,10 +32,6 @@ func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetT
 	tourResponse.ArchiveDate = TimeToProtoTimestamp(tour.ArchiveDate)
 	tourResponse.Category = tours.Tour_TourCategory(tour.Category)
 	tourResponse.IsDeleted = tour.IsDeleted
-	//tourResponse.KeyPoints = tour.KeyPoints	PROVERITI SAMO DA LI TREBA I STA TREBA
-	//tourResponse.Equipment = tour.Equipment
-	//tourResponse.Reviews = tour.Reviews
-	//tourResponse.Durations = tour.Durations
 
 	ret := &tours.GetTourByIdResponse{
 		Tour: &tourResponse,
@@ -96,8 +91,6 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 				IsDeleted:   tour.IsDeleted,
 				KeyPoints:   keypointList,
 				Durations:   durationsList,
-				//Equipment:   tour.Equipment,
-				//Reviews : tour.Reviews,
 			}
 		}
 	}
@@ -160,8 +153,6 @@ func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetA
 				IsDeleted:   tour.IsDeleted,
 				KeyPoints:   keypointList,
 				Durations:   durationsList,
-				//Equipment : tour.Equipment,
-				//Reviews : tour.Reviews,
 			}
 		}
 	}
@@ -224,8 +215,6 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 				IsDeleted:   tour.IsDeleted,
 				KeyPoints:   keypointList,
 				Durations:   durationsList,
-				//Equipment : tour.Equipment,
-				//Reviews : tour.Reviews,
 			}
 		}
 	}
@@ -283,8 +272,6 @@ func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.Creat
 
 	tour.KeyPoints = keypointList
 	tour.Durations = durationsList
-	//tourResponse.Reviews = request.Tour.Reviews
-	//tourResponse.Durations = request.Tour.Durations
 
 	handler.TourService.Create(&tour)
 
@@ -342,8 +329,6 @@ func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.Updat
 
 	tour.KeyPoints = keypointList
 	tour.Durations = durationsList
-	//tourResponse.Reviews = request.Tour.Reviews
-	//tourResponse.Durations = request.Tour.Durations
 
 	handler.TourService.Update(&tour)
 
@@ -384,8 +369,6 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 		}
 	}
 
-	fmt.Println("DUzina durations je: ", len(request.Tour.Durations))
-
 	durationsList := make([]model.TourDuration, len(request.Tour.Durations))
 	if request.Tour.Durations != nil && len(request.Tour.Durations) > 0 {
 		for index, duration := range request.Tour.Durations {
@@ -398,8 +381,6 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 
 	tour.KeyPoints = keypointList
 	tour.Durations = durationsList
-	//tourResponse.Reviews = request.Tour.Reviews
-	//tourResponse.Durations = request.Tour.Durations
 
 	handler.TourService.AddDurations(&tour)
 
@@ -407,28 +388,17 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) PublishTour(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
-
-	fmt.Println("publish ", request.ID)
-
 	handler.TourService.Publish(request.ID)
 	return &tours.PublishTourResponse{}, nil
 }
 
 func (handler *TourHandler) ArchiveTour(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
-
-	fmt.Println("archive ", request.ID)
-
 	handler.TourService.Archive(request.ID)
 	return &tours.ArchiveTourResponse{}, nil
 }
 
 func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tours.GetToursEquipmentRequest) (*tours.GetToursEquipmentResponse, error) {
-
-	fmt.Println("TOUR ID ZA GET EQUIPMENT JE: ", request.TourId)
-
 	equipmentList, _ := handler.TourService.GetEquipment(request.TourId)
-
-	fmt.Println("DUZINA LISTE EKVIPEMTA JE ", len(equipmentList))
 
 	equipmentResponse := make([]*tours.TourEquipment, len(equipmentList))
 
@@ -438,7 +408,6 @@ func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tour
 				ID:          eq.ID,
 				Name:        eq.Name,
 				Description: eq.Description,
-				//Tours: eq.Tours,	Treba proveriti
 			}
 		}
 	}
