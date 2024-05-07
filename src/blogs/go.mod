@@ -3,6 +3,7 @@ module blogs
 go 1.22.0
 
 require (
+	github.com/golang/protobuf v1.5.4
 	google.golang.org/grpc v1.63.2
 	google.golang.org/protobuf v1.34.1
 	gorm.io/gorm v1.25.7
@@ -28,7 +29,6 @@ require (
 )
 
 require (
-	github.com/gorilla/mux v1.8.1
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	go.mongodb.org/mongo-driver v1.14.0
