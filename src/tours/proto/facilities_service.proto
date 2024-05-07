@@ -3,11 +3,11 @@ syntax = "proto3";
 option go_package = "proto/facilities";
 
 service FacilitiesService {
-  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
-  rpc GetByAuthorId(GetByAuthorIdRequest) returns (GetByAuthorIdResponse) {}
-  rpc Create(CreateRequest) returns (CreateResponse) {}
-  rpc Update(UpdateRequest) returns (UpdateResponse) {}
-  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+  rpc GetAllFacilities(GetAllFacilitiesRequest) returns (GetAllFacilitiesResponse) {}
+  rpc GetFacilitiesByAuthorId(GetFacilitiesByAuthorIdRequest) returns (GetFacilitiesByAuthorIdResponse) {}
+  rpc CreateFacility(CreateFacilityRequest) returns (CreateFacilityResponse) {}
+  rpc UpdateFacility(UpdateFacilityRequest) returns (UpdateFacilityResponse) {}
+  rpc DeleteFacility(DeleteFacilityRequest) returns (DeleteFacilityResponse) {}
 }
 
 message Facility {
@@ -29,42 +29,42 @@ message Facility {
     Shop = 8;
     Other = 9;
   };
-  Category category = 8;
-  string ImagePath = 9;
+  Category category = 7;
+  string ImagePath = 8;
 }
 
-message GetAllRequest {
+message GetAllFacilitiesRequest {
 }
 
-message GetAllResponse {
+message GetAllFacilitiesResponse {
   repeated Facility facilities = 1;
 }
 
-message GetByAuthorIdRequest {
+message GetFacilitiesByAuthorIdRequest {
   string AuthorId = 1;
 }
 
-message GetByAuthorIdResponse {
+message GetFacilitiesByAuthorIdResponse {
   repeated Facility facilities = 1;
 }
 
-message CreateRequest {
+message CreateFacilityRequest {
   Facility facility = 1;
 }
 
-message CreateResponse {
+message CreateFacilityResponse {
 }
 
-message UpdateRequest {
+message UpdateFacilityRequest {
   Facility facility = 1;
 }
 
-message UpdateResponse {
+message UpdateFacilityResponse {
 }
 
-message DeleteRequest {
+message DeleteFacilityRequest {
   string ID = 1;
 }
 
-message DeleteResponse {
+message DeleteFacilityResponse {
 }

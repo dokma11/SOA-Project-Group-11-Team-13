@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"tours/model"
 	"tours/proto/facilities"
 	"tours/service"
@@ -12,7 +13,7 @@ type FacilityHandler struct {
 	facilities.UnimplementedFacilitiesServiceServer
 }
 
-func (handler *FacilityHandler) GetAll(ctx context.Context, request *facilities.GetAllRequest) (*facilities.GetAllResponse, error) {
+func (handler *FacilityHandler) GetAllFacilities(ctx context.Context, request *facilities.GetAllFacilitiesRequest) (*facilities.GetAllFacilitiesResponse, error) {
 	facilityList, _ := handler.FacilityService.GetAll()
 
 	facilitiesResponse := make([]*facilities.Facility, len(*facilityList))
@@ -32,15 +33,21 @@ func (handler *FacilityHandler) GetAll(ctx context.Context, request *facilities.
 		}
 	}
 
-	ret := &facilities.GetAllResponse{
+	ret := &facilities.GetAllFacilitiesResponse{
 		Facilities: facilitiesResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *FacilityHandler) GetAllByAuthorId(ctx context.Context, request *facilities.GetByAuthorIdRequest) (*facilities.GetByAuthorIdResponse, error) {
+func (handler *FacilityHandler) GetFacilitiesByAuthorId(ctx context.Context, request *facilities.GetFacilitiesByAuthorIdRequest) (*facilities.GetFacilitiesByAuthorIdResponse, error) {
 	facilityList, _ := handler.FacilityService.GetAllByAuthorId(request.AuthorId)
+
+	if facilityList == nil {
+		return &facilities.GetFacilitiesByAuthorIdResponse{
+			Facilities: []*facilities.Facility{},
+		}, nil
+	}
 
 	facilitiesResponse := make([]*facilities.Facility, len(*facilityList))
 
@@ -59,14 +66,22 @@ func (handler *FacilityHandler) GetAllByAuthorId(ctx context.Context, request *f
 		}
 	}
 
-	ret := &facilities.GetByAuthorIdResponse{
+	ret := &facilities.GetFacilitiesByAuthorIdResponse{
 		Facilities: facilitiesResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *FacilityHandler) Create(ctx context.Context, request *facilities.CreateRequest) (*facilities.CreateResponse, error) {
+func (handler *FacilityHandler) CreateFacility(ctx context.Context, request *facilities.CreateFacilityRequest) (*facilities.CreateFacilityResponse, error) {
+	if request == nil {
+		return nil, errors.New("nil request")
+	}
+
+	if request.Facility == nil {
+		return nil, errors.New("nil facility in request")
+	}
+
 	facility := model.Facility{}
 	facility.ID = request.Facility.ID
 	facility.AuthorId = request.Facility.AuthorId
@@ -76,18 +91,20 @@ func (handler *FacilityHandler) Create(ctx context.Context, request *facilities.
 	facility.Latitude = request.Facility.Latitude
 	facility.Category = model.FacilityCategory(request.Facility.Category)
 	facility.ImagePath = request.Facility.ImagePath
+	
+	if err := handler.FacilityService.Create(&facility); err != nil {
+		return nil, err
+	}
 
-	handler.FacilityService.Create(&facility)
-
-	return &facilities.CreateResponse{}, nil
+	return &facilities.CreateFacilityResponse{}, nil
 }
 
-func (handler *FacilityHandler) Delete(ctx context.Context, request *facilities.DeleteRequest) (*facilities.DeleteResponse, error) {
+func (handler *FacilityHandler) DeleteFacility(ctx context.Context, request *facilities.DeleteFacilityRequest) (*facilities.DeleteFacilityResponse, error) {
 	handler.FacilityService.Delete(request.ID)
-	return &facilities.DeleteResponse{}, nil
+	return &facilities.DeleteFacilityResponse{}, nil
 }
 
-func (handler *FacilityHandler) Update(ctx context.Context, request *facilities.UpdateRequest) (*facilities.UpdateResponse, error) {
+func (handler *FacilityHandler) UpdateFacility(ctx context.Context, request *facilities.UpdateFacilityRequest) (*facilities.UpdateFacilityResponse, error) {
 	facility := model.Facility{}
 	facility.ID = request.Facility.ID
 	facility.AuthorId = request.Facility.AuthorId
@@ -100,5 +117,5 @@ func (handler *FacilityHandler) Update(ctx context.Context, request *facilities.
 
 	handler.FacilityService.Update(&facility)
 
-	return &facilities.UpdateResponse{}, nil
+	return &facilities.UpdateFacilityResponse{}, nil
 }

@@ -13,9 +13,10 @@ type FacilityRepository struct {
 func (repo *FacilityRepository) GetAll() ([]model.Facility, error) {
 	var facilities []model.Facility
 	dbResult := repo.DatabaseConnection.Find(&facilities)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
+
 	return facilities, nil
 }
 
