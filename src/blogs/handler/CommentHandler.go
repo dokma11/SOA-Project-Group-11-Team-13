@@ -2,139 +2,127 @@ package handler
 
 import (
 	"blogs/model"
+	"blogs/proto/comments"
 	"blogs/service"
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
+	"context"
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
+	"time"
 )
 
 type CommentHandler struct {
 	CommentService *service.CommentService
+	comments.UnimplementedCommentsServiceServer
 }
 
-func (handler *CommentHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Comment with id %s", id)
+func (handler *CommentHandler) GetById(ctx context.Context, request *comments.GetByIdRequest) (*comments.GetByIdResponse, error) {
+	comment, _ := handler.CommentService.GetById(request.ID)
 
-	review, err := handler.CommentService.GetById(id)
+	commentResponse := comments.Comment{}
+	commentResponse.ID = int32(comment.ID)
+	commentResponse.AuthorId = int32(comment.AuthorId)
+	commentResponse.BlogId = int32(comment.BlogId)
+	commentResponse.Text = comment.Text
+	commentResponse.CreatedAt = TimeToProtoTimestamp(comment.CreatedAt)
+	commentResponse.UpdatedAt = TimeToProtoTimestamp(comment.UpdatedAt)
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	ret := &comments.GetByIdResponse{
+		Comment: &commentResponse,
 	}
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(review)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode comments in method GetById")
-		return
-	}
+
+	return ret, nil
 }
 
-func (handler *CommentHandler) GetByBlogId(writer http.ResponseWriter, req *http.Request) {
-	blogId := mux.Vars(req)["id"]
-	log.Printf("Comment with blog id %s", blogId)
-	page, _ := strconv.Atoi(req.URL.Query().Get("page"))         //novo
-	pageSize, _ := strconv.Atoi(req.URL.Query().Get("pageSize")) //novo
+func (handler *CommentHandler) GetByBlogId(ctx context.Context, request *comments.GetByBlogIdRequest) (*comments.GetByBlogIdResponse, error) {
+	commentList, _, _ := handler.CommentService.GetByBlogId(request.BlogId, int(request.Page), int(request.PageSize))
 
-	comments, totalCount, err := handler.CommentService.GetByBlogId(blogId, page, pageSize)
+	commentResponse := make([]*comments.Comment, len(commentList))
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	if commentList != nil && len(commentList) > 0 {
+		for i, comment := range commentList {
+			commentResponse[i] = &comments.Comment{
+				ID:        int32(comment.ID),
+				AuthorId:  int32(comment.AuthorId),
+				BlogId:    int32(comment.BlogId),
+				Text:      comment.Text,
+				CreatedAt: TimeToProtoTimestamp(comment.CreatedAt),
+				UpdatedAt: TimeToProtoTimestamp(comment.UpdatedAt),
+			}
+		}
 	}
 
-	response := struct {
-		Comments   []model.Comment `json:"comments"`
-		TotalCount int             `json:"totalCount"`
-	}{
-		Comments:   comments,
-		TotalCount: totalCount,
+	ret := &comments.GetByBlogIdResponse{
+		Comments: commentResponse,
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(writer).Encode(response); err != nil {
-		log.Printf("Error encountered while trying to encode comments in method GetByBlogId: %v", err)
-		writer.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	return ret, nil
 }
 
-func (handler *CommentHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all blogs")
-	tours, err := handler.CommentService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *CommentHandler) GetAll(ctx context.Context, request *comments.GetAllRequest) (*comments.GetAllResponse, error) {
+	commentList, _ := handler.CommentService.GetAll()
+
+	commentResponse := make([]*comments.Comment, len(*commentList))
+
+	if commentList != nil && len(*commentList) > 0 {
+		for i, comment := range *commentList {
+			commentResponse[i] = &comments.Comment{
+				ID:        int32(comment.ID),
+				AuthorId:  int32(comment.AuthorId),
+				BlogId:    int32(comment.BlogId),
+				Text:      comment.Text,
+				CreatedAt: TimeToProtoTimestamp(comment.CreatedAt),
+				UpdatedAt: TimeToProtoTimestamp(comment.UpdatedAt),
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tours)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode comments in method GetAll")
-		return
+	ret := &comments.GetAllResponse{
+		Comments: commentResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *CommentHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Creating a Comment")
-	var comment model.Comment
-	err := json.NewDecoder(req.Body).Decode(&comment)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *CommentHandler) Create(ctx context.Context, request *comments.CreateRequest) (*comments.CreateResponse, error) {
+	comment := model.Comment{}
 
-	err = handler.CommentService.Create(&comment)
+	comment.ID = int(request.Comment.ID)
+	comment.AuthorId = int(request.Comment.AuthorId)
+	comment.BlogId = int(request.Comment.BlogId)
+	comment.Text = request.Comment.Text
+	comment.CreatedAt, _ = ProtoTimestampToTime(request.Comment.CreatedAt)
+	comment.UpdatedAt, _ = ProtoTimestampToTime(request.Comment.UpdatedAt)
 
-	if err != nil {
-		println("Error while creating a new comment")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.CommentService.Create(&comment)
+
+	return &comments.CreateResponse{}, nil
 }
 
-func (handler *CommentHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Comment with id %s is deleted", idString)
-
-	comment := handler.CommentService.Delete(idString)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(comment)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode comments in method Delete"))
-		return
-	}
+func (handler *CommentHandler) Delete(ctx context.Context, request *comments.DeleteRequest) (*comments.DeleteResponse, error) {
+	handler.CommentService.Delete(request.ID)
+	return &comments.DeleteResponse{}, nil
 }
 
-func (handler *CommentHandler) Update(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Update Comment")
-	var comment model.Comment
-	err := json.NewDecoder(req.Body).Decode(&comment)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *CommentHandler) Update(ctx context.Context, request *comments.UpdateRequest) (*comments.UpdateResponse, error) {
+	comment := model.Comment{}
 
-	err = handler.CommentService.Update(&comment)
+	comment.ID = int(request.Comment.ID)
+	comment.AuthorId = int(request.Comment.AuthorId)
+	comment.BlogId = int(request.Comment.BlogId)
+	comment.Text = request.Comment.Text
+	comment.CreatedAt, _ = ProtoTimestampToTime(request.Comment.CreatedAt)
+	comment.UpdatedAt, _ = ProtoTimestampToTime(request.Comment.UpdatedAt)
 
-	if err != nil {
-		println("Error while updating comment")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.CommentService.Update(&comment)
+
+	return &comments.UpdateResponse{}, nil
+}
+
+func TimeToProtoTimestamp(t time.Time) *timestamp.Timestamp {
+	ts, _ := ptypes.TimestampProto(t)
+	return ts
+}
+
+func ProtoTimestampToTime(ts *timestamp.Timestamp) (time.Time, error) {
+	return ptypes.Timestamp(ts)
 }
