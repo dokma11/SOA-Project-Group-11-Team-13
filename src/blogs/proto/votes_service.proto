@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "proto/votes";
+
+service VotesService {
+  rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}
+  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
+}
+
+message Vote {
+  int32 ID = 1;
+  int32 UserId = 2;
+  int32 BlogId = 3;
+  enum VoteType {
+    Downvote = 0;
+    Upvote = 1;
+  }
+  VoteType Type = 4;
+}
+
+message GetByIdRequest {
+  string ID = 1;
+}
+
+message GetByIdResponse {
+  Vote vote = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated Vote votes = 1;
+}
