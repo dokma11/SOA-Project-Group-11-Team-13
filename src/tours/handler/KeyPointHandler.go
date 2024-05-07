@@ -61,7 +61,7 @@ func (handler *KeyPointHandler) GetAll(ctx context.Context, request *keyPoints.K
 	return ret, nil
 }
 
-func (handler *KeyPointHandler) GetAllByTourId(ctx context.Context, request *keyPoints.KeyPointGetByTourIdRequest) (*keyPoints.KeyPointGetByTourIdResponse, error) {
+func (handler *KeyPointHandler) GetByTourId(ctx context.Context, request *keyPoints.KeyPointGetByTourIdRequest) (*keyPoints.KeyPointGetByTourIdResponse, error) {
 	keyPointList, _ := handler.KeyPointService.GetAllByTourId(request.TourId)
 
 	keyPointsResponse := make([]*keyPoints.KeyPoint, len(*keyPointList))
