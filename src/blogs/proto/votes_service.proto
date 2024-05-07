@@ -3,8 +3,8 @@ syntax = "proto3";
 option go_package = "proto/votes";
 
 service VotesService {
-  rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}
-  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
+  rpc GetVoteById(GetVoteByIdRequest) returns (GetVoteByIdResponse) {}
+  rpc GetAllVotes(GetAllVotesRequest) returns (GetAllVotesResponse) {}
 }
 
 message Vote {
@@ -18,17 +18,17 @@ message Vote {
   VoteType Type = 4;
 }
 
-message GetByIdRequest {
+message GetVoteByIdRequest {
   string ID = 1;
 }
 
-message GetByIdResponse {
+message GetVoteByIdResponse {
   Vote vote = 1;
 }
 
-message GetAllRequest {
+message GetAllVotesRequest {
 }
 
-message GetAllResponse {
+message GetAllVotesResponse {
   repeated Vote votes = 1;
 }

@@ -12,7 +12,7 @@ type BlogRecommendationHandler struct {
 	blog_recommendations.UnimplementedBlogRecommendationServiceServer
 }
 
-func (handler *BlogRecommendationHandler) GetById(ctx context.Context, request *blog_recommendations.GetByIdRequest) (*blog_recommendations.GetByIdResponse, error) {
+func (handler *BlogRecommendationHandler) GetBlogRecommendationById(ctx context.Context, request *blog_recommendations.GetBlogRecommendationByIdRequest) (*blog_recommendations.GetBlogRecommendationByIdResponse, error) {
 	recommendation, _ := handler.BlogRecommendationService.GetById(request.ID)
 
 	recommendationResponse := blog_recommendations.BlogRecommendation{}
@@ -31,14 +31,14 @@ func (handler *BlogRecommendationHandler) GetById(ctx context.Context, request *
 		//Recommendations : recommendation.Blog.Recommendations,
 	}
 
-	ret := &blog_recommendations.GetByIdResponse{
+	ret := &blog_recommendations.GetBlogRecommendationByIdResponse{
 		Recommendation: &recommendationResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *BlogRecommendationHandler) GetAll(ctx context.Context, request *blog_recommendations.GetAllRequest) (*blog_recommendations.GetAllResponse, error) {
+func (handler *BlogRecommendationHandler) GetAllBlogRecommendations(ctx context.Context, request *blog_recommendations.GetAllBlogRecommendationsRequest) (*blog_recommendations.GetAllBlogRecommendationsResponse, error) {
 	recommendationList, _ := handler.BlogRecommendationService.GetAll()
 
 	recommendationResponse := make([]*blog_recommendations.BlogRecommendation, len(*recommendationList))
@@ -64,14 +64,14 @@ func (handler *BlogRecommendationHandler) GetAll(ctx context.Context, request *b
 		}
 	}
 
-	ret := &blog_recommendations.GetAllResponse{
+	ret := &blog_recommendations.GetAllBlogRecommendationsResponse{
 		Recommendations: recommendationResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *BlogRecommendationHandler) Create(ctx context.Context, request *blog_recommendations.CreateRequest) (*blog_recommendations.CreateResponse, error) {
+func (handler *BlogRecommendationHandler) CreateBlogRecommendation(ctx context.Context, request *blog_recommendations.CreateBlogRecommendationRequest) (*blog_recommendations.CreateBlogRecommendationResponse, error) {
 	recommendation := model.BlogRecommendation{}
 
 	recommendation.ID = int(request.Recommendation.ID)
@@ -90,10 +90,10 @@ func (handler *BlogRecommendationHandler) Create(ctx context.Context, request *b
 	}
 	handler.BlogRecommendationService.Create(&recommendation)
 
-	return &blog_recommendations.CreateResponse{}, nil
+	return &blog_recommendations.CreateBlogRecommendationResponse{}, nil
 }
 
-func (handler *BlogRecommendationHandler) GetByReceiverId(ctx context.Context, request *blog_recommendations.GetByReceiverIdRequest) (*blog_recommendations.GetByReceiverIdResponse, error) {
+func (handler *BlogRecommendationHandler) GetBlogRecommendationByReceiverId(ctx context.Context, request *blog_recommendations.GetBlogRecommendationByReceiverIdRequest) (*blog_recommendations.GetBlogRecommendationByReceiverIdResponse, error) {
 	recommendationList, _ := handler.BlogRecommendationService.GetByReceiverId(int(request.ReceiverId))
 
 	recommendationResponse := make([]*blog_recommendations.BlogRecommendation, len(*recommendationList))
@@ -119,7 +119,7 @@ func (handler *BlogRecommendationHandler) GetByReceiverId(ctx context.Context, r
 		}
 	}
 
-	ret := &blog_recommendations.GetByReceiverIdResponse{
+	ret := &blog_recommendations.GetBlogRecommendationByReceiverIdResponse{
 		Recommendations: recommendationResponse,
 	}
 

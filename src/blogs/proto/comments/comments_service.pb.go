@@ -108,7 +108,7 @@ func (x *Comment) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-type GetByIdRequest struct {
+type GetCommentByIdRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -116,8 +116,8 @@ type GetByIdRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *GetByIdRequest) Reset() {
-	*x = GetByIdRequest{}
+func (x *GetCommentByIdRequest) Reset() {
+	*x = GetCommentByIdRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -125,13 +125,13 @@ func (x *GetByIdRequest) Reset() {
 	}
 }
 
-func (x *GetByIdRequest) String() string {
+func (x *GetCommentByIdRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdRequest) ProtoMessage() {}
+func (*GetCommentByIdRequest) ProtoMessage() {}
 
-func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
+func (x *GetCommentByIdRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -143,19 +143,19 @@ func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdRequest.ProtoReflect.Descriptor instead.
-func (*GetByIdRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCommentByIdRequest.ProtoReflect.Descriptor instead.
+func (*GetCommentByIdRequest) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetByIdRequest) GetID() string {
+func (x *GetCommentByIdRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type GetByIdResponse struct {
+type GetCommentByIdResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -163,8 +163,8 @@ type GetByIdResponse struct {
 	Comment *Comment `protobuf:"bytes,1,opt,name=comment,proto3" json:"comment,omitempty"`
 }
 
-func (x *GetByIdResponse) Reset() {
-	*x = GetByIdResponse{}
+func (x *GetCommentByIdResponse) Reset() {
+	*x = GetCommentByIdResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -172,13 +172,13 @@ func (x *GetByIdResponse) Reset() {
 	}
 }
 
-func (x *GetByIdResponse) String() string {
+func (x *GetCommentByIdResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdResponse) ProtoMessage() {}
+func (*GetCommentByIdResponse) ProtoMessage() {}
 
-func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
+func (x *GetCommentByIdResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -190,26 +190,26 @@ func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdResponse.ProtoReflect.Descriptor instead.
-func (*GetByIdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCommentByIdResponse.ProtoReflect.Descriptor instead.
+func (*GetCommentByIdResponse) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetByIdResponse) GetComment() *Comment {
+func (x *GetCommentByIdResponse) GetComment() *Comment {
 	if x != nil {
 		return x.Comment
 	}
 	return nil
 }
 
-type GetAllRequest struct {
+type GetAllCommentsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *GetAllRequest) Reset() {
-	*x = GetAllRequest{}
+func (x *GetAllCommentsRequest) Reset() {
+	*x = GetAllCommentsRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -217,13 +217,13 @@ func (x *GetAllRequest) Reset() {
 	}
 }
 
-func (x *GetAllRequest) String() string {
+func (x *GetAllCommentsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllRequest) ProtoMessage() {}
+func (*GetAllCommentsRequest) ProtoMessage() {}
 
-func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
+func (x *GetAllCommentsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -235,12 +235,12 @@ func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllRequest.ProtoReflect.Descriptor instead.
-func (*GetAllRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllCommentsRequest.ProtoReflect.Descriptor instead.
+func (*GetAllCommentsRequest) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{3}
 }
 
-type GetAllResponse struct {
+type GetAllCommentsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -248,8 +248,8 @@ type GetAllResponse struct {
 	Comments []*Comment `protobuf:"bytes,1,rep,name=comments,proto3" json:"comments,omitempty"`
 }
 
-func (x *GetAllResponse) Reset() {
-	*x = GetAllResponse{}
+func (x *GetAllCommentsResponse) Reset() {
+	*x = GetAllCommentsResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -257,13 +257,13 @@ func (x *GetAllResponse) Reset() {
 	}
 }
 
-func (x *GetAllResponse) String() string {
+func (x *GetAllCommentsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllResponse) ProtoMessage() {}
+func (*GetAllCommentsResponse) ProtoMessage() {}
 
-func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
+func (x *GetAllCommentsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -275,19 +275,19 @@ func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllResponse.ProtoReflect.Descriptor instead.
-func (*GetAllResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllCommentsResponse.ProtoReflect.Descriptor instead.
+func (*GetAllCommentsResponse) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetAllResponse) GetComments() []*Comment {
+func (x *GetAllCommentsResponse) GetComments() []*Comment {
 	if x != nil {
 		return x.Comments
 	}
 	return nil
 }
 
-type GetByBlogIdRequest struct {
+type GetCommentByBlogIdRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -297,8 +297,8 @@ type GetByBlogIdRequest struct {
 	PageSize int32  `protobuf:"varint,3,opt,name=PageSize,proto3" json:"PageSize,omitempty"`
 }
 
-func (x *GetByBlogIdRequest) Reset() {
-	*x = GetByBlogIdRequest{}
+func (x *GetCommentByBlogIdRequest) Reset() {
+	*x = GetCommentByBlogIdRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -306,13 +306,13 @@ func (x *GetByBlogIdRequest) Reset() {
 	}
 }
 
-func (x *GetByBlogIdRequest) String() string {
+func (x *GetCommentByBlogIdRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByBlogIdRequest) ProtoMessage() {}
+func (*GetCommentByBlogIdRequest) ProtoMessage() {}
 
-func (x *GetByBlogIdRequest) ProtoReflect() protoreflect.Message {
+func (x *GetCommentByBlogIdRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -324,33 +324,33 @@ func (x *GetByBlogIdRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByBlogIdRequest.ProtoReflect.Descriptor instead.
-func (*GetByBlogIdRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCommentByBlogIdRequest.ProtoReflect.Descriptor instead.
+func (*GetCommentByBlogIdRequest) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetByBlogIdRequest) GetBlogId() string {
+func (x *GetCommentByBlogIdRequest) GetBlogId() string {
 	if x != nil {
 		return x.BlogId
 	}
 	return ""
 }
 
-func (x *GetByBlogIdRequest) GetPage() int32 {
+func (x *GetCommentByBlogIdRequest) GetPage() int32 {
 	if x != nil {
 		return x.Page
 	}
 	return 0
 }
 
-func (x *GetByBlogIdRequest) GetPageSize() int32 {
+func (x *GetCommentByBlogIdRequest) GetPageSize() int32 {
 	if x != nil {
 		return x.PageSize
 	}
 	return 0
 }
 
-type GetByBlogIdResponse struct {
+type GetCommentByBlogIdResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -358,8 +358,8 @@ type GetByBlogIdResponse struct {
 	Comments []*Comment `protobuf:"bytes,1,rep,name=comments,proto3" json:"comments,omitempty"`
 }
 
-func (x *GetByBlogIdResponse) Reset() {
-	*x = GetByBlogIdResponse{}
+func (x *GetCommentByBlogIdResponse) Reset() {
+	*x = GetCommentByBlogIdResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -367,13 +367,13 @@ func (x *GetByBlogIdResponse) Reset() {
 	}
 }
 
-func (x *GetByBlogIdResponse) String() string {
+func (x *GetCommentByBlogIdResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByBlogIdResponse) ProtoMessage() {}
+func (*GetCommentByBlogIdResponse) ProtoMessage() {}
 
-func (x *GetByBlogIdResponse) ProtoReflect() protoreflect.Message {
+func (x *GetCommentByBlogIdResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -385,19 +385,19 @@ func (x *GetByBlogIdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByBlogIdResponse.ProtoReflect.Descriptor instead.
-func (*GetByBlogIdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCommentByBlogIdResponse.ProtoReflect.Descriptor instead.
+func (*GetCommentByBlogIdResponse) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetByBlogIdResponse) GetComments() []*Comment {
+func (x *GetCommentByBlogIdResponse) GetComments() []*Comment {
 	if x != nil {
 		return x.Comments
 	}
 	return nil
 }
 
-type CreateRequest struct {
+type CreateCommentRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -405,8 +405,8 @@ type CreateRequest struct {
 	Comment *Comment `protobuf:"bytes,1,opt,name=comment,proto3" json:"comment,omitempty"`
 }
 
-func (x *CreateRequest) Reset() {
-	*x = CreateRequest{}
+func (x *CreateCommentRequest) Reset() {
+	*x = CreateCommentRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -414,13 +414,13 @@ func (x *CreateRequest) Reset() {
 	}
 }
 
-func (x *CreateRequest) String() string {
+func (x *CreateCommentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateRequest) ProtoMessage() {}
+func (*CreateCommentRequest) ProtoMessage() {}
 
-func (x *CreateRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateCommentRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -432,26 +432,26 @@ func (x *CreateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateRequest.ProtoReflect.Descriptor instead.
-func (*CreateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateCommentRequest.ProtoReflect.Descriptor instead.
+func (*CreateCommentRequest) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *CreateRequest) GetComment() *Comment {
+func (x *CreateCommentRequest) GetComment() *Comment {
 	if x != nil {
 		return x.Comment
 	}
 	return nil
 }
 
-type CreateResponse struct {
+type CreateCommentResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *CreateResponse) Reset() {
-	*x = CreateResponse{}
+func (x *CreateCommentResponse) Reset() {
+	*x = CreateCommentResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -459,13 +459,13 @@ func (x *CreateResponse) Reset() {
 	}
 }
 
-func (x *CreateResponse) String() string {
+func (x *CreateCommentResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateResponse) ProtoMessage() {}
+func (*CreateCommentResponse) ProtoMessage() {}
 
-func (x *CreateResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateCommentResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -477,12 +477,12 @@ func (x *CreateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateResponse.ProtoReflect.Descriptor instead.
-func (*CreateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateCommentResponse.ProtoReflect.Descriptor instead.
+func (*CreateCommentResponse) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{8}
 }
 
-type DeleteRequest struct {
+type DeleteCommentRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -490,8 +490,8 @@ type DeleteRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *DeleteRequest) Reset() {
-	*x = DeleteRequest{}
+func (x *DeleteCommentRequest) Reset() {
+	*x = DeleteCommentRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -499,13 +499,13 @@ func (x *DeleteRequest) Reset() {
 	}
 }
 
-func (x *DeleteRequest) String() string {
+func (x *DeleteCommentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteRequest) ProtoMessage() {}
+func (*DeleteCommentRequest) ProtoMessage() {}
 
-func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
+func (x *DeleteCommentRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -517,26 +517,26 @@ func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteRequest.ProtoReflect.Descriptor instead.
-func (*DeleteRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteCommentRequest.ProtoReflect.Descriptor instead.
+func (*DeleteCommentRequest) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *DeleteRequest) GetID() string {
+func (x *DeleteCommentRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type DeleteResponse struct {
+type DeleteCommentResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *DeleteResponse) Reset() {
-	*x = DeleteResponse{}
+func (x *DeleteCommentResponse) Reset() {
+	*x = DeleteCommentResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -544,13 +544,13 @@ func (x *DeleteResponse) Reset() {
 	}
 }
 
-func (x *DeleteResponse) String() string {
+func (x *DeleteCommentResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteResponse) ProtoMessage() {}
+func (*DeleteCommentResponse) ProtoMessage() {}
 
-func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
+func (x *DeleteCommentResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -562,12 +562,12 @@ func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteResponse.ProtoReflect.Descriptor instead.
-func (*DeleteResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteCommentResponse.ProtoReflect.Descriptor instead.
+func (*DeleteCommentResponse) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{10}
 }
 
-type UpdateRequest struct {
+type UpdateCommentRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -575,8 +575,8 @@ type UpdateRequest struct {
 	Comment *Comment `protobuf:"bytes,1,opt,name=comment,proto3" json:"comment,omitempty"`
 }
 
-func (x *UpdateRequest) Reset() {
-	*x = UpdateRequest{}
+func (x *UpdateCommentRequest) Reset() {
+	*x = UpdateCommentRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -584,13 +584,13 @@ func (x *UpdateRequest) Reset() {
 	}
 }
 
-func (x *UpdateRequest) String() string {
+func (x *UpdateCommentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateRequest) ProtoMessage() {}
+func (*UpdateCommentRequest) ProtoMessage() {}
 
-func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateCommentRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -602,26 +602,26 @@ func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateRequest.ProtoReflect.Descriptor instead.
-func (*UpdateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCommentRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCommentRequest) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *UpdateRequest) GetComment() *Comment {
+func (x *UpdateCommentRequest) GetComment() *Comment {
 	if x != nil {
 		return x.Comment
 	}
 	return nil
 }
 
-type UpdateResponse struct {
+type UpdateCommentResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *UpdateResponse) Reset() {
-	*x = UpdateResponse{}
+func (x *UpdateCommentResponse) Reset() {
+	*x = UpdateCommentResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_comments_service_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -629,13 +629,13 @@ func (x *UpdateResponse) Reset() {
 	}
 }
 
-func (x *UpdateResponse) String() string {
+func (x *UpdateCommentResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateResponse) ProtoMessage() {}
+func (*UpdateCommentResponse) ProtoMessage() {}
 
-func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateCommentResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_comments_service_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -647,8 +647,8 @@ func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateResponse.ProtoReflect.Descriptor instead.
-func (*UpdateResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCommentResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCommentResponse) Descriptor() ([]byte, []int) {
 	return file_comments_service_proto_rawDescGZIP(), []int{12}
 }
 
@@ -672,59 +672,73 @@ var file_comments_service_proto_rawDesc = []byte{
 	0x65, 0x64, 0x41, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f,
 	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d,
 	0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x09, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x41,
-	0x74, 0x22, 0x20, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x02, 0x49, 0x44, 0x22, 0x35, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x22, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
-	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
-	0x74, 0x52, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x0f, 0x0a, 0x0d, 0x47, 0x65,
-	0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x36, 0x0a, 0x0e, 0x47,
-	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a,
-	0x08, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
-	0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x63, 0x6f, 0x6d, 0x6d, 0x65,
-	0x6e, 0x74, 0x73, 0x22, 0x5c, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67,
-	0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x42, 0x6c, 0x6f,
-	0x67, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x42, 0x6c, 0x6f, 0x67, 0x49,
-	0x64, 0x12, 0x12, 0x0a, 0x04, 0x50, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
-	0x04, 0x50, 0x61, 0x67, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x50, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a,
-	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x50, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a,
-	0x65, 0x22, 0x3b, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x08, 0x63, 0x6f, 0x6d, 0x6d,
-	0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d,
-	0x6d, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x33,
-	0x0a, 0x0d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x22, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x07, 0x63, 0x6f, 0x6d, 0x6d,
-	0x65, 0x6e, 0x74, 0x22, 0x10, 0x0a, 0x0e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1f, 0x0a, 0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x10, 0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x33, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x22, 0x0a, 0x07, 0x63, 0x6f, 0x6d,
-	0x6d, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d,
-	0x6d, 0x65, 0x6e, 0x74, 0x52, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x10, 0x0a,
-	0x0e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32,
-	0xb1, 0x02, 0x0a, 0x0f, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x12, 0x2e, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x12, 0x0f,
-	0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x10, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x0e, 0x2e,
-	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e,
-	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
-	0x12, 0x3a, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12,
-	0x13, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67,
-	0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06,
-	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x12, 0x0e, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x44, 0x65, 0x6c,
-	0x65, 0x74, 0x65, 0x12, 0x0e, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
-	0x12, 0x0e, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x0f, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x00, 0x42, 0x10, 0x5a, 0x0e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6f, 0x6d,
-	0x6d, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x22, 0x27, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x42,
+	0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x3c, 0x0a, 0x16, 0x47, 0x65,
+	0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x22, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52,
+	0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x17, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x41,
+	0x6c, 0x6c, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x22, 0x3e, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x43, 0x6f, 0x6d, 0x6d, 0x65,
+	0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x08, 0x63,
+	0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e,
+	0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
+	0x73, 0x22, 0x63, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x42,
+	0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16,
+	0x0a, 0x06, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06,
+	0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x50, 0x61, 0x67, 0x65, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x50, 0x61, 0x67, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x50, 0x61,
+	0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x50, 0x61,
+	0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x22, 0x42, 0x0a, 0x1a, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d,
+	0x6d, 0x65, 0x6e, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x08, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
+	0x52, 0x08, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x3a, 0x0a, 0x14, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x22, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x07, 0x63,
+	0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x17, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x26, 0x0a, 0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x17, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x3a, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x22, 0x0a, 0x07, 0x63, 0x6f, 0x6d, 0x6d,
+	0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x43, 0x6f, 0x6d, 0x6d,
+	0x65, 0x6e, 0x74, 0x52, 0x07, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x17, 0x0a, 0x15,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xb2, 0x03, 0x0a, 0x0f, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
+	0x74, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x43, 0x0a, 0x0e, 0x47, 0x65, 0x74,
+	0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x42, 0x79, 0x49, 0x64, 0x12, 0x16, 0x2e, 0x47, 0x65,
+	0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
+	0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x43,
+	0x0a, 0x0e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73,
+	0x12, 0x16, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c,
+	0x6c, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x12, 0x4f, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
+	0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12, 0x1a, 0x2e, 0x47, 0x65, 0x74, 0x43,
+	0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65,
+	0x6e, 0x74, 0x42, 0x79, 0x42, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x40, 0x0a, 0x0d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6f,
+	0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x15, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6f,
+	0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x43,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x40, 0x0a, 0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x15, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16,
+	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x40, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x15, 0x2e, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x16, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x10, 0x5a, 0x0e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -741,41 +755,41 @@ func file_comments_service_proto_rawDescGZIP() []byte {
 
 var file_comments_service_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_comments_service_proto_goTypes = []interface{}{
-	(*Comment)(nil),               // 0: Comment
-	(*GetByIdRequest)(nil),        // 1: GetByIdRequest
-	(*GetByIdResponse)(nil),       // 2: GetByIdResponse
-	(*GetAllRequest)(nil),         // 3: GetAllRequest
-	(*GetAllResponse)(nil),        // 4: GetAllResponse
-	(*GetByBlogIdRequest)(nil),    // 5: GetByBlogIdRequest
-	(*GetByBlogIdResponse)(nil),   // 6: GetByBlogIdResponse
-	(*CreateRequest)(nil),         // 7: CreateRequest
-	(*CreateResponse)(nil),        // 8: CreateResponse
-	(*DeleteRequest)(nil),         // 9: DeleteRequest
-	(*DeleteResponse)(nil),        // 10: DeleteResponse
-	(*UpdateRequest)(nil),         // 11: UpdateRequest
-	(*UpdateResponse)(nil),        // 12: UpdateResponse
-	(*timestamppb.Timestamp)(nil), // 13: google.protobuf.Timestamp
+	(*Comment)(nil),                    // 0: Comment
+	(*GetCommentByIdRequest)(nil),      // 1: GetCommentByIdRequest
+	(*GetCommentByIdResponse)(nil),     // 2: GetCommentByIdResponse
+	(*GetAllCommentsRequest)(nil),      // 3: GetAllCommentsRequest
+	(*GetAllCommentsResponse)(nil),     // 4: GetAllCommentsResponse
+	(*GetCommentByBlogIdRequest)(nil),  // 5: GetCommentByBlogIdRequest
+	(*GetCommentByBlogIdResponse)(nil), // 6: GetCommentByBlogIdResponse
+	(*CreateCommentRequest)(nil),       // 7: CreateCommentRequest
+	(*CreateCommentResponse)(nil),      // 8: CreateCommentResponse
+	(*DeleteCommentRequest)(nil),       // 9: DeleteCommentRequest
+	(*DeleteCommentResponse)(nil),      // 10: DeleteCommentResponse
+	(*UpdateCommentRequest)(nil),       // 11: UpdateCommentRequest
+	(*UpdateCommentResponse)(nil),      // 12: UpdateCommentResponse
+	(*timestamppb.Timestamp)(nil),      // 13: google.protobuf.Timestamp
 }
 var file_comments_service_proto_depIdxs = []int32{
 	13, // 0: Comment.CreatedAt:type_name -> google.protobuf.Timestamp
 	13, // 1: Comment.UpdatedAt:type_name -> google.protobuf.Timestamp
-	0,  // 2: GetByIdResponse.comment:type_name -> Comment
-	0,  // 3: GetAllResponse.comments:type_name -> Comment
-	0,  // 4: GetByBlogIdResponse.comments:type_name -> Comment
-	0,  // 5: CreateRequest.comment:type_name -> Comment
-	0,  // 6: UpdateRequest.comment:type_name -> Comment
-	1,  // 7: CommentsService.GetById:input_type -> GetByIdRequest
-	3,  // 8: CommentsService.GetAll:input_type -> GetAllRequest
-	5,  // 9: CommentsService.GetByBlogId:input_type -> GetByBlogIdRequest
-	7,  // 10: CommentsService.Create:input_type -> CreateRequest
-	9,  // 11: CommentsService.Delete:input_type -> DeleteRequest
-	11, // 12: CommentsService.Update:input_type -> UpdateRequest
-	2,  // 13: CommentsService.GetById:output_type -> GetByIdResponse
-	4,  // 14: CommentsService.GetAll:output_type -> GetAllResponse
-	6,  // 15: CommentsService.GetByBlogId:output_type -> GetByBlogIdResponse
-	8,  // 16: CommentsService.Create:output_type -> CreateResponse
-	10, // 17: CommentsService.Delete:output_type -> DeleteResponse
-	12, // 18: CommentsService.Update:output_type -> UpdateResponse
+	0,  // 2: GetCommentByIdResponse.comment:type_name -> Comment
+	0,  // 3: GetAllCommentsResponse.comments:type_name -> Comment
+	0,  // 4: GetCommentByBlogIdResponse.comments:type_name -> Comment
+	0,  // 5: CreateCommentRequest.comment:type_name -> Comment
+	0,  // 6: UpdateCommentRequest.comment:type_name -> Comment
+	1,  // 7: CommentsService.GetCommentById:input_type -> GetCommentByIdRequest
+	3,  // 8: CommentsService.GetAllComments:input_type -> GetAllCommentsRequest
+	5,  // 9: CommentsService.GetCommentByBlogId:input_type -> GetCommentByBlogIdRequest
+	7,  // 10: CommentsService.CreateComment:input_type -> CreateCommentRequest
+	9,  // 11: CommentsService.DeleteComment:input_type -> DeleteCommentRequest
+	11, // 12: CommentsService.UpdateComment:input_type -> UpdateCommentRequest
+	2,  // 13: CommentsService.GetCommentById:output_type -> GetCommentByIdResponse
+	4,  // 14: CommentsService.GetAllComments:output_type -> GetAllCommentsResponse
+	6,  // 15: CommentsService.GetCommentByBlogId:output_type -> GetCommentByBlogIdResponse
+	8,  // 16: CommentsService.CreateComment:output_type -> CreateCommentResponse
+	10, // 17: CommentsService.DeleteComment:output_type -> DeleteCommentResponse
+	12, // 18: CommentsService.UpdateComment:output_type -> UpdateCommentResponse
 	13, // [13:19] is the sub-list for method output_type
 	7,  // [7:13] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
@@ -802,7 +816,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdRequest); i {
+			switch v := v.(*GetCommentByIdRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -814,7 +828,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdResponse); i {
+			switch v := v.(*GetCommentByIdResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -826,7 +840,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllRequest); i {
+			switch v := v.(*GetAllCommentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -838,7 +852,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllResponse); i {
+			switch v := v.(*GetAllCommentsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -850,7 +864,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByBlogIdRequest); i {
+			switch v := v.(*GetCommentByBlogIdRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -862,7 +876,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByBlogIdResponse); i {
+			switch v := v.(*GetCommentByBlogIdResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -874,7 +888,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRequest); i {
+			switch v := v.(*CreateCommentRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -886,7 +900,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateResponse); i {
+			switch v := v.(*CreateCommentResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -898,7 +912,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRequest); i {
+			switch v := v.(*DeleteCommentRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -910,7 +924,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteResponse); i {
+			switch v := v.(*DeleteCommentResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -922,7 +936,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRequest); i {
+			switch v := v.(*UpdateCommentRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -934,7 +948,7 @@ func file_comments_service_proto_init() {
 			}
 		}
 		file_comments_service_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResponse); i {
+			switch v := v.(*UpdateCommentResponse); i {
 			case 0:
 				return &v.state
 			case 1:

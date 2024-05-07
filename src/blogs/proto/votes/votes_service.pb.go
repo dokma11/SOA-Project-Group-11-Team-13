@@ -137,7 +137,7 @@ func (x *Vote) GetType() Vote_VoteType {
 	return Vote_Downvote
 }
 
-type GetByIdRequest struct {
+type GetVoteByIdRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -145,8 +145,8 @@ type GetByIdRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *GetByIdRequest) Reset() {
-	*x = GetByIdRequest{}
+func (x *GetVoteByIdRequest) Reset() {
+	*x = GetVoteByIdRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_votes_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -154,13 +154,13 @@ func (x *GetByIdRequest) Reset() {
 	}
 }
 
-func (x *GetByIdRequest) String() string {
+func (x *GetVoteByIdRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdRequest) ProtoMessage() {}
+func (*GetVoteByIdRequest) ProtoMessage() {}
 
-func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
+func (x *GetVoteByIdRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_votes_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -172,19 +172,19 @@ func (x *GetByIdRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdRequest.ProtoReflect.Descriptor instead.
-func (*GetByIdRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetVoteByIdRequest.ProtoReflect.Descriptor instead.
+func (*GetVoteByIdRequest) Descriptor() ([]byte, []int) {
 	return file_votes_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetByIdRequest) GetID() string {
+func (x *GetVoteByIdRequest) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-type GetByIdResponse struct {
+type GetVoteByIdResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -192,8 +192,8 @@ type GetByIdResponse struct {
 	Vote *Vote `protobuf:"bytes,1,opt,name=vote,proto3" json:"vote,omitempty"`
 }
 
-func (x *GetByIdResponse) Reset() {
-	*x = GetByIdResponse{}
+func (x *GetVoteByIdResponse) Reset() {
+	*x = GetVoteByIdResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_votes_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -201,13 +201,13 @@ func (x *GetByIdResponse) Reset() {
 	}
 }
 
-func (x *GetByIdResponse) String() string {
+func (x *GetVoteByIdResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetByIdResponse) ProtoMessage() {}
+func (*GetVoteByIdResponse) ProtoMessage() {}
 
-func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
+func (x *GetVoteByIdResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_votes_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -219,26 +219,26 @@ func (x *GetByIdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetByIdResponse.ProtoReflect.Descriptor instead.
-func (*GetByIdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetVoteByIdResponse.ProtoReflect.Descriptor instead.
+func (*GetVoteByIdResponse) Descriptor() ([]byte, []int) {
 	return file_votes_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetByIdResponse) GetVote() *Vote {
+func (x *GetVoteByIdResponse) GetVote() *Vote {
 	if x != nil {
 		return x.Vote
 	}
 	return nil
 }
 
-type GetAllRequest struct {
+type GetAllVotesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *GetAllRequest) Reset() {
-	*x = GetAllRequest{}
+func (x *GetAllVotesRequest) Reset() {
+	*x = GetAllVotesRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_votes_service_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -246,13 +246,13 @@ func (x *GetAllRequest) Reset() {
 	}
 }
 
-func (x *GetAllRequest) String() string {
+func (x *GetAllVotesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllRequest) ProtoMessage() {}
+func (*GetAllVotesRequest) ProtoMessage() {}
 
-func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
+func (x *GetAllVotesRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_votes_service_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -264,12 +264,12 @@ func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllRequest.ProtoReflect.Descriptor instead.
-func (*GetAllRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllVotesRequest.ProtoReflect.Descriptor instead.
+func (*GetAllVotesRequest) Descriptor() ([]byte, []int) {
 	return file_votes_service_proto_rawDescGZIP(), []int{3}
 }
 
-type GetAllResponse struct {
+type GetAllVotesResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -277,8 +277,8 @@ type GetAllResponse struct {
 	Votes []*Vote `protobuf:"bytes,1,rep,name=votes,proto3" json:"votes,omitempty"`
 }
 
-func (x *GetAllResponse) Reset() {
-	*x = GetAllResponse{}
+func (x *GetAllVotesResponse) Reset() {
+	*x = GetAllVotesResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_votes_service_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -286,13 +286,13 @@ func (x *GetAllResponse) Reset() {
 	}
 }
 
-func (x *GetAllResponse) String() string {
+func (x *GetAllVotesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllResponse) ProtoMessage() {}
+func (*GetAllVotesResponse) ProtoMessage() {}
 
-func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
+func (x *GetAllVotesResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_votes_service_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -304,12 +304,12 @@ func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllResponse.ProtoReflect.Descriptor instead.
-func (*GetAllResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllVotesResponse.ProtoReflect.Descriptor instead.
+func (*GetAllVotesResponse) Descriptor() ([]byte, []int) {
 	return file_votes_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetAllResponse) GetVotes() []*Vote {
+func (x *GetAllVotesResponse) GetVotes() []*Vote {
 	if x != nil {
 		return x.Votes
 	}
@@ -329,24 +329,27 @@ var file_votes_service_proto_rawDesc = []byte{
 	0x6f, 0x74, 0x65, 0x2e, 0x56, 0x6f, 0x74, 0x65, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x54, 0x79,
 	0x70, 0x65, 0x22, 0x24, 0x0a, 0x08, 0x56, 0x6f, 0x74, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0c,
 	0x0a, 0x08, 0x44, 0x6f, 0x77, 0x6e, 0x76, 0x6f, 0x74, 0x65, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06,
-	0x55, 0x70, 0x76, 0x6f, 0x74, 0x65, 0x10, 0x01, 0x22, 0x20, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x42,
-	0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x2c, 0x0a, 0x0f, 0x47, 0x65,
-	0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x19, 0x0a,
-	0x04, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x05, 0x2e, 0x56, 0x6f,
-	0x74, 0x65, 0x52, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x22, 0x0f, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x41,
-	0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x2d, 0x0a, 0x0e, 0x47, 0x65, 0x74,
-	0x41, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1b, 0x0a, 0x05, 0x76,
-	0x6f, 0x74, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x05, 0x2e, 0x56, 0x6f, 0x74,
-	0x65, 0x52, 0x05, 0x76, 0x6f, 0x74, 0x65, 0x73, 0x32, 0x6b, 0x0a, 0x0c, 0x56, 0x6f, 0x74, 0x65,
-	0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2e, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x42,
-	0x79, 0x49, 0x64, 0x12, 0x0f, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x10, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x06, 0x47, 0x65, 0x74, 0x41,
-	0x6c, 0x6c, 0x12, 0x0e, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0d, 0x5a, 0x0b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x76,
-	0x6f, 0x74, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x55, 0x70, 0x76, 0x6f, 0x74, 0x65, 0x10, 0x01, 0x22, 0x24, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x56,
+	0x6f, 0x74, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e,
+	0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x30,
+	0x0a, 0x13, 0x47, 0x65, 0x74, 0x56, 0x6f, 0x74, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x19, 0x0a, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x05, 0x2e, 0x56, 0x6f, 0x74, 0x65, 0x52, 0x04, 0x76, 0x6f, 0x74, 0x65,
+	0x22, 0x14, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x56, 0x6f, 0x74, 0x65, 0x73, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x32, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c,
+	0x56, 0x6f, 0x74, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1b, 0x0a,
+	0x05, 0x76, 0x6f, 0x74, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x05, 0x2e, 0x56,
+	0x6f, 0x74, 0x65, 0x52, 0x05, 0x76, 0x6f, 0x74, 0x65, 0x73, 0x32, 0x86, 0x01, 0x0a, 0x0c, 0x56,
+	0x6f, 0x74, 0x65, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x47,
+	0x65, 0x74, 0x56, 0x6f, 0x74, 0x65, 0x42, 0x79, 0x49, 0x64, 0x12, 0x13, 0x2e, 0x47, 0x65, 0x74,
+	0x56, 0x6f, 0x74, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x14, 0x2e, 0x47, 0x65, 0x74, 0x56, 0x6f, 0x74, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x41, 0x6c,
+	0x6c, 0x56, 0x6f, 0x74, 0x65, 0x73, 0x12, 0x13, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x56,
+	0x6f, 0x74, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x47, 0x65,
+	0x74, 0x41, 0x6c, 0x6c, 0x56, 0x6f, 0x74, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x42, 0x0d, 0x5a, 0x0b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x76, 0x6f, 0x74,
+	0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -364,21 +367,21 @@ func file_votes_service_proto_rawDescGZIP() []byte {
 var file_votes_service_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_votes_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_votes_service_proto_goTypes = []interface{}{
-	(Vote_VoteType)(0),      // 0: Vote.VoteType
-	(*Vote)(nil),            // 1: Vote
-	(*GetByIdRequest)(nil),  // 2: GetByIdRequest
-	(*GetByIdResponse)(nil), // 3: GetByIdResponse
-	(*GetAllRequest)(nil),   // 4: GetAllRequest
-	(*GetAllResponse)(nil),  // 5: GetAllResponse
+	(Vote_VoteType)(0),          // 0: Vote.VoteType
+	(*Vote)(nil),                // 1: Vote
+	(*GetVoteByIdRequest)(nil),  // 2: GetVoteByIdRequest
+	(*GetVoteByIdResponse)(nil), // 3: GetVoteByIdResponse
+	(*GetAllVotesRequest)(nil),  // 4: GetAllVotesRequest
+	(*GetAllVotesResponse)(nil), // 5: GetAllVotesResponse
 }
 var file_votes_service_proto_depIdxs = []int32{
 	0, // 0: Vote.Type:type_name -> Vote.VoteType
-	1, // 1: GetByIdResponse.vote:type_name -> Vote
-	1, // 2: GetAllResponse.votes:type_name -> Vote
-	2, // 3: VotesService.GetById:input_type -> GetByIdRequest
-	4, // 4: VotesService.GetAll:input_type -> GetAllRequest
-	3, // 5: VotesService.GetById:output_type -> GetByIdResponse
-	5, // 6: VotesService.GetAll:output_type -> GetAllResponse
+	1, // 1: GetVoteByIdResponse.vote:type_name -> Vote
+	1, // 2: GetAllVotesResponse.votes:type_name -> Vote
+	2, // 3: VotesService.GetVoteById:input_type -> GetVoteByIdRequest
+	4, // 4: VotesService.GetAllVotes:input_type -> GetAllVotesRequest
+	3, // 5: VotesService.GetVoteById:output_type -> GetVoteByIdResponse
+	5, // 6: VotesService.GetAllVotes:output_type -> GetAllVotesResponse
 	5, // [5:7] is the sub-list for method output_type
 	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -405,7 +408,7 @@ func file_votes_service_proto_init() {
 			}
 		}
 		file_votes_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdRequest); i {
+			switch v := v.(*GetVoteByIdRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -417,7 +420,7 @@ func file_votes_service_proto_init() {
 			}
 		}
 		file_votes_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetByIdResponse); i {
+			switch v := v.(*GetVoteByIdResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -429,7 +432,7 @@ func file_votes_service_proto_init() {
 			}
 		}
 		file_votes_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllRequest); i {
+			switch v := v.(*GetAllVotesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -441,7 +444,7 @@ func file_votes_service_proto_init() {
 			}
 		}
 		file_votes_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllResponse); i {
+			switch v := v.(*GetAllVotesResponse); i {
 			case 0:
 				return &v.state
 			case 1:

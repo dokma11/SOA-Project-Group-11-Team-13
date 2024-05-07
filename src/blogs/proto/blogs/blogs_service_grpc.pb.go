@@ -19,28 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BlogsService_Create_FullMethodName          = "/BlogsService/Create"
-	BlogsService_GetAll_FullMethodName          = "/BlogsService/GetAll"
-	BlogsService_GetById_FullMethodName         = "/BlogsService/GetById"
-	BlogsService_GetByAuthorsId_FullMethodName  = "/BlogsService/GetByAuthorsId"
-	BlogsService_GetByAuthorsIds_FullMethodName = "/BlogsService/GetByAuthorsIds"
-	BlogsService_SearchByName_FullMethodName    = "/BlogsService/SearchByName"
-	BlogsService_Publish_FullMethodName         = "/BlogsService/Publish"
-	BlogsService_Delete_FullMethodName          = "/BlogsService/Delete"
+	BlogsService_CreateBlog_FullMethodName           = "/BlogsService/CreateBlog"
+	BlogsService_GetAllBlogs_FullMethodName          = "/BlogsService/GetAllBlogs"
+	BlogsService_GetBlogById_FullMethodName          = "/BlogsService/GetBlogById"
+	BlogsService_GetBlogsByAuthorsId_FullMethodName  = "/BlogsService/GetBlogsByAuthorsId"
+	BlogsService_GetBlogsByAuthorsIds_FullMethodName = "/BlogsService/GetBlogsByAuthorsIds"
+	BlogsService_SearchBlogByName_FullMethodName     = "/BlogsService/SearchBlogByName"
+	BlogsService_PublishBlog_FullMethodName          = "/BlogsService/PublishBlog"
+	BlogsService_DeleteBlog_FullMethodName           = "/BlogsService/DeleteBlog"
 )
 
 // BlogsServiceClient is the client API for BlogsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BlogsServiceClient interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
-	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error)
-	GetByAuthorsId(ctx context.Context, in *GetByAuthorsIdRequest, opts ...grpc.CallOption) (*GetByAuthorsIdResponse, error)
-	GetByAuthorsIds(ctx context.Context, in *GetByAuthorsIdsRequest, opts ...grpc.CallOption) (*GetByAuthorsIdsResponse, error)
-	SearchByName(ctx context.Context, in *SearchByNameRequest, opts ...grpc.CallOption) (*SearchByNameResponse, error)
-	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	CreateBlog(ctx context.Context, in *CreateBlogRequest, opts ...grpc.CallOption) (*CreateBlogResponse, error)
+	GetAllBlogs(ctx context.Context, in *GetAllBlogsRequest, opts ...grpc.CallOption) (*GetAllBlogsResponse, error)
+	GetBlogById(ctx context.Context, in *GetBlogByIdRequest, opts ...grpc.CallOption) (*GetBlogByIdResponse, error)
+	GetBlogsByAuthorsId(ctx context.Context, in *GetBlogsByAuthorsIdRequest, opts ...grpc.CallOption) (*GetBlogsByAuthorsIdResponse, error)
+	GetBlogsByAuthorsIds(ctx context.Context, in *GetBlogsByAuthorsIdsRequest, opts ...grpc.CallOption) (*GetBlogsByAuthorsIdsResponse, error)
+	SearchBlogByName(ctx context.Context, in *SearchBlogByNameRequest, opts ...grpc.CallOption) (*SearchBlogByNameResponse, error)
+	PublishBlog(ctx context.Context, in *PublishBlogRequest, opts ...grpc.CallOption) (*PublishBlogResponse, error)
+	DeleteBlog(ctx context.Context, in *DeleteBlogRequest, opts ...grpc.CallOption) (*DeleteBlogResponse, error)
 }
 
 type blogsServiceClient struct {
@@ -51,72 +51,72 @@ func NewBlogsServiceClient(cc grpc.ClientConnInterface) BlogsServiceClient {
 	return &blogsServiceClient{cc}
 }
 
-func (c *blogsServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, BlogsService_Create_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) CreateBlog(ctx context.Context, in *CreateBlogRequest, opts ...grpc.CallOption) (*CreateBlogResponse, error) {
+	out := new(CreateBlogResponse)
+	err := c.cc.Invoke(ctx, BlogsService_CreateBlog_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, BlogsService_GetAll_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) GetAllBlogs(ctx context.Context, in *GetAllBlogsRequest, opts ...grpc.CallOption) (*GetAllBlogsResponse, error) {
+	out := new(GetAllBlogsResponse)
+	err := c.cc.Invoke(ctx, BlogsService_GetAllBlogs_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error) {
-	out := new(GetByIdResponse)
-	err := c.cc.Invoke(ctx, BlogsService_GetById_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) GetBlogById(ctx context.Context, in *GetBlogByIdRequest, opts ...grpc.CallOption) (*GetBlogByIdResponse, error) {
+	out := new(GetBlogByIdResponse)
+	err := c.cc.Invoke(ctx, BlogsService_GetBlogById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) GetByAuthorsId(ctx context.Context, in *GetByAuthorsIdRequest, opts ...grpc.CallOption) (*GetByAuthorsIdResponse, error) {
-	out := new(GetByAuthorsIdResponse)
-	err := c.cc.Invoke(ctx, BlogsService_GetByAuthorsId_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) GetBlogsByAuthorsId(ctx context.Context, in *GetBlogsByAuthorsIdRequest, opts ...grpc.CallOption) (*GetBlogsByAuthorsIdResponse, error) {
+	out := new(GetBlogsByAuthorsIdResponse)
+	err := c.cc.Invoke(ctx, BlogsService_GetBlogsByAuthorsId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) GetByAuthorsIds(ctx context.Context, in *GetByAuthorsIdsRequest, opts ...grpc.CallOption) (*GetByAuthorsIdsResponse, error) {
-	out := new(GetByAuthorsIdsResponse)
-	err := c.cc.Invoke(ctx, BlogsService_GetByAuthorsIds_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) GetBlogsByAuthorsIds(ctx context.Context, in *GetBlogsByAuthorsIdsRequest, opts ...grpc.CallOption) (*GetBlogsByAuthorsIdsResponse, error) {
+	out := new(GetBlogsByAuthorsIdsResponse)
+	err := c.cc.Invoke(ctx, BlogsService_GetBlogsByAuthorsIds_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) SearchByName(ctx context.Context, in *SearchByNameRequest, opts ...grpc.CallOption) (*SearchByNameResponse, error) {
-	out := new(SearchByNameResponse)
-	err := c.cc.Invoke(ctx, BlogsService_SearchByName_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) SearchBlogByName(ctx context.Context, in *SearchBlogByNameRequest, opts ...grpc.CallOption) (*SearchBlogByNameResponse, error) {
+	out := new(SearchBlogByNameResponse)
+	err := c.cc.Invoke(ctx, BlogsService_SearchBlogByName_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error) {
-	out := new(PublishResponse)
-	err := c.cc.Invoke(ctx, BlogsService_Publish_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) PublishBlog(ctx context.Context, in *PublishBlogRequest, opts ...grpc.CallOption) (*PublishBlogResponse, error) {
+	out := new(PublishBlogResponse)
+	err := c.cc.Invoke(ctx, BlogsService_PublishBlog_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogsServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
-	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, BlogsService_Delete_FullMethodName, in, out, opts...)
+func (c *blogsServiceClient) DeleteBlog(ctx context.Context, in *DeleteBlogRequest, opts ...grpc.CallOption) (*DeleteBlogResponse, error) {
+	out := new(DeleteBlogResponse)
+	err := c.cc.Invoke(ctx, BlogsService_DeleteBlog_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -127,14 +127,14 @@ func (c *blogsServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts
 // All implementations must embed UnimplementedBlogsServiceServer
 // for forward compatibility
 type BlogsServiceServer interface {
-	Create(context.Context, *CreateRequest) (*CreateResponse, error)
-	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error)
-	GetByAuthorsId(context.Context, *GetByAuthorsIdRequest) (*GetByAuthorsIdResponse, error)
-	GetByAuthorsIds(context.Context, *GetByAuthorsIdsRequest) (*GetByAuthorsIdsResponse, error)
-	SearchByName(context.Context, *SearchByNameRequest) (*SearchByNameResponse, error)
-	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
-	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
+	CreateBlog(context.Context, *CreateBlogRequest) (*CreateBlogResponse, error)
+	GetAllBlogs(context.Context, *GetAllBlogsRequest) (*GetAllBlogsResponse, error)
+	GetBlogById(context.Context, *GetBlogByIdRequest) (*GetBlogByIdResponse, error)
+	GetBlogsByAuthorsId(context.Context, *GetBlogsByAuthorsIdRequest) (*GetBlogsByAuthorsIdResponse, error)
+	GetBlogsByAuthorsIds(context.Context, *GetBlogsByAuthorsIdsRequest) (*GetBlogsByAuthorsIdsResponse, error)
+	SearchBlogByName(context.Context, *SearchBlogByNameRequest) (*SearchBlogByNameResponse, error)
+	PublishBlog(context.Context, *PublishBlogRequest) (*PublishBlogResponse, error)
+	DeleteBlog(context.Context, *DeleteBlogRequest) (*DeleteBlogResponse, error)
 	mustEmbedUnimplementedBlogsServiceServer()
 }
 
@@ -142,29 +142,29 @@ type BlogsServiceServer interface {
 type UnimplementedBlogsServiceServer struct {
 }
 
-func (UnimplementedBlogsServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedBlogsServiceServer) CreateBlog(context.Context, *CreateBlogRequest) (*CreateBlogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBlog not implemented")
 }
-func (UnimplementedBlogsServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+func (UnimplementedBlogsServiceServer) GetAllBlogs(context.Context, *GetAllBlogsRequest) (*GetAllBlogsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllBlogs not implemented")
 }
-func (UnimplementedBlogsServiceServer) GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
+func (UnimplementedBlogsServiceServer) GetBlogById(context.Context, *GetBlogByIdRequest) (*GetBlogByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlogById not implemented")
 }
-func (UnimplementedBlogsServiceServer) GetByAuthorsId(context.Context, *GetByAuthorsIdRequest) (*GetByAuthorsIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetByAuthorsId not implemented")
+func (UnimplementedBlogsServiceServer) GetBlogsByAuthorsId(context.Context, *GetBlogsByAuthorsIdRequest) (*GetBlogsByAuthorsIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlogsByAuthorsId not implemented")
 }
-func (UnimplementedBlogsServiceServer) GetByAuthorsIds(context.Context, *GetByAuthorsIdsRequest) (*GetByAuthorsIdsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetByAuthorsIds not implemented")
+func (UnimplementedBlogsServiceServer) GetBlogsByAuthorsIds(context.Context, *GetBlogsByAuthorsIdsRequest) (*GetBlogsByAuthorsIdsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlogsByAuthorsIds not implemented")
 }
-func (UnimplementedBlogsServiceServer) SearchByName(context.Context, *SearchByNameRequest) (*SearchByNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchByName not implemented")
+func (UnimplementedBlogsServiceServer) SearchBlogByName(context.Context, *SearchBlogByNameRequest) (*SearchBlogByNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchBlogByName not implemented")
 }
-func (UnimplementedBlogsServiceServer) Publish(context.Context, *PublishRequest) (*PublishResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Publish not implemented")
+func (UnimplementedBlogsServiceServer) PublishBlog(context.Context, *PublishBlogRequest) (*PublishBlogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishBlog not implemented")
 }
-func (UnimplementedBlogsServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedBlogsServiceServer) DeleteBlog(context.Context, *DeleteBlogRequest) (*DeleteBlogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBlog not implemented")
 }
 func (UnimplementedBlogsServiceServer) mustEmbedUnimplementedBlogsServiceServer() {}
 
@@ -179,146 +179,146 @@ func RegisterBlogsServiceServer(s grpc.ServiceRegistrar, srv BlogsServiceServer)
 	s.RegisterService(&BlogsService_ServiceDesc, srv)
 }
 
-func _BlogsService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
+func _BlogsService_CreateBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBlogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).Create(ctx, in)
+		return srv.(BlogsServiceServer).CreateBlog(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_Create_FullMethodName,
+		FullMethod: BlogsService_CreateBlog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).Create(ctx, req.(*CreateRequest))
+		return srv.(BlogsServiceServer).CreateBlog(ctx, req.(*CreateBlogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllRequest)
+func _BlogsService_GetAllBlogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllBlogsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).GetAll(ctx, in)
+		return srv.(BlogsServiceServer).GetAllBlogs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_GetAll_FullMethodName,
+		FullMethod: BlogsService_GetAllBlogs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).GetAll(ctx, req.(*GetAllRequest))
+		return srv.(BlogsServiceServer).GetAllBlogs(ctx, req.(*GetAllBlogsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByIdRequest)
+func _BlogsService_GetBlogById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBlogByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).GetById(ctx, in)
+		return srv.(BlogsServiceServer).GetBlogById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_GetById_FullMethodName,
+		FullMethod: BlogsService_GetBlogById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).GetById(ctx, req.(*GetByIdRequest))
+		return srv.(BlogsServiceServer).GetBlogById(ctx, req.(*GetBlogByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_GetByAuthorsId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByAuthorsIdRequest)
+func _BlogsService_GetBlogsByAuthorsId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBlogsByAuthorsIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).GetByAuthorsId(ctx, in)
+		return srv.(BlogsServiceServer).GetBlogsByAuthorsId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_GetByAuthorsId_FullMethodName,
+		FullMethod: BlogsService_GetBlogsByAuthorsId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).GetByAuthorsId(ctx, req.(*GetByAuthorsIdRequest))
+		return srv.(BlogsServiceServer).GetBlogsByAuthorsId(ctx, req.(*GetBlogsByAuthorsIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_GetByAuthorsIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByAuthorsIdsRequest)
+func _BlogsService_GetBlogsByAuthorsIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBlogsByAuthorsIdsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).GetByAuthorsIds(ctx, in)
+		return srv.(BlogsServiceServer).GetBlogsByAuthorsIds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_GetByAuthorsIds_FullMethodName,
+		FullMethod: BlogsService_GetBlogsByAuthorsIds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).GetByAuthorsIds(ctx, req.(*GetByAuthorsIdsRequest))
+		return srv.(BlogsServiceServer).GetBlogsByAuthorsIds(ctx, req.(*GetBlogsByAuthorsIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_SearchByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchByNameRequest)
+func _BlogsService_SearchBlogByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchBlogByNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).SearchByName(ctx, in)
+		return srv.(BlogsServiceServer).SearchBlogByName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_SearchByName_FullMethodName,
+		FullMethod: BlogsService_SearchBlogByName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).SearchByName(ctx, req.(*SearchByNameRequest))
+		return srv.(BlogsServiceServer).SearchBlogByName(ctx, req.(*SearchBlogByNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_Publish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PublishRequest)
+func _BlogsService_PublishBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishBlogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).Publish(ctx, in)
+		return srv.(BlogsServiceServer).PublishBlog(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_Publish_FullMethodName,
+		FullMethod: BlogsService_PublishBlog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).Publish(ctx, req.(*PublishRequest))
+		return srv.(BlogsServiceServer).PublishBlog(ctx, req.(*PublishBlogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogsService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRequest)
+func _BlogsService_DeleteBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBlogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogsServiceServer).Delete(ctx, in)
+		return srv.(BlogsServiceServer).DeleteBlog(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogsService_Delete_FullMethodName,
+		FullMethod: BlogsService_DeleteBlog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogsServiceServer).Delete(ctx, req.(*DeleteRequest))
+		return srv.(BlogsServiceServer).DeleteBlog(ctx, req.(*DeleteBlogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -331,36 +331,36 @@ var BlogsService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*BlogsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _BlogsService_Create_Handler,
+			MethodName: "CreateBlog",
+			Handler:    _BlogsService_CreateBlog_Handler,
 		},
 		{
-			MethodName: "GetAll",
-			Handler:    _BlogsService_GetAll_Handler,
+			MethodName: "GetAllBlogs",
+			Handler:    _BlogsService_GetAllBlogs_Handler,
 		},
 		{
-			MethodName: "GetById",
-			Handler:    _BlogsService_GetById_Handler,
+			MethodName: "GetBlogById",
+			Handler:    _BlogsService_GetBlogById_Handler,
 		},
 		{
-			MethodName: "GetByAuthorsId",
-			Handler:    _BlogsService_GetByAuthorsId_Handler,
+			MethodName: "GetBlogsByAuthorsId",
+			Handler:    _BlogsService_GetBlogsByAuthorsId_Handler,
 		},
 		{
-			MethodName: "GetByAuthorsIds",
-			Handler:    _BlogsService_GetByAuthorsIds_Handler,
+			MethodName: "GetBlogsByAuthorsIds",
+			Handler:    _BlogsService_GetBlogsByAuthorsIds_Handler,
 		},
 		{
-			MethodName: "SearchByName",
-			Handler:    _BlogsService_SearchByName_Handler,
+			MethodName: "SearchBlogByName",
+			Handler:    _BlogsService_SearchBlogByName_Handler,
 		},
 		{
-			MethodName: "Publish",
-			Handler:    _BlogsService_Publish_Handler,
+			MethodName: "PublishBlog",
+			Handler:    _BlogsService_PublishBlog_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _BlogsService_Delete_Handler,
+			MethodName: "DeleteBlog",
+			Handler:    _BlogsService_DeleteBlog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

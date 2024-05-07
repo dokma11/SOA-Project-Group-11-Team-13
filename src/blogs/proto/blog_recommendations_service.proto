@@ -5,10 +5,10 @@ import "google/protobuf/timestamp.proto";
 option go_package = "proto/blog_recommendations";
 
 service BlogRecommendationService {
-  rpc Create(CreateRequest) returns (CreateResponse) {}
-  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
-  rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}
-  rpc GetByReceiverId(GetByReceiverIdRequest) returns (GetByReceiverIdResponse) {}
+  rpc CreateBlogRecommendation(CreateBlogRecommendationRequest) returns (CreateBlogRecommendationResponse) {}
+  rpc GetAllBlogRecommendations(GetAllBlogRecommendationsRequest) returns (GetAllBlogRecommendationsResponse) {}
+  rpc GetBlogRecommendationById(GetBlogRecommendationByIdRequest) returns (GetBlogRecommendationByIdResponse) {}
+  rpc GetBlogRecommendationByReceiverId(GetBlogRecommendationByReceiverIdRequest) returns (GetBlogRecommendationByReceiverIdResponse) {}
 }
 
 message BlogRecommendation {
@@ -57,32 +57,32 @@ message RecommenderVote {
   VoteType Type = 4;
 }
 
-message CreateRequest {
+message CreateBlogRecommendationRequest {
   BlogRecommendation recommendation = 1;    // Proveriti samo ne znam sta su slali tacno
 }
 
-message CreateResponse {
+message CreateBlogRecommendationResponse {
 }
 
-message GetByIdRequest {
+message GetBlogRecommendationByIdRequest {
   string ID = 1;
 }
 
-message GetByIdResponse {
+message GetBlogRecommendationByIdResponse {
   BlogRecommendation recommendation = 1;
 }
 
-message GetAllRequest {
+message GetAllBlogRecommendationsRequest {
 }
 
-message GetAllResponse {
+message GetAllBlogRecommendationsResponse {
   repeated BlogRecommendation recommendations = 1;
 }
 
-message GetByReceiverIdRequest {
+message GetBlogRecommendationByReceiverIdRequest {
   int32 ReceiverId = 1;
 }
 
-message GetByReceiverIdResponse {
+message GetBlogRecommendationByReceiverIdResponse {
   repeated BlogRecommendation recommendations = 1;
 }

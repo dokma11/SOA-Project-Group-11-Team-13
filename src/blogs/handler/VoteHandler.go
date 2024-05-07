@@ -11,7 +11,7 @@ type VoteHandler struct {
 	votes.UnimplementedVotesServiceServer
 }
 
-func (handler *VoteHandler) GetById(ctx context.Context, request *votes.GetByIdRequest) (*votes.GetByIdResponse, error) {
+func (handler *VoteHandler) GetVoteById(ctx context.Context, request *votes.GetVoteByIdRequest) (*votes.GetVoteByIdResponse, error) {
 	vote, _ := handler.VoteService.GetById(request.ID)
 
 	voteResponse := votes.Vote{}
@@ -20,14 +20,14 @@ func (handler *VoteHandler) GetById(ctx context.Context, request *votes.GetByIdR
 	voteResponse.BlogId = int32(vote.BlogId)
 	voteResponse.Type = votes.Vote_VoteType(vote.Type)
 
-	ret := &votes.GetByIdResponse{
+	ret := &votes.GetVoteByIdResponse{
 		Vote: &voteResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *VoteHandler) GetAll(ctx context.Context, request *votes.GetAllRequest) (*votes.GetAllResponse, error) {
+func (handler *VoteHandler) GetAllVotes(ctx context.Context, request *votes.GetAllVotesRequest) (*votes.GetAllVotesResponse, error) {
 	voteList, _ := handler.VoteService.GetAll()
 
 	votesResponse := make([]*votes.Vote, len(*voteList))
@@ -43,7 +43,7 @@ func (handler *VoteHandler) GetAll(ctx context.Context, request *votes.GetAllReq
 		}
 	}
 
-	ret := &votes.GetAllResponse{
+	ret := &votes.GetAllVotesResponse{
 		Votes: votesResponse,
 	}
 

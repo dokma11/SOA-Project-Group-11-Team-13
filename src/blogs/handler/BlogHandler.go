@@ -3,6 +3,7 @@ package handler
 import (
 	"blogs/model"
 	"blogs/proto/blogs"
+	"blogs/proto/votes"
 	"blogs/service"
 	"context"
 	"strings"
@@ -13,8 +14,46 @@ type BlogHandler struct {
 	blogs.UnimplementedBlogsServiceServer
 }
 
-func (handler *BlogHandler) GetById(ctx context.Context, request *blogs.GetByIdRequest) (*blogs.GetByIdResponse, error) {
+func (handler *BlogHandler) GetBlogById(ctx context.Context, request *blogs.GetBlogByIdRequest) (*blogs.GetBlogByIdResponse, error) {
 	blog, _ := handler.BlogService.GetById(request.ID)
+
+	commentList := make([]*blogs.BlogComment, len(blog.Comments))
+	if blog.Comments != nil && len(blog.Comments) > 0 {
+		for index, b := range blog.Comments {
+			commentList[index] = &blogs.BlogComment{
+				ID:        int32(b.ID),
+				AuthorId:  int32(b.AuthorId),
+				BlogId:    int32(b.BlogId),
+				Text:      b.Text,
+				CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+				UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+			}
+		}
+	}
+
+	voteList := make([]*blogs.BlogVote, len(blog.Votes))
+	if blog.Votes != nil && len(blog.Votes) > 0 {
+		for index, b := range blog.Votes {
+			voteList[index] = &blogs.BlogVote{
+				ID:     int32(b.ID),
+				UserId: int32(b.UserId),
+				BlogId: int32(b.BlogId),
+				Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+			}
+		}
+	}
+
+	recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+	if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+		for index, b := range blog.Recommendations {
+			recommendationList[index] = &blogs.BlogsRecommendation{
+				ID:                       int32(b.ID),
+				BlogId:                   int32(b.BlogId),
+				RecommenderId:            int32(b.RecommenderId),
+				RecommendationReceiverId: int32(b.RecommendationReceiverId),
+			}
+		}
+	}
 
 	blogResponse := blogs.Blog{}
 	blogResponse.ID = int32(blog.ID)
@@ -22,126 +61,281 @@ func (handler *BlogHandler) GetById(ctx context.Context, request *blogs.GetByIdR
 	blogResponse.Description = blog.Description
 	blogResponse.Status = blogs.Blog_BlogStatus(blog.Status)
 	blogResponse.AuthorId = int32(blog.AuthorId)
-	//blogResponse.Comments = blog.Comments
-	//blogResponse.Votes = blog.Votes
-	//blogResponse.Recommendations = blog.Recommendations
+	blogResponse.Comments = commentList
+	blogResponse.Votes = voteList
+	blogResponse.Recommendations = recommendationList
 
-	ret := &blogs.GetByIdResponse{
+	ret := &blogs.GetBlogByIdResponse{
 		Blog: &blogResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *BlogHandler) GetAll(ctx context.Context, request *blogs.GetAllRequest) (*blogs.GetAllResponse, error) {
+func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetAllBlogsRequest) (*blogs.GetAllBlogsResponse, error) {
 	blogList, _ := handler.BlogService.GetAll()
 
 	blogsResponse := make([]*blogs.Blog, len(*blogList))
 
 	if blogList != nil && len(*blogList) > 0 {
 		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						ID:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						ID:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						ID:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
 			blogsResponse[i] = &blogs.Blog{
-				ID:          int32(blog.ID),
-				Title:       blog.Title,
-				Description: blog.Description,
-				Status:      blogs.Blog_BlogStatus(blog.Status),
-				AuthorId:    int32(blog.AuthorId),
-				//Comments : blog.Comments,
-				//Votes : blog.Votes,
-				//Recommendations : blog.Recommendations,
+				ID:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
 			}
 		}
 	}
 
-	ret := &blogs.GetAllResponse{
+	ret := &blogs.GetAllBlogsResponse{
 		Blogs: blogsResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *BlogHandler) Create(ctx context.Context, request *blogs.CreateRequest) (*blogs.CreateResponse, error) {
+func (handler *BlogHandler) CreateBlog(ctx context.Context, request *blogs.CreateBlogRequest) (*blogs.CreateBlogResponse, error) {
 	blog := model.Blog{}
+
+	commentList := make([]model.Comment, len(blog.Comments))
+	if blog.Comments != nil && len(blog.Comments) > 0 {
+		for index, b := range blog.Comments {
+			commentList[index] = model.Comment{
+				ID:        b.ID,
+				AuthorId:  b.AuthorId,
+				BlogId:    b.BlogId,
+				Text:      b.Text,
+				CreatedAt: b.CreatedAt,
+				UpdatedAt: b.UpdatedAt,
+			}
+		}
+	}
+
+	voteList := make([]model.Vote, len(blog.Votes))
+	if blog.Votes != nil && len(blog.Votes) > 0 {
+		for index, b := range blog.Votes {
+			voteList[index] = model.Vote{
+				ID:     b.ID,
+				UserId: b.UserId,
+				BlogId: b.BlogId,
+				Type:   b.Type,
+			}
+		}
+	}
+
+	recommendationList := make([]model.BlogRecommendation, len(blog.Recommendations))
+	if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+		for index, b := range blog.Recommendations {
+			recommendationList[index] = model.BlogRecommendation{
+				ID:                       b.ID,
+				BlogId:                   b.BlogId,
+				RecommenderId:            b.RecommenderId,
+				RecommendationReceiverId: b.RecommendationReceiverId,
+			}
+		}
+	}
 
 	blog.ID = int(request.Blog.ID)
 	blog.Title = request.Blog.Title
 	blog.Description = request.Blog.Description
 	blog.Status = model.BlogStatus(request.Blog.Status)
 	blog.AuthorId = int(request.Blog.AuthorId)
-	//blogResponse.Comments = blog.Comments
-	//blogResponse.Votes = blog.Votes
-	//blogResponse.Recommendations = blog.Recommendations
+	blog.Comments = commentList
+	blog.Votes = voteList
+	blog.Recommendations = recommendationList
 
 	handler.BlogService.Create(&blog)
 
-	return &blogs.CreateResponse{}, nil
+	return &blogs.CreateBlogResponse{}, nil
 }
 
-func (handler *BlogHandler) Delete(ctx context.Context, request *blogs.DeleteRequest) (*blogs.DeleteResponse, error) {
+func (handler *BlogHandler) DeleteBlog(ctx context.Context, request *blogs.DeleteBlogRequest) (*blogs.DeleteBlogResponse, error) {
 	handler.BlogService.Delete(request.ID)
-	return &blogs.DeleteResponse{}, nil
+	return &blogs.DeleteBlogResponse{}, nil
 }
 
-func (handler *BlogHandler) SearchByName(ctx context.Context, request *blogs.SearchByNameRequest) (*blogs.SearchByNameResponse, error) {
+func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs.SearchBlogByNameRequest) (*blogs.SearchBlogByNameResponse, error) {
 	blogList, _ := handler.BlogService.SearchByName(request.Title)
 
 	blogsResponse := make([]*blogs.Blog, len(*blogList))
 
 	if blogList != nil && len(*blogList) > 0 {
 		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						ID:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						ID:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						ID:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
 			blogsResponse[i] = &blogs.Blog{
-				ID:          int32(blog.ID),
-				Title:       blog.Title,
-				Description: blog.Description,
-				Status:      blogs.Blog_BlogStatus(blog.Status),
-				AuthorId:    int32(blog.AuthorId),
-				//Comments : blog.Comments,
-				//Votes : blog.Votes,
-				//Recommendations : blog.Recommendations,
+				ID:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
 			}
 		}
 	}
 
-	ret := &blogs.SearchByNameResponse{
+	ret := &blogs.SearchBlogByNameResponse{
 		Blogs: blogsResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *BlogHandler) Publish(ctx context.Context, request *blogs.PublishRequest) (*blogs.PublishResponse, error) {
+func (handler *BlogHandler) PublishBlog(ctx context.Context, request *blogs.PublishBlogRequest) (*blogs.PublishBlogResponse, error) {
 	handler.BlogService.Publish(request.ID)
-	return &blogs.PublishResponse{}, nil
+	return &blogs.PublishBlogResponse{}, nil
 }
 
-func (handler *BlogHandler) GetByAuthorsId(ctx context.Context, request *blogs.GetByAuthorsIdRequest) (*blogs.GetByAuthorsIdResponse, error) {
+func (handler *BlogHandler) GetBlogsByAuthorsId(ctx context.Context, request *blogs.GetBlogsByAuthorsIdRequest) (*blogs.GetBlogsByAuthorsIdResponse, error) {
 	blogList, _ := handler.BlogService.GetByAuthorId(string(request.AuthorId))
 
 	blogsResponse := make([]*blogs.Blog, len(*blogList))
 
 	if blogList != nil && len(*blogList) > 0 {
 		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						ID:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						ID:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						ID:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
 			blogsResponse[i] = &blogs.Blog{
-				ID:          int32(blog.ID),
-				Title:       blog.Title,
-				Description: blog.Description,
-				Status:      blogs.Blog_BlogStatus(blog.Status),
-				AuthorId:    int32(blog.AuthorId),
-				//Comments : blog.Comments,
-				//Votes : blog.Votes,
-				//Recommendations : blog.Recommendations,
+				ID:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
 			}
 		}
 	}
 
-	ret := &blogs.GetByAuthorsIdResponse{
+	ret := &blogs.GetBlogsByAuthorsIdResponse{
 		Blogs: blogsResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *BlogHandler) GetByAuthorsIds(ctx context.Context, request *blogs.GetByAuthorsIdsRequest) (*blogs.GetByAuthorsIdsResponse, error) {
+func (handler *BlogHandler) GetBlogsByAuthorsIds(ctx context.Context, request *blogs.GetBlogsByAuthorsIdsRequest) (*blogs.GetBlogsByAuthorsIdsResponse, error) {
 	authorIds := strings.Split(request.AuthorsIds, ",")
 	blogList, _ := handler.BlogService.GetByAuthorIds(authorIds)
 
@@ -149,20 +343,59 @@ func (handler *BlogHandler) GetByAuthorsIds(ctx context.Context, request *blogs.
 
 	if blogList != nil && len(*blogList) > 0 {
 		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						ID:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						ID:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						ID:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
 			blogsResponse[i] = &blogs.Blog{
-				ID:          int32(blog.ID),
-				Title:       blog.Title,
-				Description: blog.Description,
-				Status:      blogs.Blog_BlogStatus(blog.Status),
-				AuthorId:    int32(blog.AuthorId),
-				//Comments : blog.Comments,
-				//Votes : blog.Votes,
-				//Recommendations : blog.Recommendations,
+				ID:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
 			}
 		}
 	}
 
-	ret := &blogs.GetByAuthorsIdsResponse{
+	ret := &blogs.GetBlogsByAuthorsIdsResponse{
 		Blogs: blogsResponse,
 	}
 

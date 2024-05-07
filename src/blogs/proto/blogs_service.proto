@@ -5,14 +5,14 @@ import "google/protobuf/timestamp.proto";
 option go_package = "proto/blogs";
 
 service BlogsService {
-  rpc Create(CreateRequest) returns (CreateResponse) {}
-  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
-  rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}
-  rpc GetByAuthorsId(GetByAuthorsIdRequest) returns (GetByAuthorsIdResponse) {}
-  rpc GetByAuthorsIds(GetByAuthorsIdsRequest) returns (GetByAuthorsIdsResponse) {}
-  rpc SearchByName(SearchByNameRequest) returns (SearchByNameResponse) {}
-  rpc Publish(PublishRequest) returns (PublishResponse) {}
-  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+  rpc CreateBlog(CreateBlogRequest) returns (CreateBlogResponse) {}
+  rpc GetAllBlogs(GetAllBlogsRequest) returns (GetAllBlogsResponse) {}
+  rpc GetBlogById(GetBlogByIdRequest) returns (GetBlogByIdResponse) {}
+  rpc GetBlogsByAuthorsId(GetBlogsByAuthorsIdRequest) returns (GetBlogsByAuthorsIdResponse) {}
+  rpc GetBlogsByAuthorsIds(GetBlogsByAuthorsIdsRequest) returns (GetBlogsByAuthorsIdsResponse) {}
+  rpc SearchBlogByName(SearchBlogByNameRequest) returns (SearchBlogByNameResponse) {}
+  rpc PublishBlog(PublishBlogRequest) returns (PublishBlogResponse) {}
+  rpc DeleteBlog(DeleteBlogRequest) returns (DeleteBlogResponse) {}
 }
 
 message Blog {
@@ -61,62 +61,62 @@ message BlogVote {
   VoteType Type = 4;
 }
 
-message CreateRequest {
+message CreateBlogRequest {
   Blog blog = 1;
 }
 
-message CreateResponse {
+message CreateBlogResponse {
 }
 
-message GetByIdRequest {
+message GetBlogByIdRequest {
   string ID = 1;
 }
 
-message GetByIdResponse {
+message GetBlogByIdResponse {
   Blog blog = 1;
 }
 
-message GetAllRequest {
+message GetAllBlogsRequest {
 }
 
-message GetAllResponse {
+message GetAllBlogsResponse {
   repeated Blog blogs = 1;
 }
 
-message GetByAuthorsIdRequest {
+message GetBlogsByAuthorsIdRequest {
   string AuthorId = 1;
 }
 
-message GetByAuthorsIdResponse {
+message GetBlogsByAuthorsIdResponse {
   repeated Blog blogs = 1;
 }
 
-message GetByAuthorsIdsRequest {
+message GetBlogsByAuthorsIdsRequest {
   string AuthorsIds = 1;
 }
 
-message GetByAuthorsIdsResponse {
+message GetBlogsByAuthorsIdsResponse {
   repeated Blog blogs = 1;
 }
 
-message SearchByNameRequest {
+message SearchBlogByNameRequest {
   string Title = 1;
 }
 
-message SearchByNameResponse {
+message SearchBlogByNameResponse {
   repeated Blog blogs = 1;
 }
 
-message PublishRequest {
+message PublishBlogRequest {
   string ID = 1;
 }
 
-message PublishResponse {
+message PublishBlogResponse {
 }
 
-message DeleteRequest {
+message DeleteBlogRequest {
   string ID = 1;
 }
 
-message DeleteResponse {
+message DeleteBlogResponse {
 }

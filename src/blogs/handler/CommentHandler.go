@@ -15,7 +15,7 @@ type CommentHandler struct {
 	comments.UnimplementedCommentsServiceServer
 }
 
-func (handler *CommentHandler) GetById(ctx context.Context, request *comments.GetByIdRequest) (*comments.GetByIdResponse, error) {
+func (handler *CommentHandler) GetCommentById(ctx context.Context, request *comments.GetCommentByIdRequest) (*comments.GetCommentByIdResponse, error) {
 	comment, _ := handler.CommentService.GetById(request.ID)
 
 	commentResponse := comments.Comment{}
@@ -26,14 +26,14 @@ func (handler *CommentHandler) GetById(ctx context.Context, request *comments.Ge
 	commentResponse.CreatedAt = TimeToProtoTimestamp(comment.CreatedAt)
 	commentResponse.UpdatedAt = TimeToProtoTimestamp(comment.UpdatedAt)
 
-	ret := &comments.GetByIdResponse{
+	ret := &comments.GetCommentByIdResponse{
 		Comment: &commentResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *CommentHandler) GetByBlogId(ctx context.Context, request *comments.GetByBlogIdRequest) (*comments.GetByBlogIdResponse, error) {
+func (handler *CommentHandler) GetCommentByBlogId(ctx context.Context, request *comments.GetCommentByBlogIdRequest) (*comments.GetCommentByBlogIdResponse, error) {
 	commentList, _, _ := handler.CommentService.GetByBlogId(request.BlogId, int(request.Page), int(request.PageSize))
 
 	commentResponse := make([]*comments.Comment, len(commentList))
@@ -51,14 +51,14 @@ func (handler *CommentHandler) GetByBlogId(ctx context.Context, request *comment
 		}
 	}
 
-	ret := &comments.GetByBlogIdResponse{
+	ret := &comments.GetCommentByBlogIdResponse{
 		Comments: commentResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *CommentHandler) GetAll(ctx context.Context, request *comments.GetAllRequest) (*comments.GetAllResponse, error) {
+func (handler *CommentHandler) GetAllComments(ctx context.Context, request *comments.GetAllCommentsRequest) (*comments.GetAllCommentsResponse, error) {
 	commentList, _ := handler.CommentService.GetAll()
 
 	commentResponse := make([]*comments.Comment, len(*commentList))
@@ -76,14 +76,14 @@ func (handler *CommentHandler) GetAll(ctx context.Context, request *comments.Get
 		}
 	}
 
-	ret := &comments.GetAllResponse{
+	ret := &comments.GetAllCommentsResponse{
 		Comments: commentResponse,
 	}
 
 	return ret, nil
 }
 
-func (handler *CommentHandler) Create(ctx context.Context, request *comments.CreateRequest) (*comments.CreateResponse, error) {
+func (handler *CommentHandler) CreateComment(ctx context.Context, request *comments.CreateCommentRequest) (*comments.CreateCommentResponse, error) {
 	comment := model.Comment{}
 
 	comment.ID = int(request.Comment.ID)
@@ -95,15 +95,15 @@ func (handler *CommentHandler) Create(ctx context.Context, request *comments.Cre
 
 	handler.CommentService.Create(&comment)
 
-	return &comments.CreateResponse{}, nil
+	return &comments.CreateCommentResponse{}, nil
 }
 
-func (handler *CommentHandler) Delete(ctx context.Context, request *comments.DeleteRequest) (*comments.DeleteResponse, error) {
+func (handler *CommentHandler) DeleteComment(ctx context.Context, request *comments.DeleteCommentRequest) (*comments.DeleteCommentResponse, error) {
 	handler.CommentService.Delete(request.ID)
-	return &comments.DeleteResponse{}, nil
+	return &comments.DeleteCommentResponse{}, nil
 }
 
-func (handler *CommentHandler) Update(ctx context.Context, request *comments.UpdateRequest) (*comments.UpdateResponse, error) {
+func (handler *CommentHandler) UpdateComment(ctx context.Context, request *comments.UpdateCommentRequest) (*comments.UpdateCommentResponse, error) {
 	comment := model.Comment{}
 
 	comment.ID = int(request.Comment.ID)
@@ -115,7 +115,7 @@ func (handler *CommentHandler) Update(ctx context.Context, request *comments.Upd
 
 	handler.CommentService.Update(&comment)
 
-	return &comments.UpdateResponse{}, nil
+	return &comments.UpdateCommentResponse{}, nil
 }
 
 func TimeToProtoTimestamp(t time.Time) *timestamp.Timestamp {

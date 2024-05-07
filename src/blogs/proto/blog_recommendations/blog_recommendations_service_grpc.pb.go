@@ -19,20 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BlogRecommendationService_Create_FullMethodName          = "/BlogRecommendationService/Create"
-	BlogRecommendationService_GetAll_FullMethodName          = "/BlogRecommendationService/GetAll"
-	BlogRecommendationService_GetById_FullMethodName         = "/BlogRecommendationService/GetById"
-	BlogRecommendationService_GetByReceiverId_FullMethodName = "/BlogRecommendationService/GetByReceiverId"
+	BlogRecommendationService_CreateBlogRecommendation_FullMethodName          = "/BlogRecommendationService/CreateBlogRecommendation"
+	BlogRecommendationService_GetAllBlogRecommendations_FullMethodName         = "/BlogRecommendationService/GetAllBlogRecommendations"
+	BlogRecommendationService_GetBlogRecommendationById_FullMethodName         = "/BlogRecommendationService/GetBlogRecommendationById"
+	BlogRecommendationService_GetBlogRecommendationByReceiverId_FullMethodName = "/BlogRecommendationService/GetBlogRecommendationByReceiverId"
 )
 
 // BlogRecommendationServiceClient is the client API for BlogRecommendationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BlogRecommendationServiceClient interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
-	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error)
-	GetByReceiverId(ctx context.Context, in *GetByReceiverIdRequest, opts ...grpc.CallOption) (*GetByReceiverIdResponse, error)
+	CreateBlogRecommendation(ctx context.Context, in *CreateBlogRecommendationRequest, opts ...grpc.CallOption) (*CreateBlogRecommendationResponse, error)
+	GetAllBlogRecommendations(ctx context.Context, in *GetAllBlogRecommendationsRequest, opts ...grpc.CallOption) (*GetAllBlogRecommendationsResponse, error)
+	GetBlogRecommendationById(ctx context.Context, in *GetBlogRecommendationByIdRequest, opts ...grpc.CallOption) (*GetBlogRecommendationByIdResponse, error)
+	GetBlogRecommendationByReceiverId(ctx context.Context, in *GetBlogRecommendationByReceiverIdRequest, opts ...grpc.CallOption) (*GetBlogRecommendationByReceiverIdResponse, error)
 }
 
 type blogRecommendationServiceClient struct {
@@ -43,36 +43,36 @@ func NewBlogRecommendationServiceClient(cc grpc.ClientConnInterface) BlogRecomme
 	return &blogRecommendationServiceClient{cc}
 }
 
-func (c *blogRecommendationServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_Create_FullMethodName, in, out, opts...)
+func (c *blogRecommendationServiceClient) CreateBlogRecommendation(ctx context.Context, in *CreateBlogRecommendationRequest, opts ...grpc.CallOption) (*CreateBlogRecommendationResponse, error) {
+	out := new(CreateBlogRecommendationResponse)
+	err := c.cc.Invoke(ctx, BlogRecommendationService_CreateBlogRecommendation_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_GetAll_FullMethodName, in, out, opts...)
+func (c *blogRecommendationServiceClient) GetAllBlogRecommendations(ctx context.Context, in *GetAllBlogRecommendationsRequest, opts ...grpc.CallOption) (*GetAllBlogRecommendationsResponse, error) {
+	out := new(GetAllBlogRecommendationsResponse)
+	err := c.cc.Invoke(ctx, BlogRecommendationService_GetAllBlogRecommendations_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*GetByIdResponse, error) {
-	out := new(GetByIdResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_GetById_FullMethodName, in, out, opts...)
+func (c *blogRecommendationServiceClient) GetBlogRecommendationById(ctx context.Context, in *GetBlogRecommendationByIdRequest, opts ...grpc.CallOption) (*GetBlogRecommendationByIdResponse, error) {
+	out := new(GetBlogRecommendationByIdResponse)
+	err := c.cc.Invoke(ctx, BlogRecommendationService_GetBlogRecommendationById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *blogRecommendationServiceClient) GetByReceiverId(ctx context.Context, in *GetByReceiverIdRequest, opts ...grpc.CallOption) (*GetByReceiverIdResponse, error) {
-	out := new(GetByReceiverIdResponse)
-	err := c.cc.Invoke(ctx, BlogRecommendationService_GetByReceiverId_FullMethodName, in, out, opts...)
+func (c *blogRecommendationServiceClient) GetBlogRecommendationByReceiverId(ctx context.Context, in *GetBlogRecommendationByReceiverIdRequest, opts ...grpc.CallOption) (*GetBlogRecommendationByReceiverIdResponse, error) {
+	out := new(GetBlogRecommendationByReceiverIdResponse)
+	err := c.cc.Invoke(ctx, BlogRecommendationService_GetBlogRecommendationByReceiverId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,10 +83,10 @@ func (c *blogRecommendationServiceClient) GetByReceiverId(ctx context.Context, i
 // All implementations must embed UnimplementedBlogRecommendationServiceServer
 // for forward compatibility
 type BlogRecommendationServiceServer interface {
-	Create(context.Context, *CreateRequest) (*CreateResponse, error)
-	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error)
-	GetByReceiverId(context.Context, *GetByReceiverIdRequest) (*GetByReceiverIdResponse, error)
+	CreateBlogRecommendation(context.Context, *CreateBlogRecommendationRequest) (*CreateBlogRecommendationResponse, error)
+	GetAllBlogRecommendations(context.Context, *GetAllBlogRecommendationsRequest) (*GetAllBlogRecommendationsResponse, error)
+	GetBlogRecommendationById(context.Context, *GetBlogRecommendationByIdRequest) (*GetBlogRecommendationByIdResponse, error)
+	GetBlogRecommendationByReceiverId(context.Context, *GetBlogRecommendationByReceiverIdRequest) (*GetBlogRecommendationByReceiverIdResponse, error)
 	mustEmbedUnimplementedBlogRecommendationServiceServer()
 }
 
@@ -94,17 +94,17 @@ type BlogRecommendationServiceServer interface {
 type UnimplementedBlogRecommendationServiceServer struct {
 }
 
-func (UnimplementedBlogRecommendationServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedBlogRecommendationServiceServer) CreateBlogRecommendation(context.Context, *CreateBlogRecommendationRequest) (*CreateBlogRecommendationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBlogRecommendation not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+func (UnimplementedBlogRecommendationServiceServer) GetAllBlogRecommendations(context.Context, *GetAllBlogRecommendationsRequest) (*GetAllBlogRecommendationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllBlogRecommendations not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) GetById(context.Context, *GetByIdRequest) (*GetByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
+func (UnimplementedBlogRecommendationServiceServer) GetBlogRecommendationById(context.Context, *GetBlogRecommendationByIdRequest) (*GetBlogRecommendationByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlogRecommendationById not implemented")
 }
-func (UnimplementedBlogRecommendationServiceServer) GetByReceiverId(context.Context, *GetByReceiverIdRequest) (*GetByReceiverIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetByReceiverId not implemented")
+func (UnimplementedBlogRecommendationServiceServer) GetBlogRecommendationByReceiverId(context.Context, *GetBlogRecommendationByReceiverIdRequest) (*GetBlogRecommendationByReceiverIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlogRecommendationByReceiverId not implemented")
 }
 func (UnimplementedBlogRecommendationServiceServer) mustEmbedUnimplementedBlogRecommendationServiceServer() {
 }
@@ -120,74 +120,74 @@ func RegisterBlogRecommendationServiceServer(s grpc.ServiceRegistrar, srv BlogRe
 	s.RegisterService(&BlogRecommendationService_ServiceDesc, srv)
 }
 
-func _BlogRecommendationService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
+func _BlogRecommendationService_CreateBlogRecommendation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBlogRecommendationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).Create(ctx, in)
+		return srv.(BlogRecommendationServiceServer).CreateBlogRecommendation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_Create_FullMethodName,
+		FullMethod: BlogRecommendationService_CreateBlogRecommendation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).Create(ctx, req.(*CreateRequest))
+		return srv.(BlogRecommendationServiceServer).CreateBlogRecommendation(ctx, req.(*CreateBlogRecommendationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllRequest)
+func _BlogRecommendationService_GetAllBlogRecommendations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllBlogRecommendationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).GetAll(ctx, in)
+		return srv.(BlogRecommendationServiceServer).GetAllBlogRecommendations(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_GetAll_FullMethodName,
+		FullMethod: BlogRecommendationService_GetAllBlogRecommendations_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).GetAll(ctx, req.(*GetAllRequest))
+		return srv.(BlogRecommendationServiceServer).GetAllBlogRecommendations(ctx, req.(*GetAllBlogRecommendationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByIdRequest)
+func _BlogRecommendationService_GetBlogRecommendationById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBlogRecommendationByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).GetById(ctx, in)
+		return srv.(BlogRecommendationServiceServer).GetBlogRecommendationById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_GetById_FullMethodName,
+		FullMethod: BlogRecommendationService_GetBlogRecommendationById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).GetById(ctx, req.(*GetByIdRequest))
+		return srv.(BlogRecommendationServiceServer).GetBlogRecommendationById(ctx, req.(*GetBlogRecommendationByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogRecommendationService_GetByReceiverId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByReceiverIdRequest)
+func _BlogRecommendationService_GetBlogRecommendationByReceiverId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBlogRecommendationByReceiverIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlogRecommendationServiceServer).GetByReceiverId(ctx, in)
+		return srv.(BlogRecommendationServiceServer).GetBlogRecommendationByReceiverId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlogRecommendationService_GetByReceiverId_FullMethodName,
+		FullMethod: BlogRecommendationService_GetBlogRecommendationByReceiverId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogRecommendationServiceServer).GetByReceiverId(ctx, req.(*GetByReceiverIdRequest))
+		return srv.(BlogRecommendationServiceServer).GetBlogRecommendationByReceiverId(ctx, req.(*GetBlogRecommendationByReceiverIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -200,20 +200,20 @@ var BlogRecommendationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*BlogRecommendationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _BlogRecommendationService_Create_Handler,
+			MethodName: "CreateBlogRecommendation",
+			Handler:    _BlogRecommendationService_CreateBlogRecommendation_Handler,
 		},
 		{
-			MethodName: "GetAll",
-			Handler:    _BlogRecommendationService_GetAll_Handler,
+			MethodName: "GetAllBlogRecommendations",
+			Handler:    _BlogRecommendationService_GetAllBlogRecommendations_Handler,
 		},
 		{
-			MethodName: "GetById",
-			Handler:    _BlogRecommendationService_GetById_Handler,
+			MethodName: "GetBlogRecommendationById",
+			Handler:    _BlogRecommendationService_GetBlogRecommendationById_Handler,
 		},
 		{
-			MethodName: "GetByReceiverId",
-			Handler:    _BlogRecommendationService_GetByReceiverId_Handler,
+			MethodName: "GetBlogRecommendationByReceiverId",
+			Handler:    _BlogRecommendationService_GetBlogRecommendationByReceiverId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
