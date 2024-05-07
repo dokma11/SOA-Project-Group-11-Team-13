@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "proto/blogs";
+
+service BlogRecommendationService {
+  rpc Create(CreateRequest) returns (CreateResponse) {}
+  rpc GetAll(GetAllRequest) returns (GetAllResponse) {}
+  rpc GetById(GetByIdRequest) returns (GetByIdResponse) {}
+  rpc GetByReceiverId(GetByAuthorsIdRequest) returns (GetByAuthorsIdResponse) {}
+  rpc SearchByName(SearchByNameRequest) returns (SearchByNameResponse) {}
+  rpc Publish(PublishRequest) returns (PublishResponse) {}
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+}
+
+message Blog {
+  int32 ID = 1;
+  string Title = 2;
+  string Description = 3;
+  enum BlogStatus {
+    Draft = 0;
+    Published = 1;
+    Closed = 2;
+    Active = 3;
+    Famous = 4;
+  }
+  BlogStatus Status = 4;
+  int32 AuthorId = 5;
+  repeated BlogComment Comments = 6;
+  repeated BlogVote Votes = 7;
+  repeated BlogsRecommendation Recommendations = 8;
+}
+
+message BlogsRecommendation {
+  int32 ID = 1;
+  int32 BlogId = 2;
+  int32 RecommenderId = 3;
+  int32 RecommendationReceiverId = 4;
+  Blog blog = 5;
+}
+
+message BlogComment {
+  int32 ID = 1;
+  int32 AuthorId = 2;
+  int32 BlogId = 3;
+  string Text = 4;
+  google.protobuf.Timestamp CreatedAt = 5;
+  google.protobuf.Timestamp UpdatedAt = 6;
+}
+
+message BlogVote {
+  int32 ID = 1;
+  int32 UserId = 2;
+  int32 BlogId = 3;
+  enum VoteType {
+    Downvote = 0;
+    Upvote = 1;
+  }
+  VoteType Type = 4;
+}
+
+message CreateRequest {
+  Blog blog = 1;
+}
+
+message CreateResponse {
+}
+
+message GetByIdRequest {
+  string ID = 1;
+}
+
+message GetByIdResponse {
+  Blog blog = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated Blog blogs = 1;
+}
+
+message GetByAuthorsIdRequest {
+  int32 AuthorId = 1;
+}
+
+message GetByAuthorsIdResponse {
+  repeated Blog blogs = 1;
+}
+
+message SearchByNameRequest {
+  string Title = 1;
+}
+
+message SearchByNameResponse {
+  repeated Blog blogs = 1;
+}
+
+message PublishRequest {
+  string ID = 1;
+}
+
+message PublishResponse {
+}
+
+message DeleteRequest {
+  string ID = 1;
+}
+
+message DeleteResponse {
+}
