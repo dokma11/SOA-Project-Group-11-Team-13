@@ -23,7 +23,7 @@ func (repo *FacilityRepository) GetAll() ([]model.Facility, error) {
 func (repo *FacilityRepository) GetAllByAuthorId(authorId string) ([]model.Facility, error) {
 	var facilities []model.Facility
 	dbResult := repo.DatabaseConnection.Find(&facilities, "author_id = ?", authorId)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return facilities, nil
