@@ -19,7 +19,7 @@ func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetT
 	tour, _ := handler.TourService.GetById(request.ID)
 
 	tourResponse := tours.Tour{}
-	tourResponse.ID = tour.ID
+	tourResponse.Id = tour.ID
 	tourResponse.AuthorId = int32(tour.AuthorId)
 	tourResponse.Name = tour.Name
 	tourResponse.Description = tour.Description
@@ -52,7 +52,7 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
 				for index, kp := range tour.KeyPoints {
 					keypointList[index] = &tours.TourKeyPoint{
-						ID:              kp.ID,
+						Id:              kp.ID,
 						TourId:          kp.TourId,
 						Name:            kp.Name,
 						Description:     kp.Description,
@@ -76,7 +76,7 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 			}
 
 			toursResponse[i] = &tours.Tour{
-				ID:          tour.ID,
+				Id:          tour.ID,
 				AuthorId:    int32(tour.AuthorId),
 				Name:        tour.Name,
 				Description: tour.Description,
@@ -114,7 +114,7 @@ func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetA
 			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
 				for index, kp := range tour.KeyPoints {
 					keypointList[index] = &tours.TourKeyPoint{
-						ID:              kp.ID,
+						Id:              kp.ID,
 						TourId:          kp.TourId,
 						Name:            kp.Name,
 						Description:     kp.Description,
@@ -138,7 +138,7 @@ func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetA
 			}
 
 			toursResponse[i] = &tours.Tour{
-				ID:          tour.ID,
+				Id:          tour.ID,
 				AuthorId:    int32(tour.AuthorId),
 				Name:        tour.Name,
 				Description: tour.Description,
@@ -176,7 +176,7 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
 				for index, kp := range tour.KeyPoints {
 					keypointList[index] = &tours.TourKeyPoint{
-						ID:              kp.ID,
+						Id:              kp.ID,
 						TourId:          kp.TourId,
 						Name:            kp.Name,
 						Description:     kp.Description,
@@ -200,7 +200,7 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 			}
 
 			toursResponse[i] = &tours.Tour{
-				ID:          tour.ID,
+				Id:          tour.ID,
 				AuthorId:    int32(tour.AuthorId),
 				Name:        tour.Name,
 				Description: tour.Description,
@@ -229,7 +229,7 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.CreateTourRequest) (*tours.CreateTourResponse, error) {
 	tour := model.Tour{}
 
-	tour.ID = request.Tour.ID
+	tour.ID = request.Tour.Id
 	tour.AuthorId = int(request.Tour.AuthorId)
 	tour.Name = request.Tour.Name
 	tour.Description = request.Tour.Description
@@ -286,7 +286,7 @@ func (handler *TourHandler) DeleteTour(ctx context.Context, request *tours.Delet
 func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.UpdateTourRequest) (*tours.UpdateTourResponse, error) {
 	tour := model.Tour{}
 
-	tour.ID = request.Tour.ID
+	tour.ID = request.Tour.Id
 	tour.AuthorId = int(request.Tour.AuthorId)
 	tour.Name = request.Tour.Name
 	tour.Description = request.Tour.Description
@@ -304,7 +304,7 @@ func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.Updat
 	if request.Tour.KeyPoints != nil && len(request.Tour.KeyPoints) > 0 {
 		for index, kp := range request.Tour.KeyPoints {
 			keypointList[index] = model.KeyPoint{
-				ID:              kp.ID,
+				ID:              kp.Id,
 				TourId:          kp.TourId,
 				Name:            kp.Name,
 				Description:     kp.Description,
@@ -338,7 +338,7 @@ func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.Updat
 func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tours.AddToursDurationsRequest) (*tours.AddToursDurationsResponse, error) {
 	tour := model.Tour{}
 
-	tour.ID = request.Tour.ID
+	tour.ID = request.Tour.Id
 	tour.AuthorId = int(request.Tour.AuthorId)
 	tour.Name = request.Tour.Name
 	tour.Description = request.Tour.Description
@@ -356,7 +356,7 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 	if request.Tour.KeyPoints != nil && len(request.Tour.KeyPoints) > 0 {
 		for index, kp := range request.Tour.KeyPoints {
 			keypointList[index] = model.KeyPoint{
-				ID:              kp.ID,
+				ID:              kp.Id,
 				TourId:          kp.TourId,
 				Name:            kp.Name,
 				Description:     kp.Description,
@@ -405,7 +405,7 @@ func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tour
 	if equipmentList != nil && len(equipmentList) > 0 {
 		for i, eq := range equipmentList {
 			equipmentResponse[i] = &tours.TourEquipment{
-				ID:          eq.ID,
+				Id:          eq.ID,
 				Name:        eq.Name,
 				Description: eq.Description,
 			}

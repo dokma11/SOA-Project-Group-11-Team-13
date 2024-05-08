@@ -16,7 +16,7 @@ func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment
 	equipmentList, _ := handler.EquipmentService.GetById(request.ID)
 
 	equipmentResponse := equipment.Equipment{}
-	equipmentResponse.ID = equipmentList.ID
+	equipmentResponse.Id = equipmentList.ID
 	equipmentResponse.Name = equipmentList.Name
 	equipmentResponse.Description = equipmentList.Description
 
@@ -35,7 +35,7 @@ func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.
 	if equipmentList != nil && len(*equipmentList) > 0 {
 		for i, eq := range *equipmentList {
 			equipmentResponse[i] = &equipment.Equipment{
-				ID:          eq.ID,
+				Id:          eq.ID,
 				Name:        eq.Name,
 				Description: eq.Description,
 			}
@@ -51,7 +51,7 @@ func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.
 
 func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.EquipmentCreateRequest) (*equipment.EquipmentCreateResponse, error) {
 	equipmentResponse := model.Equipment{}
-	equipmentResponse.ID = request.Equipment.ID
+	equipmentResponse.ID = request.Equipment.Id
 	equipmentResponse.Name = request.Equipment.Name
 	equipmentResponse.Description = request.Equipment.Description
 

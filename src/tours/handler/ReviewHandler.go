@@ -16,7 +16,7 @@ func (handler *ReviewHandler) GetReviewById(ctx context.Context, request *review
 	review, _ := handler.ReviewService.GetById(request.ID)
 
 	reviewResponse := reviews.Review{}
-	reviewResponse.ID = review.ID
+	reviewResponse.Id = review.ID
 	reviewResponse.Rating = int32(review.Rating)
 	reviewResponse.TourId = review.TourId
 	reviewResponse.Comment = review.Comment
@@ -41,7 +41,7 @@ func (handler *ReviewHandler) GetAllReviews(ctx context.Context, request *review
 	if reviewList != nil && len(*reviewList) > 0 {
 		for i, review := range *reviewList {
 			reviewsResponse[i] = &reviews.Review{
-				ID:            review.ID,
+				Id:            review.ID,
 				Rating:        int32(review.Rating),
 				TourId:        review.TourId,
 				Comment:       review.Comment,
@@ -63,7 +63,7 @@ func (handler *ReviewHandler) GetAllReviews(ctx context.Context, request *review
 func (handler *ReviewHandler) CreateReview(ctx context.Context, request *reviews.CreateReviewRequest) (*reviews.CreateReviewResponse, error) {
 	review := model.Review{}
 
-	review.ID = request.Review.ID
+	review.ID = request.Review.Id
 	review.Rating = int(request.Review.Rating)
 	review.TourId = request.Review.TourId
 	review.Comment = request.Review.Comment
@@ -86,7 +86,7 @@ func (handler *ReviewHandler) DeleteReview(ctx context.Context, request *reviews
 func (handler *ReviewHandler) UpdateReview(ctx context.Context, request *reviews.UpdateReviewRequest) (*reviews.UpdateReviewResponse, error) {
 	review := model.Review{}
 
-	review.ID = request.Review.ID
+	review.ID = request.Review.Id
 	review.Rating = int(request.Review.Rating)
 	review.TourId = request.Review.TourId
 	review.Comment = request.Review.Comment

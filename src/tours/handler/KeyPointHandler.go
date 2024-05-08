@@ -16,7 +16,7 @@ func (handler *KeyPointHandler) GetById(ctx context.Context, request *keyPoints.
 	keyPoint, _ := handler.KeyPointService.GetById(request.ID)
 
 	keyPointsResponse := keyPoints.KeyPoint{}
-	keyPointsResponse.ID = keyPoint.ID
+	keyPointsResponse.Id = keyPoint.ID
 	keyPointsResponse.TourId = keyPoint.TourId
 	keyPointsResponse.Name = keyPoint.Name
 	keyPointsResponse.Description = keyPoint.Description
@@ -41,7 +41,7 @@ func (handler *KeyPointHandler) GetAll(ctx context.Context, request *keyPoints.K
 	if keyPointList != nil && len(*keyPointList) > 0 {
 		for i, keyPoint := range *keyPointList {
 			keyPointsResponse[i] = &keyPoints.KeyPoint{
-				ID:              keyPoint.ID,
+				Id:              keyPoint.ID,
 				TourId:          keyPoint.TourId,
 				Name:            keyPoint.Name,
 				Description:     keyPoint.Description,
@@ -69,7 +69,7 @@ func (handler *KeyPointHandler) GetByTourId(ctx context.Context, request *keyPoi
 	if keyPointList != nil && len(*keyPointList) > 0 {
 		for i, keyPoint := range *keyPointList {
 			keyPointsResponse[i] = &keyPoints.KeyPoint{
-				ID:              keyPoint.ID,
+				Id:              keyPoint.ID,
 				TourId:          keyPoint.TourId,
 				Name:            keyPoint.Name,
 				Description:     keyPoint.Description,
@@ -92,7 +92,7 @@ func (handler *KeyPointHandler) GetByTourId(ctx context.Context, request *keyPoi
 func (handler *KeyPointHandler) Create(ctx context.Context, request *keyPoints.KeyPointCreateRequest) (*keyPoints.KeyPointCreateResponse, error) {
 	keyPoint := model.KeyPoint{}
 
-	keyPoint.ID = request.KeyPoint.ID
+	keyPoint.ID = request.KeyPoint.Id
 	keyPoint.TourId = request.KeyPoint.TourId
 	keyPoint.Name = request.KeyPoint.Name
 	keyPoint.Description = request.KeyPoint.Description
@@ -115,7 +115,7 @@ func (handler *KeyPointHandler) Delete(ctx context.Context, request *keyPoints.K
 func (handler *KeyPointHandler) Update(ctx context.Context, request *keyPoints.KeyPointUpdateRequest) (*keyPoints.KeyPointUpdateResponse, error) {
 	keyPoint := model.KeyPoint{}
 
-	keyPoint.ID = request.KeyPoint.ID
+	keyPoint.ID = request.KeyPoint.Id
 	keyPoint.TourId = request.KeyPoint.TourId
 	keyPoint.Name = request.KeyPoint.Name
 	keyPoint.Description = request.KeyPoint.Description
