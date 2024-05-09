@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
+	"strconv"
 	"time"
 	"tours/model"
 	"tours/proto/tours"
@@ -388,12 +389,12 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) PublishTour(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
-	handler.TourService.Publish(request.ID)
+	handler.TourService.Publish(strconv.FormatInt(request.Tour.Id, 10))
 	return &tours.PublishTourResponse{}, nil
 }
 
 func (handler *TourHandler) ArchiveTour(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
-	handler.TourService.Archive(request.ID)
+	handler.TourService.Archive(strconv.FormatInt(request.Tour.Id, 10))
 	return &tours.ArchiveTourResponse{}, nil
 }
 
@@ -420,12 +421,12 @@ func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) AddToursEquipment(ctx context.Context, request *tours.AddToursEquipmentRequest) (*tours.AddToursEquipmentResponse, error) {
-	handler.TourService.AddEquipment(request.TourId, request.EquipmentId)
+	handler.TourService.AddEquipment(request.Ids.TourId, request.Ids.EquipmentId)
 	return &tours.AddToursEquipmentResponse{}, nil
 }
 
 func (handler *TourHandler) DeleteToursEquipment(ctx context.Context, request *tours.DeleteToursEquipmentRequest) (*tours.DeleteToursEquipmentResponse, error) {
-	handler.TourService.DeleteEquipment(request.TourId, request.EquipmentId)
+	handler.TourService.DeleteEquipment(request.Ids.TourId, request.Ids.EquipmentId)
 	return &tours.DeleteToursEquipmentResponse{}, nil
 }
 
