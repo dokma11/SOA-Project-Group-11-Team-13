@@ -1,30 +1,58 @@
 package handler
 
 import (
+	"encoding/json"
+	"fmt"
 	"jwt/model"
-	"jwt/service"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
-type JwtHandler struct {
-	UserService *service.UserService
-	logger      *log.Logger
-}
+type JwtHandler struct { }
 
 type KeyProduct struct{}
 
-func NewUserHandler(l *log.Logger, s *service.UserService) *JwtHandler {
-	return &JwtHandler{s, l}
+func NewUserHandler(l *log.Logger) *JwtHandler {
+	return &JwtHandler{}
 }
 
-func (handler *JwtHandler) Create(rw http.ResponseWriter, h *http.Request) {
-	user := h.Context().Value(KeyProduct{}).(*model.User)
-	err := handler.UserService.Create(user)
+func (handler *JwtHandler) Create(writer http.ResponseWriter, req *http.Request) {
+	q := req.URL.Query()
+
+	userId := q.Get("id")
+	username := q.Get("username")
+	personId := q.Get("personId")
+	role := q.Get("role")
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id": userId,
+		"username": username,
+		"personId": personId,
+		"exp": time.Now().Add(time.Hour * 24 * 100).Unix(),
+		"iss": "explorer",
+		"aud": "explorer-front.com",
+		"http://schemas.microsoft.com/ws/2008/06/identity/claims/role": role,
+	})
+
+	tokenStr, err := token.SignedString([]byte("explorer_secret_key"))
+
 	if err != nil {
-		handler.logger.Print("Database exception: ", err)
-		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	rw.WriteHeader(http.StatusCreated)
+
+	jwtResponse := model.JwtResponse{
+		Token: tokenStr,
+	}
+
+	log.Println("Generating JWT for user with id=" + userId + ", username=" + username + ", personId=" + personId);
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(writer).Encode(jwtResponse)
+	if err != nil {
+		_ = fmt.Errorf("error encountered while trying to encode jwt in method Create")
+		return
+	}
 }
