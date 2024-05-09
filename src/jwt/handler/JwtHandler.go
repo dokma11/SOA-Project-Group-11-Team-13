@@ -3,12 +3,12 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"jwt/model"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 )
 
 type JwtHandler struct { }
@@ -27,6 +27,8 @@ func (handler *JwtHandler) Create(writer http.ResponseWriter, req *http.Request)
 	personId := q.Get("personId")
 	role := q.Get("role")
 
+	jti := uuid.New().String()
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id": userId,
 		"username": username,
@@ -35,6 +37,7 @@ func (handler *JwtHandler) Create(writer http.ResponseWriter, req *http.Request)
 		"iss": "explorer",
 		"aud": "explorer-front.com",
 		"http://schemas.microsoft.com/ws/2008/06/identity/claims/role": role,
+		"jti": jti,
 	})
 
 	tokenStr, err := token.SignedString([]byte("explorer_secret_key"))
@@ -43,14 +46,10 @@ func (handler *JwtHandler) Create(writer http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	jwtResponse := model.JwtResponse{
-		Token: tokenStr,
-	}
-
 	log.Println("Generating JWT for user with id=" + userId + ", username=" + username + ", personId=" + personId);
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(jwtResponse)
+	err = json.NewEncoder(writer).Encode(tokenStr)
 	if err != nil {
 		_ = fmt.Errorf("error encountered while trying to encode jwt in method Create")
 		return
