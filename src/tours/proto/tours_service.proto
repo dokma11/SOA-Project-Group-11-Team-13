@@ -199,7 +199,8 @@ message AddToursEquipmentResponse {
 }
 
 message DeleteToursEquipmentRequest {
-  TourEquipmentIds ids = 1;
+  string tourId = 1;
+  string equipmentId = 2;
 }
 
 message DeleteToursEquipmentResponse {

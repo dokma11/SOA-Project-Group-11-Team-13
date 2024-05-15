@@ -16,20 +16,20 @@ func (handler *BlogRecommendationHandler) GetBlogRecommendationById(ctx context.
 	recommendation, _ := handler.BlogRecommendationService.GetById(request.ID)
 
 	recommendationResponse := blog_recommendations.BlogRecommendation{}
-	recommendationResponse.ID = int32(recommendation.ID)
+	recommendationResponse.Id = int32(recommendation.ID)
 	recommendationResponse.BlogId = int32(recommendation.BlogId)
 	recommendationResponse.RecommenderId = int32(recommendation.RecommenderId)
 	recommendationResponse.RecommendationReceiverId = int32(recommendation.RecommendationReceiverId)
-	recommendationResponse.Blog = &blog_recommendations.RecommenderBlog{
-		ID:          int32(recommendation.Blog.ID),
-		Title:       recommendation.Blog.Title,
-		Description: recommendation.Blog.Description,
-		Status:      blog_recommendations.RecommenderBlog_BlogStatus(recommendation.Blog.Status),
-		AuthorId:    int32(recommendation.Blog.AuthorId),
-		//Comments : recommendation.Blog.Comments,
-		//Votes : recommendation.Blog.Votes,
-		//Recommendations : recommendation.Blog.Recommendations,
-	}
+	//recommendationResponse.Blog = &blog_recommendations.RecommenderBlog{
+	//	Id:          int32(recommendation.Blog.ID),
+	//	Title:       recommendation.Blog.Title,
+	//	Description: recommendation.Blog.Description,
+	//	Status:      blog_recommendations.RecommenderBlog_BlogStatus(recommendation.Blog.Status),
+	//	AuthorId:    int32(recommendation.Blog.AuthorId),
+	//	//Comments : recommendation.Blog.Comments,
+	//	//Votes : recommendation.Blog.Votes,
+	//	//Recommendations : recommendation.Blog.Recommendations,
+	//}
 
 	ret := &blog_recommendations.GetBlogRecommendationByIdResponse{
 		Recommendation: &recommendationResponse,
@@ -46,20 +46,20 @@ func (handler *BlogRecommendationHandler) GetAllBlogRecommendations(ctx context.
 	if recommendationList != nil && len(*recommendationList) > 0 {
 		for i, recommendation := range *recommendationList {
 			recommendationResponse[i] = &blog_recommendations.BlogRecommendation{
-				ID:                       int32(recommendation.ID),
+				Id:                       int32(recommendation.ID),
 				BlogId:                   int32(recommendation.BlogId),
 				RecommenderId:            int32(recommendation.RecommenderId),
 				RecommendationReceiverId: int32(recommendation.RecommendationReceiverId),
-				Blog: &blog_recommendations.RecommenderBlog{
-					ID:          int32(recommendation.Blog.ID),
-					Title:       recommendation.Blog.Title,
-					Description: recommendation.Blog.Description,
-					Status:      blog_recommendations.RecommenderBlog_BlogStatus(recommendation.Blog.Status),
-					AuthorId:    int32(recommendation.Blog.AuthorId),
-					//Comments : recommendation.Blog.Comments,
-					//Votes : recommendation.Blog.Votes,
-					//Recommendations : recommendation.Blog.Recommendations,
-				},
+				//Blog: &blog_recommendations.RecommenderBlog{
+				//	Id:          int32(recommendation.Blog.ID),
+				//	Title:       recommendation.Blog.Title,
+				//	Description: recommendation.Blog.Description,
+				//	Status:      blog_recommendations.RecommenderBlog_BlogStatus(recommendation.Blog.Status),
+				//	AuthorId:    int32(recommendation.Blog.AuthorId),
+				//	//Comments : recommendation.Blog.Comments,
+				//	//Votes : recommendation.Blog.Votes,
+				//	//Recommendations : recommendation.Blog.Recommendations,
+				//},
 			}
 		}
 	}
@@ -74,20 +74,20 @@ func (handler *BlogRecommendationHandler) GetAllBlogRecommendations(ctx context.
 func (handler *BlogRecommendationHandler) CreateBlogRecommendation(ctx context.Context, request *blog_recommendations.CreateBlogRecommendationRequest) (*blog_recommendations.CreateBlogRecommendationResponse, error) {
 	recommendation := model.BlogRecommendation{}
 
-	recommendation.ID = int(request.Recommendation.ID)
+	recommendation.ID = int(request.Recommendation.Id)
 	recommendation.BlogId = int(request.Recommendation.BlogId)
 	recommendation.RecommenderId = int(request.Recommendation.RecommenderId)
 	recommendation.RecommendationReceiverId = int(request.Recommendation.RecommendationReceiverId)
-	recommendation.Blog = model.Blog{
-		ID:          int(request.Recommendation.Blog.ID),
-		Title:       request.Recommendation.Blog.Title,
-		Description: request.Recommendation.Blog.Description,
-		Status:      model.BlogStatus(request.Recommendation.Blog.Status),
-		AuthorId:    int(request.Recommendation.Blog.AuthorId),
-		//Comments : recommendation.Blog.Comments,
-		//Votes : recommendation.Blog.Votes,
-		//Recommendations : recommendation.Blog.Recommendations,
-	}
+	//recommendation.Blog = model.Blog{
+	//	ID:          int(request.Recommendation.Blog.Id),
+	//	Title:       request.Recommendation.Blog.Title,
+	//	Description: request.Recommendation.Blog.Description,
+	//	Status:      model.BlogStatus(request.Recommendation.Blog.Status),
+	//	AuthorId:    int(request.Recommendation.Blog.AuthorId),
+	//	//Comments : recommendation.Blog.Comments,
+	//	//Votes : recommendation.Blog.Votes,
+	//	//Recommendations : recommendation.Blog.Recommendations,
+	//}
 	handler.BlogRecommendationService.Create(&recommendation)
 
 	return &blog_recommendations.CreateBlogRecommendationResponse{}, nil
@@ -101,20 +101,20 @@ func (handler *BlogRecommendationHandler) GetBlogRecommendationByReceiverId(ctx 
 	if recommendationList != nil && len(*recommendationList) > 0 {
 		for i, recommendation := range *recommendationList {
 			recommendationResponse[i] = &blog_recommendations.BlogRecommendation{
-				ID:                       int32(recommendation.ID),
+				Id:                       int32(recommendation.ID),
 				BlogId:                   int32(recommendation.BlogId),
 				RecommenderId:            int32(recommendation.RecommenderId),
 				RecommendationReceiverId: int32(recommendation.RecommendationReceiverId),
-				Blog: &blog_recommendations.RecommenderBlog{
-					ID:          int32(recommendation.Blog.ID),
-					Title:       recommendation.Blog.Title,
-					Description: recommendation.Blog.Description,
-					Status:      blog_recommendations.RecommenderBlog_BlogStatus(recommendation.Blog.Status),
-					AuthorId:    int32(recommendation.Blog.AuthorId),
-					//Comments : recommendation.Blog.Comments,
-					//Votes : recommendation.Blog.Votes,
-					//Recommendations : recommendation.Blog.Recommendations,
-				},
+				//Blog: &blog_recommendations.RecommenderBlog{
+				//	Id:          int32(recommendation.Blog.ID),
+				//	Title:       recommendation.Blog.Title,
+				//	Description: recommendation.Blog.Description,
+				//	Status:      blog_recommendations.RecommenderBlog_BlogStatus(recommendation.Blog.Status),
+				//	AuthorId:    int32(recommendation.Blog.AuthorId),
+				//	//Comments : recommendation.Blog.Comments,
+				//	//Votes : recommendation.Blog.Votes,
+				//	//Recommendations : recommendation.Blog.Recommendations,
+				//},
 			}
 		}
 	}

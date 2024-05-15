@@ -15,7 +15,7 @@ func (handler *VoteHandler) GetVoteById(ctx context.Context, request *votes.GetV
 	vote, _ := handler.VoteService.GetById(request.ID)
 
 	voteResponse := votes.Vote{}
-	voteResponse.ID = int32(vote.ID)
+	voteResponse.Id = int32(vote.ID)
 	voteResponse.UserId = int32(vote.UserId)
 	voteResponse.BlogId = int32(vote.BlogId)
 	voteResponse.Type = votes.Vote_VoteType(vote.Type)
@@ -35,7 +35,7 @@ func (handler *VoteHandler) GetAllVotes(ctx context.Context, request *votes.GetA
 	if voteList != nil && len(*voteList) > 0 {
 		for i, vote := range *voteList {
 			votesResponse[i] = &votes.Vote{
-				ID:     int32(vote.ID),
+				Id:     int32(vote.ID),
 				UserId: int32(vote.UserId),
 				BlogId: int32(vote.BlogId),
 				Type:   votes.Vote_VoteType(vote.Type),
