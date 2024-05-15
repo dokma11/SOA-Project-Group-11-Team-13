@@ -6,6 +6,7 @@ import (
 	"blogs/proto/votes"
 	"blogs/service"
 	"context"
+	"strconv"
 	"strings"
 )
 
@@ -21,7 +22,7 @@ func (handler *BlogHandler) GetBlogById(ctx context.Context, request *blogs.GetB
 	if blog.Comments != nil && len(blog.Comments) > 0 {
 		for index, b := range blog.Comments {
 			commentList[index] = &blogs.BlogComment{
-				ID:        int32(b.ID),
+				Id:        int32(b.ID),
 				AuthorId:  int32(b.AuthorId),
 				BlogId:    int32(b.BlogId),
 				Text:      b.Text,
@@ -35,7 +36,7 @@ func (handler *BlogHandler) GetBlogById(ctx context.Context, request *blogs.GetB
 	if blog.Votes != nil && len(blog.Votes) > 0 {
 		for index, b := range blog.Votes {
 			voteList[index] = &blogs.BlogVote{
-				ID:     int32(b.ID),
+				Id:     int32(b.ID),
 				UserId: int32(b.UserId),
 				BlogId: int32(b.BlogId),
 				Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
@@ -47,7 +48,7 @@ func (handler *BlogHandler) GetBlogById(ctx context.Context, request *blogs.GetB
 	if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
 		for index, b := range blog.Recommendations {
 			recommendationList[index] = &blogs.BlogsRecommendation{
-				ID:                       int32(b.ID),
+				Id:                       int32(b.ID),
 				BlogId:                   int32(b.BlogId),
 				RecommenderId:            int32(b.RecommenderId),
 				RecommendationReceiverId: int32(b.RecommendationReceiverId),
@@ -56,7 +57,7 @@ func (handler *BlogHandler) GetBlogById(ctx context.Context, request *blogs.GetB
 	}
 
 	blogResponse := blogs.Blog{}
-	blogResponse.ID = int32(blog.ID)
+	blogResponse.Id = int32(blog.ID)
 	blogResponse.Title = blog.Title
 	blogResponse.Description = blog.Description
 	blogResponse.Status = blogs.Blog_BlogStatus(blog.Status)
@@ -84,7 +85,7 @@ func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetA
 			if blog.Comments != nil && len(blog.Comments) > 0 {
 				for index, b := range blog.Comments {
 					commentList[index] = &blogs.BlogComment{
-						ID:        int32(b.ID),
+						Id:        int32(b.ID),
 						AuthorId:  int32(b.AuthorId),
 						BlogId:    int32(b.BlogId),
 						Text:      b.Text,
@@ -98,7 +99,7 @@ func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetA
 			if blog.Votes != nil && len(blog.Votes) > 0 {
 				for index, b := range blog.Votes {
 					voteList[index] = &blogs.BlogVote{
-						ID:     int32(b.ID),
+						Id:     int32(b.ID),
 						UserId: int32(b.UserId),
 						BlogId: int32(b.BlogId),
 						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
@@ -110,7 +111,7 @@ func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetA
 			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
 				for index, b := range blog.Recommendations {
 					recommendationList[index] = &blogs.BlogsRecommendation{
-						ID:                       int32(b.ID),
+						Id:                       int32(b.ID),
 						BlogId:                   int32(b.BlogId),
 						RecommenderId:            int32(b.RecommenderId),
 						RecommendationReceiverId: int32(b.RecommendationReceiverId),
@@ -119,7 +120,7 @@ func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetA
 			}
 
 			blogsResponse[i] = &blogs.Blog{
-				ID:              int32(blog.ID),
+				Id:              int32(blog.ID),
 				Title:           blog.Title,
 				Description:     blog.Description,
 				Status:          blogs.Blog_BlogStatus(blog.Status),
@@ -141,8 +142,8 @@ func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetA
 func (handler *BlogHandler) CreateBlog(ctx context.Context, request *blogs.CreateBlogRequest) (*blogs.CreateBlogResponse, error) {
 	blog := model.Blog{}
 
-	commentList := make([]model.Comment, len(blog.Comments))
 	if blog.Comments != nil && len(blog.Comments) > 0 {
+		commentList := make([]model.Comment, len(blog.Comments))
 		for index, b := range blog.Comments {
 			commentList[index] = model.Comment{
 				ID:        b.ID,
@@ -153,10 +154,11 @@ func (handler *BlogHandler) CreateBlog(ctx context.Context, request *blogs.Creat
 				UpdatedAt: b.UpdatedAt,
 			}
 		}
+		blog.Comments = commentList
 	}
 
-	voteList := make([]model.Vote, len(blog.Votes))
 	if blog.Votes != nil && len(blog.Votes) > 0 {
+		voteList := make([]model.Vote, len(blog.Votes))
 		for index, b := range blog.Votes {
 			voteList[index] = model.Vote{
 				ID:     b.ID,
@@ -165,10 +167,11 @@ func (handler *BlogHandler) CreateBlog(ctx context.Context, request *blogs.Creat
 				Type:   b.Type,
 			}
 		}
+		blog.Votes = voteList
 	}
 
-	recommendationList := make([]model.BlogRecommendation, len(blog.Recommendations))
 	if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+		recommendationList := make([]model.BlogRecommendation, len(blog.Recommendations))
 		for index, b := range blog.Recommendations {
 			recommendationList[index] = model.BlogRecommendation{
 				ID:                       b.ID,
@@ -177,16 +180,14 @@ func (handler *BlogHandler) CreateBlog(ctx context.Context, request *blogs.Creat
 				RecommendationReceiverId: b.RecommendationReceiverId,
 			}
 		}
+		blog.Recommendations = recommendationList
 	}
 
-	blog.ID = int(request.Blog.ID)
+	blog.ID = int(request.Blog.Id)
 	blog.Title = request.Blog.Title
 	blog.Description = request.Blog.Description
 	blog.Status = model.BlogStatus(request.Blog.Status)
 	blog.AuthorId = int(request.Blog.AuthorId)
-	blog.Comments = commentList
-	blog.Votes = voteList
-	blog.Recommendations = recommendationList
 
 	handler.BlogService.Create(&blog)
 
@@ -210,7 +211,7 @@ func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs
 			if blog.Comments != nil && len(blog.Comments) > 0 {
 				for index, b := range blog.Comments {
 					commentList[index] = &blogs.BlogComment{
-						ID:        int32(b.ID),
+						Id:        int32(b.ID),
 						AuthorId:  int32(b.AuthorId),
 						BlogId:    int32(b.BlogId),
 						Text:      b.Text,
@@ -224,7 +225,7 @@ func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs
 			if blog.Votes != nil && len(blog.Votes) > 0 {
 				for index, b := range blog.Votes {
 					voteList[index] = &blogs.BlogVote{
-						ID:     int32(b.ID),
+						Id:     int32(b.ID),
 						UserId: int32(b.UserId),
 						BlogId: int32(b.BlogId),
 						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
@@ -236,7 +237,7 @@ func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs
 			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
 				for index, b := range blog.Recommendations {
 					recommendationList[index] = &blogs.BlogsRecommendation{
-						ID:                       int32(b.ID),
+						Id:                       int32(b.ID),
 						BlogId:                   int32(b.BlogId),
 						RecommenderId:            int32(b.RecommenderId),
 						RecommendationReceiverId: int32(b.RecommendationReceiverId),
@@ -245,7 +246,7 @@ func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs
 			}
 
 			blogsResponse[i] = &blogs.Blog{
-				ID:              int32(blog.ID),
+				Id:              int32(blog.ID),
 				Title:           blog.Title,
 				Description:     blog.Description,
 				Status:          blogs.Blog_BlogStatus(blog.Status),
@@ -265,7 +266,7 @@ func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs
 }
 
 func (handler *BlogHandler) PublishBlog(ctx context.Context, request *blogs.PublishBlogRequest) (*blogs.PublishBlogResponse, error) {
-	handler.BlogService.Publish(request.ID)
+	handler.BlogService.Publish(strconv.FormatInt(int64(request.Blog.Id), 10))
 	return &blogs.PublishBlogResponse{}, nil
 }
 
@@ -281,7 +282,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsId(ctx context.Context, request *bl
 			if blog.Comments != nil && len(blog.Comments) > 0 {
 				for index, b := range blog.Comments {
 					commentList[index] = &blogs.BlogComment{
-						ID:        int32(b.ID),
+						Id:        int32(b.ID),
 						AuthorId:  int32(b.AuthorId),
 						BlogId:    int32(b.BlogId),
 						Text:      b.Text,
@@ -295,7 +296,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsId(ctx context.Context, request *bl
 			if blog.Votes != nil && len(blog.Votes) > 0 {
 				for index, b := range blog.Votes {
 					voteList[index] = &blogs.BlogVote{
-						ID:     int32(b.ID),
+						Id:     int32(b.ID),
 						UserId: int32(b.UserId),
 						BlogId: int32(b.BlogId),
 						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
@@ -307,7 +308,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsId(ctx context.Context, request *bl
 			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
 				for index, b := range blog.Recommendations {
 					recommendationList[index] = &blogs.BlogsRecommendation{
-						ID:                       int32(b.ID),
+						Id:                       int32(b.ID),
 						BlogId:                   int32(b.BlogId),
 						RecommenderId:            int32(b.RecommenderId),
 						RecommendationReceiverId: int32(b.RecommendationReceiverId),
@@ -316,7 +317,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsId(ctx context.Context, request *bl
 			}
 
 			blogsResponse[i] = &blogs.Blog{
-				ID:              int32(blog.ID),
+				Id:              int32(blog.ID),
 				Title:           blog.Title,
 				Description:     blog.Description,
 				Status:          blogs.Blog_BlogStatus(blog.Status),
@@ -348,7 +349,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsIds(ctx context.Context, request *b
 			if blog.Comments != nil && len(blog.Comments) > 0 {
 				for index, b := range blog.Comments {
 					commentList[index] = &blogs.BlogComment{
-						ID:        int32(b.ID),
+						Id:        int32(b.ID),
 						AuthorId:  int32(b.AuthorId),
 						BlogId:    int32(b.BlogId),
 						Text:      b.Text,
@@ -362,7 +363,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsIds(ctx context.Context, request *b
 			if blog.Votes != nil && len(blog.Votes) > 0 {
 				for index, b := range blog.Votes {
 					voteList[index] = &blogs.BlogVote{
-						ID:     int32(b.ID),
+						Id:     int32(b.ID),
 						UserId: int32(b.UserId),
 						BlogId: int32(b.BlogId),
 						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
@@ -374,7 +375,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsIds(ctx context.Context, request *b
 			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
 				for index, b := range blog.Recommendations {
 					recommendationList[index] = &blogs.BlogsRecommendation{
-						ID:                       int32(b.ID),
+						Id:                       int32(b.ID),
 						BlogId:                   int32(b.BlogId),
 						RecommenderId:            int32(b.RecommenderId),
 						RecommendationReceiverId: int32(b.RecommendationReceiverId),
@@ -383,7 +384,7 @@ func (handler *BlogHandler) GetBlogsByAuthorsIds(ctx context.Context, request *b
 			}
 
 			blogsResponse[i] = &blogs.Blog{
-				ID:              int32(blog.ID),
+				Id:              int32(blog.ID),
 				Title:           blog.Title,
 				Description:     blog.Description,
 				Status:          blogs.Blog_BlogStatus(blog.Status),

@@ -19,7 +19,7 @@ func (handler *CommentHandler) GetCommentById(ctx context.Context, request *comm
 	comment, _ := handler.CommentService.GetById(request.ID)
 
 	commentResponse := comments.Comment{}
-	commentResponse.ID = int32(comment.ID)
+	commentResponse.Id = int32(comment.ID)
 	commentResponse.AuthorId = int32(comment.AuthorId)
 	commentResponse.BlogId = int32(comment.BlogId)
 	commentResponse.Text = comment.Text
@@ -34,14 +34,14 @@ func (handler *CommentHandler) GetCommentById(ctx context.Context, request *comm
 }
 
 func (handler *CommentHandler) GetCommentByBlogId(ctx context.Context, request *comments.GetCommentByBlogIdRequest) (*comments.GetCommentByBlogIdResponse, error) {
-	commentList, _, _ := handler.CommentService.GetByBlogId(request.BlogId, int(request.Page), int(request.PageSize))
+	commentList, _, _ := handler.CommentService.GetByBlogId(request.BlogId)
 
 	commentResponse := make([]*comments.Comment, len(commentList))
 
 	if commentList != nil && len(commentList) > 0 {
 		for i, comment := range commentList {
 			commentResponse[i] = &comments.Comment{
-				ID:        int32(comment.ID),
+				Id:        int32(comment.ID),
 				AuthorId:  int32(comment.AuthorId),
 				BlogId:    int32(comment.BlogId),
 				Text:      comment.Text,
@@ -66,7 +66,7 @@ func (handler *CommentHandler) GetAllComments(ctx context.Context, request *comm
 	if commentList != nil && len(*commentList) > 0 {
 		for i, comment := range *commentList {
 			commentResponse[i] = &comments.Comment{
-				ID:        int32(comment.ID),
+				Id:        int32(comment.ID),
 				AuthorId:  int32(comment.AuthorId),
 				BlogId:    int32(comment.BlogId),
 				Text:      comment.Text,
@@ -86,7 +86,7 @@ func (handler *CommentHandler) GetAllComments(ctx context.Context, request *comm
 func (handler *CommentHandler) CreateComment(ctx context.Context, request *comments.CreateCommentRequest) (*comments.CreateCommentResponse, error) {
 	comment := model.Comment{}
 
-	comment.ID = int(request.Comment.ID)
+	comment.ID = int(request.Comment.Id)
 	comment.AuthorId = int(request.Comment.AuthorId)
 	comment.BlogId = int(request.Comment.BlogId)
 	comment.Text = request.Comment.Text
@@ -106,7 +106,7 @@ func (handler *CommentHandler) DeleteComment(ctx context.Context, request *comme
 func (handler *CommentHandler) UpdateComment(ctx context.Context, request *comments.UpdateCommentRequest) (*comments.UpdateCommentResponse, error) {
 	comment := model.Comment{}
 
-	comment.ID = int(request.Comment.ID)
+	comment.ID = int(request.Comment.Id)
 	comment.AuthorId = int(request.Comment.AuthorId)
 	comment.BlogId = int(request.Comment.BlogId)
 	comment.Text = request.Comment.Text

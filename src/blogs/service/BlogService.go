@@ -8,7 +8,7 @@ import (
 )
 
 type BlogService struct {
-	BlogRepository *repo.BlogRepository
+	BlogRepository               *repo.BlogRepository
 	BlogRecommendationRepository *repo.BlogRecommendationRepository
 }
 
@@ -51,7 +51,7 @@ func (service *BlogService) SearchByName(name string) (*[]model.Blog, error) {
 }
 
 func (service *BlogService) Publish(id string) (model.Blog, error) {
-	blog, err := service.BlogRepository.UpdateStatus(id, model.BlogStatus(model.Published))
+	blog, err := service.BlogRepository.UpdateStatus(id, model.Published)
 	if err != nil {
 		return blog, err
 	}
@@ -66,7 +66,6 @@ func (service *BlogService) Delete(id string) error {
 	}
 	return nil
 }
-
 
 func (service *BlogService) GetByAuthorId(id string) (*[]model.Blog, error) {
 	blogs, err := service.BlogRepository.GetByAuthorId(id)
