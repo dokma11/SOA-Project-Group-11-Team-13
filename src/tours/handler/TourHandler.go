@@ -426,7 +426,7 @@ func (handler *TourHandler) AddToursEquipment(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) DeleteToursEquipment(ctx context.Context, request *tours.DeleteToursEquipmentRequest) (*tours.DeleteToursEquipmentResponse, error) {
-	handler.TourService.DeleteEquipment(request.Ids.TourId, request.Ids.EquipmentId)
+	handler.TourService.DeleteEquipment(request.TourId, request.EquipmentId)
 	return &tours.DeleteToursEquipmentResponse{}, nil
 }
 
