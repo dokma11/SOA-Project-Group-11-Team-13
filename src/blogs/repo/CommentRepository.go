@@ -17,7 +17,7 @@ func (repo *CommentRepository) GetById(id string) (model.Comment, error) {
 	var comment model.Comment
 	converted, _ := strconv.Atoi(id)
 	filter := bson.D{{Key: "id", Value: converted}}
-	commentsCollection := repo.getCollection();
+	commentsCollection := repo.getCollection()
 	err := commentsCollection.FindOne(context.Background(), filter).Decode(&comment)
 	if err != nil {
 		return comment, err
@@ -25,13 +25,13 @@ func (repo *CommentRepository) GetById(id string) (model.Comment, error) {
 	return comment, nil
 }
 
-func (repo *CommentRepository) GetByBlogId(id string, page int, pageSize int) ([]model.Comment, int, error) {
-	var comments []model.Comment = make([]model.Comment, 0)
+func (repo *CommentRepository) GetByBlogId(id string) ([]model.Comment, int, error) {
+	var comments = make([]model.Comment, 0)
 	var totalCount int64
 
 	converted, _ := strconv.Atoi(id)
 	filter := bson.D{{Key: "blogid", Value: converted}}
-	commentsCollection := repo.getCollection();
+	commentsCollection := repo.getCollection()
 	cur, err := commentsCollection.Find(context.Background(), filter)
 
 	if err != nil {
@@ -54,9 +54,9 @@ func (repo *CommentRepository) GetByBlogId(id string, page int, pageSize int) ([
 }
 
 func (repo *CommentRepository) GetAll() ([]model.Comment, error) {
-	var comments []model.Comment = make([]model.Comment, 0)
+	var comments = make([]model.Comment, 0)
 
-	commentsCollection := repo.getCollection();
+	commentsCollection := repo.getCollection()
 	cur, err := commentsCollection.Find(context.Background(), bson.M{})
 
 	if err != nil {
@@ -80,7 +80,7 @@ func (repo *CommentRepository) GetAll() ([]model.Comment, error) {
 
 func (repo *CommentRepository) Create(comment *model.Comment) error {
 
-	commentsCollection := repo.getCollection();
+	commentsCollection := repo.getCollection()
 	comment.ID = repo.nextId()
 	_, err := commentsCollection.InsertOne(context.Background(), comment)
 	if err != nil {
@@ -112,7 +112,7 @@ func (repo *CommentRepository) Delete(id string) error {
 }
 
 func (repo *CommentRepository) Update(comment *model.Comment) error {
-	commentsCollection := repo.getCollection();
+	commentsCollection := repo.getCollection()
 	filter := bson.M{"id": comment.ID}
 	update := bson.M{"$set": bson.M{"text": comment.Text}}
 	commentsCollection.UpdateOne(context.Background(), filter, update)
@@ -132,9 +132,9 @@ func (repo *CommentRepository) getCollection() *mongo.Collection {
 }
 
 func (repo *CommentRepository) nextId() int {
-	blogs, _ := repo.GetAll();
+	blogs, _ := repo.GetAll()
 
-	maxId := 0;
+	maxId := 0
 	for _, blog := range blogs {
 		if blog.ID > maxId {
 			maxId = blog.ID
