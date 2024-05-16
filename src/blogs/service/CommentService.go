@@ -18,8 +18,8 @@ func (service *CommentService) GetById(id string) (*model.Comment, error) {
 	return &comment, nil
 }
 
-func (service *CommentService) GetByBlogId(id string, page int, pageSize int) ([]model.Comment, int, error) {
-	comments, totalCount, err := service.CommentRepository.GetByBlogId(id, page, pageSize)
+func (service *CommentService) GetByBlogId(id string) ([]model.Comment, int, error) {
+	comments, totalCount, err := service.CommentRepository.GetByBlogId(id)
 	if err != nil {
 		return nil, 0, fmt.Errorf("comments with blog id %s not found", id)
 	}

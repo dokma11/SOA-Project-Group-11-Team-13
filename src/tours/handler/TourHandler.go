@@ -1,257 +1,440 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
+	"context"
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
+	"strconv"
+	"time"
 	"tours/model"
+	"tours/proto/tours"
 	"tours/service"
-
-	"github.com/gorilla/mux"
 )
 
 type TourHandler struct {
 	TourService *service.TourService
+	tours.UnimplementedToursServiceServer
 }
 
-func (handler *TourHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", idString)
+func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetTourByIdRequest) (*tours.GetTourByIdResponse, error) {
+	tour, _ := handler.TourService.GetById(request.ID)
 
-	tour, err := handler.TourService.GetById(idString)
+	tourResponse := tours.Tour{}
+	tourResponse.Id = tour.ID
+	tourResponse.AuthorId = int32(tour.AuthorId)
+	tourResponse.Name = tour.Name
+	tourResponse.Description = tour.Description
+	tourResponse.Difficulty = int32(tour.Difficulty)
+	tourResponse.Tags = tour.Tags
+	tourResponse.Status = tours.Tour_TourStatus(tour.Status)
+	tourResponse.Price = tour.Price
+	tourResponse.Distance = tour.Distance
+	tourResponse.PublishDate = TimeToProtoTimestamp(tour.PublishDate)
+	tourResponse.ArchiveDate = TimeToProtoTimestamp(tour.ArchiveDate)
+	tourResponse.Category = tours.Tour_TourCategory(tour.Category)
+	tourResponse.IsDeleted = tour.IsDeleted
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	ret := &tours.GetTourByIdResponse{
+		Tour: &tourResponse,
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tour)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
-		return
-	}
+	return ret, nil
 }
 
-func (handler *TourHandler) GetByAuthorId(writer http.ResponseWriter, req *http.Request) {
-	authorId := mux.Vars(req)["authorId"]
-	log.Printf("Tour with author id %s", authorId)
+func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tours.GetToursByAuthorIdRequest) (*tours.GetToursByAuthorIdResponse, error) {
+	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId)
 
-	tour, err := handler.TourService.GetByAuthorId(authorId)
+	toursResponse := make([]*tours.Tour, len(*toursList))
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	if toursList != nil && len(*toursList) > 0 {
+		for i, tour := range *toursList {
+
+			keypointList := make([]*tours.TourKeyPoint, len(tour.KeyPoints))
+			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+				for index, kp := range tour.KeyPoints {
+					keypointList[index] = &tours.TourKeyPoint{
+						Id:              kp.ID,
+						TourId:          kp.TourId,
+						Name:            kp.Name,
+						Description:     kp.Description,
+						Longitude:       kp.Longitude,
+						Latitude:        kp.Latitude,
+						LocationAddress: kp.LocationAddress,
+						ImagePath:       kp.ImagePath,
+						Order:           kp.Order,
+					}
+				}
+			}
+
+			durationsList := make([]*tours.TourDuration, len(tour.Durations))
+			if tour.Durations != nil && len(tour.Durations) > 0 {
+				for index, duration := range tour.Durations {
+					durationsList[index] = &tours.TourDuration{
+						Duration:      int32(duration.Duration),
+						TransportType: tours.TourDuration_TransportType(duration.TransportType),
+					}
+				}
+			}
+
+			toursResponse[i] = &tours.Tour{
+				Id:          tour.ID,
+				AuthorId:    int32(tour.AuthorId),
+				Name:        tour.Name,
+				Description: tour.Description,
+				Difficulty:  int32(tour.Difficulty),
+				Tags:        tour.Tags,
+				Status:      tours.Tour_TourStatus(tour.Status),
+				Price:       tour.Price,
+				Distance:    tour.Distance,
+				PublishDate: TimeToProtoTimestamp(tour.PublishDate),
+				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
+				Category:    tours.Tour_TourCategory(tour.Category),
+				IsDeleted:   tour.IsDeleted,
+				KeyPoints:   keypointList,
+				Durations:   durationsList,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tour)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
-		return
+	ret := &tours.GetToursByAuthorIdResponse{
+		Tours: toursResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all tours")
-	tours, err := handler.TourService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetAllToursRequest) (*tours.GetAllToursResponse, error) {
+	toursList, _ := handler.TourService.GetAll()
+
+	toursResponse := make([]*tours.Tour, len(*toursList))
+
+	if toursList != nil && len(*toursList) > 0 {
+		for i, tour := range *toursList {
+
+			keypointList := make([]*tours.TourKeyPoint, len(tour.KeyPoints))
+			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+				for index, kp := range tour.KeyPoints {
+					keypointList[index] = &tours.TourKeyPoint{
+						Id:              kp.ID,
+						TourId:          kp.TourId,
+						Name:            kp.Name,
+						Description:     kp.Description,
+						Longitude:       kp.Longitude,
+						Latitude:        kp.Latitude,
+						LocationAddress: kp.LocationAddress,
+						ImagePath:       kp.ImagePath,
+						Order:           kp.Order,
+					}
+				}
+			}
+
+			durationsList := make([]*tours.TourDuration, len(tour.Durations))
+			if tour.Durations != nil && len(tour.Durations) > 0 {
+				for index, duration := range tour.Durations {
+					durationsList[index] = &tours.TourDuration{
+						Duration:      int32(duration.Duration),
+						TransportType: tours.TourDuration_TransportType(duration.TransportType),
+					}
+				}
+			}
+
+			toursResponse[i] = &tours.Tour{
+				Id:          tour.ID,
+				AuthorId:    int32(tour.AuthorId),
+				Name:        tour.Name,
+				Description: tour.Description,
+				Difficulty:  int32(tour.Difficulty),
+				Tags:        tour.Tags,
+				Status:      tours.Tour_TourStatus(tour.Status),
+				Price:       tour.Price,
+				Distance:    tour.Distance,
+				PublishDate: TimeToProtoTimestamp(tour.PublishDate),
+				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
+				Category:    tours.Tour_TourCategory(tour.Category),
+				IsDeleted:   tour.IsDeleted,
+				KeyPoints:   keypointList,
+				Durations:   durationsList,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tours)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetAll"))
-		return
+	ret := &tours.GetAllToursResponse{
+		Tours: toursResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) GetPublished(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get published tours")
-	tours, err := handler.TourService.GetPublished()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tours.GetPublishedToursRequest) (*tours.GetPublishedToursResponse, error) {
+	toursList, _ := handler.TourService.GetPublished()
+
+	toursResponse := make([]*tours.Tour, len(*toursList))
+
+	if toursList != nil && len(*toursList) > 0 {
+		for i, tour := range *toursList {
+
+			keypointList := make([]*tours.TourKeyPoint, len(tour.KeyPoints))
+			if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+				for index, kp := range tour.KeyPoints {
+					keypointList[index] = &tours.TourKeyPoint{
+						Id:              kp.ID,
+						TourId:          kp.TourId,
+						Name:            kp.Name,
+						Description:     kp.Description,
+						Longitude:       kp.Longitude,
+						Latitude:        kp.Latitude,
+						LocationAddress: kp.LocationAddress,
+						ImagePath:       kp.ImagePath,
+						Order:           kp.Order,
+					}
+				}
+			}
+
+			durationsList := make([]*tours.TourDuration, len(tour.Durations))
+			if tour.Durations != nil && len(tour.Durations) > 0 {
+				for index, duration := range tour.Durations {
+					durationsList[index] = &tours.TourDuration{
+						Duration:      int32(duration.Duration),
+						TransportType: tours.TourDuration_TransportType(duration.TransportType),
+					}
+				}
+			}
+
+			toursResponse[i] = &tours.Tour{
+				Id:          tour.ID,
+				AuthorId:    int32(tour.AuthorId),
+				Name:        tour.Name,
+				Description: tour.Description,
+				Difficulty:  int32(tour.Difficulty),
+				Tags:        tour.Tags,
+				Status:      tours.Tour_TourStatus(tour.Status),
+				Price:       tour.Price,
+				Distance:    tour.Distance,
+				PublishDate: TimeToProtoTimestamp(tour.PublishDate),
+				ArchiveDate: TimeToProtoTimestamp(tour.ArchiveDate),
+				Category:    tours.Tour_TourCategory(tour.Category),
+				IsDeleted:   tour.IsDeleted,
+				KeyPoints:   keypointList,
+				Durations:   durationsList,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tours)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetPublished"))
-		return
+	ret := &tours.GetPublishedToursResponse{
+		Tours: toursResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Create a tour")
-	body, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		fmt.Println("Error reading request body:", err)
-		http.Error(writer, "Internal Server Error", http.StatusInternalServerError)
-		return
+func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.CreateTourRequest) (*tours.CreateTourResponse, error) {
+	tour := model.Tour{}
+
+	tour.ID = request.Tour.Id
+	tour.AuthorId = int(request.Tour.AuthorId)
+	tour.Name = request.Tour.Name
+	tour.Description = request.Tour.Description
+	tour.Difficulty = int(request.Tour.Difficulty)
+	tour.Tags = request.Tour.Tags
+	tour.Status = model.TourStatus(request.Tour.Status)
+	tour.Price = request.Tour.Price
+	tour.Distance = request.Tour.Distance
+	tour.PublishDate, _ = ProtoTimestampToTime(request.Tour.PublishDate)
+	tour.ArchiveDate, _ = ProtoTimestampToTime(request.Tour.ArchiveDate)
+	tour.Category = model.TourCategory(request.Tour.Category)
+	tour.IsDeleted = request.Tour.IsDeleted
+
+	keypointList := make([]model.KeyPoint, len(tour.KeyPoints))
+	if tour.KeyPoints != nil && len(tour.KeyPoints) > 0 {
+		for index, kp := range tour.KeyPoints {
+			keypointList[index] = model.KeyPoint{
+				ID:              kp.ID,
+				TourId:          kp.TourId,
+				Name:            kp.Name,
+				Description:     kp.Description,
+				Longitude:       kp.Longitude,
+				Latitude:        kp.Latitude,
+				LocationAddress: kp.LocationAddress,
+				ImagePath:       kp.ImagePath,
+				Order:           kp.Order,
+			}
+		}
 	}
 
-	fmt.Println("Request Body:", string(body))
-	var tour model.Tour
-
-	err = json.Unmarshal(body, &tour)
-	if err != nil {
-		fmt.Println("Error decoding JSON:", err)
-		http.Error(writer, "Invalid JSON", http.StatusBadRequest)
-		return
+	durationsList := make([]model.TourDuration, len(tour.Durations))
+	if tour.Durations != nil && len(tour.Durations) > 0 {
+		for index, duration := range tour.Durations {
+			durationsList[index] = model.TourDuration{
+				Duration:      duration.Duration,
+				TransportType: duration.TransportType,
+			}
+		}
 	}
 
-	err = handler.TourService.Create(&tour)
+	tour.KeyPoints = keypointList
+	tour.Durations = durationsList
 
-	if err != nil {
-		println("Error while creating a new tour")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.TourService.Create(&tour)
+
+	return &tours.CreateTourResponse{}, nil
 }
 
-func (handler *TourHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", id)
-
-	tour := handler.TourService.Delete(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(tour)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method Delete"))
-		return
-	}
+func (handler *TourHandler) DeleteTour(ctx context.Context, request *tours.DeleteTourRequest) (*tours.DeleteTourResponse, error) {
+	handler.TourService.Delete(request.ID)
+	return &tours.DeleteTourResponse{}, nil
 }
 
-func (handler *TourHandler) Update(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Update a tour")
-	var tour model.Tour
-	err := json.NewDecoder(req.Body).Decode(&tour)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.UpdateTourRequest) (*tours.UpdateTourResponse, error) {
+	tour := model.Tour{}
+
+	tour.ID = request.Tour.Id
+	tour.AuthorId = int(request.Tour.AuthorId)
+	tour.Name = request.Tour.Name
+	tour.Description = request.Tour.Description
+	tour.Difficulty = int(request.Tour.Difficulty)
+	tour.Tags = request.Tour.Tags
+	tour.Status = model.TourStatus(request.Tour.Status)
+	tour.Price = request.Tour.Price
+	tour.Distance = request.Tour.Distance
+	tour.PublishDate, _ = ProtoTimestampToTime(request.Tour.PublishDate)
+	tour.ArchiveDate, _ = ProtoTimestampToTime(request.Tour.ArchiveDate)
+	tour.Category = model.TourCategory(request.Tour.Category)
+	tour.IsDeleted = request.Tour.IsDeleted
+
+	keypointList := make([]model.KeyPoint, len(request.Tour.KeyPoints))
+	if request.Tour.KeyPoints != nil && len(request.Tour.KeyPoints) > 0 {
+		for index, kp := range request.Tour.KeyPoints {
+			keypointList[index] = model.KeyPoint{
+				ID:              kp.Id,
+				TourId:          kp.TourId,
+				Name:            kp.Name,
+				Description:     kp.Description,
+				Longitude:       kp.Longitude,
+				Latitude:        kp.Latitude,
+				LocationAddress: kp.LocationAddress,
+				ImagePath:       kp.ImagePath,
+				Order:           kp.Order,
+			}
+		}
 	}
 
-	err = handler.TourService.Update(&tour)
-
-	if err != nil {
-		println("Error while updating tour")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
+	durationsList := make([]model.TourDuration, len(request.Tour.Durations))
+	if request.Tour.Durations != nil && len(request.Tour.Durations) > 0 {
+		for index, duration := range request.Tour.Durations {
+			durationsList[index] = model.TourDuration{
+				Duration:      int(duration.Duration),
+				TransportType: model.TransportType(duration.TransportType),
+			}
+		}
 	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+
+	tour.KeyPoints = keypointList
+	tour.Durations = durationsList
+
+	handler.TourService.Update(&tour)
+
+	return &tours.UpdateTourResponse{}, nil
 }
 
-func (handler *TourHandler) AddDurations(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Add durations to a tour")
-	var tour model.Tour
-	err := json.NewDecoder(req.Body).Decode(&tour)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tours.AddToursDurationsRequest) (*tours.AddToursDurationsResponse, error) {
+	tour := model.Tour{}
+
+	tour.ID = request.Tour.Id
+	tour.AuthorId = int(request.Tour.AuthorId)
+	tour.Name = request.Tour.Name
+	tour.Description = request.Tour.Description
+	tour.Difficulty = int(request.Tour.Difficulty)
+	tour.Tags = request.Tour.Tags
+	tour.Status = model.TourStatus(request.Tour.Status)
+	tour.Price = request.Tour.Price
+	tour.Distance = request.Tour.Distance
+	tour.PublishDate, _ = ProtoTimestampToTime(request.Tour.PublishDate)
+	tour.ArchiveDate, _ = ProtoTimestampToTime(request.Tour.ArchiveDate)
+	tour.Category = model.TourCategory(request.Tour.Category)
+	tour.IsDeleted = request.Tour.IsDeleted
+
+	keypointList := make([]model.KeyPoint, len(request.Tour.KeyPoints))
+	if request.Tour.KeyPoints != nil && len(request.Tour.KeyPoints) > 0 {
+		for index, kp := range request.Tour.KeyPoints {
+			keypointList[index] = model.KeyPoint{
+				ID:              kp.Id,
+				TourId:          kp.TourId,
+				Name:            kp.Name,
+				Description:     kp.Description,
+				Longitude:       kp.Longitude,
+				Latitude:        kp.Latitude,
+				LocationAddress: kp.LocationAddress,
+				ImagePath:       kp.ImagePath,
+				Order:           kp.Order,
+			}
+		}
 	}
 
-	err = handler.TourService.AddDurations(&tour)
-
-	if err != nil {
-		println("Error while updating tour")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
+	durationsList := make([]model.TourDuration, len(request.Tour.Durations))
+	if request.Tour.Durations != nil && len(request.Tour.Durations) > 0 {
+		for index, duration := range request.Tour.Durations {
+			durationsList[index] = model.TourDuration{
+				Duration:      int(duration.Duration),
+				TransportType: model.TransportType(duration.TransportType),
+			}
+		}
 	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+
+	tour.KeyPoints = keypointList
+	tour.Durations = durationsList
+
+	handler.TourService.AddDurations(&tour)
+
+	return &tours.AddToursDurationsResponse{}, nil
 }
 
-func (handler *TourHandler) Publish(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Publish tour with id %s", id)
-
-	tour := handler.TourService.Publish(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(tour)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
-		return
-	}
-}
-func (handler *TourHandler) Archive(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Tour with id %s", id)
-
-	tour := handler.TourService.Archive(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(tour)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode tours in method GetById"))
-		return
-	}
+func (handler *TourHandler) PublishTour(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
+	handler.TourService.Publish(strconv.FormatInt(request.Tour.Id, 10))
+	return &tours.PublishTourResponse{}, nil
 }
 
-func (handler *TourHandler) GetEquipment(writer http.ResponseWriter, req *http.Request) {
-	tourId := mux.Vars(req)["tourId"]
-	log.Printf("Equipment for tour with id %s", tourId)
-
-	equipmentList, err := handler.TourService.GetEquipment(tourId)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(equipmentList)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode equipment in method GetEquipment"))
-		return
-	}
+func (handler *TourHandler) ArchiveTour(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
+	handler.TourService.Archive(strconv.FormatInt(request.Tour.Id, 10))
+	return &tours.ArchiveTourResponse{}, nil
 }
 
-func (handler *TourHandler) AddEquipment(writer http.ResponseWriter, req *http.Request) {
-	tourId := mux.Vars(req)["tourId"]
-	equipmentId := mux.Vars(req)["equipmentId"]
-	log.Printf("Adding equipment with id %s to tour with id %s", equipmentId, tourId)
+func (handler *TourHandler) GetToursEquipment(ctx context.Context, request *tours.GetToursEquipmentRequest) (*tours.GetToursEquipmentResponse, error) {
+	equipmentList, _ := handler.TourService.GetEquipment(request.TourId)
 
-	err := handler.TourService.AddEquipment(tourId, equipmentId)
+	equipmentResponse := make([]*tours.TourEquipment, len(equipmentList))
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
+	if equipmentList != nil && len(equipmentList) > 0 {
+		for i, eq := range equipmentList {
+			equipmentResponse[i] = &tours.TourEquipment{
+				Id:          eq.ID,
+				Name:        eq.Name,
+				Description: eq.Description,
+			}
+		}
 	}
-	writer.WriteHeader(http.StatusOK)
+
+	ret := &tours.GetToursEquipmentResponse{
+		Equipment: equipmentResponse,
+	}
+
+	return ret, nil
 }
 
-func (handler *TourHandler) DeleteEquipment(writer http.ResponseWriter, req *http.Request) {
-	tourId := mux.Vars(req)["tourId"]
-	equipmentId := mux.Vars(req)["equipmentId"]
-	log.Printf("Deleting equipment with id %s from tour with id %s", equipmentId, tourId)
+func (handler *TourHandler) AddToursEquipment(ctx context.Context, request *tours.AddToursEquipmentRequest) (*tours.AddToursEquipmentResponse, error) {
+	handler.TourService.AddEquipment(request.Ids.TourId, request.Ids.EquipmentId)
+	return &tours.AddToursEquipmentResponse{}, nil
+}
 
-	err := handler.TourService.DeleteEquipment(tourId, equipmentId)
+func (handler *TourHandler) DeleteToursEquipment(ctx context.Context, request *tours.DeleteToursEquipmentRequest) (*tours.DeleteToursEquipmentResponse, error) {
+	handler.TourService.DeleteEquipment(request.TourId, request.EquipmentId)
+	return &tours.DeleteToursEquipmentResponse{}, nil
+}
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusOK)
+func TimeToProtoTimestamp(t time.Time) *timestamp.Timestamp {
+	ts, _ := ptypes.TimestampProto(t)
+	return ts
+}
+
+func ProtoTimestampToTime(ts *timestamp.Timestamp) (time.Time, error) {
+	return ptypes.Timestamp(ts)
 }

@@ -2,164 +2,403 @@ package handler
 
 import (
 	"blogs/model"
+	"blogs/proto/blogs"
+	"blogs/proto/votes"
 	"blogs/service"
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
+	"context"
+	"strconv"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
 type BlogHandler struct {
 	BlogService *service.BlogService
+	blogs.UnimplementedBlogsServiceServer
 }
 
-func (handler *BlogHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Blog with id %s", id)
+func (handler *BlogHandler) GetBlogById(ctx context.Context, request *blogs.GetBlogByIdRequest) (*blogs.GetBlogByIdResponse, error) {
+	blog, _ := handler.BlogService.GetById(request.ID)
 
-	review, err := handler.BlogService.GetById(id)
+	commentList := make([]*blogs.BlogComment, len(blog.Comments))
+	if blog.Comments != nil && len(blog.Comments) > 0 {
+		for index, b := range blog.Comments {
+			commentList[index] = &blogs.BlogComment{
+				Id:        int32(b.ID),
+				AuthorId:  int32(b.AuthorId),
+				BlogId:    int32(b.BlogId),
+				Text:      b.Text,
+				CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+				UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+			}
+		}
+	}
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	voteList := make([]*blogs.BlogVote, len(blog.Votes))
+	if blog.Votes != nil && len(blog.Votes) > 0 {
+		for index, b := range blog.Votes {
+			voteList[index] = &blogs.BlogVote{
+				Id:     int32(b.ID),
+				UserId: int32(b.UserId),
+				BlogId: int32(b.BlogId),
+				Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+			}
+		}
 	}
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(review)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetById")
-		return
+
+	recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+	if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+		for index, b := range blog.Recommendations {
+			recommendationList[index] = &blogs.BlogsRecommendation{
+				Id:                       int32(b.ID),
+				BlogId:                   int32(b.BlogId),
+				RecommenderId:            int32(b.RecommenderId),
+				RecommendationReceiverId: int32(b.RecommendationReceiverId),
+			}
+		}
 	}
+
+	blogResponse := blogs.Blog{}
+	blogResponse.Id = int32(blog.ID)
+	blogResponse.Title = blog.Title
+	blogResponse.Description = blog.Description
+	blogResponse.Status = blogs.Blog_BlogStatus(blog.Status)
+	blogResponse.AuthorId = int32(blog.AuthorId)
+	blogResponse.Comments = commentList
+	blogResponse.Votes = voteList
+	blogResponse.Recommendations = recommendationList
+
+	ret := &blogs.GetBlogByIdResponse{
+		Blog: &blogResponse,
+	}
+
+	return ret, nil
 }
 
-func (handler *BlogHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all blogs")
-	blogs, err := handler.BlogService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *BlogHandler) GetAllBlogs(ctx context.Context, request *blogs.GetAllBlogsRequest) (*blogs.GetAllBlogsResponse, error) {
+	blogList, _ := handler.BlogService.GetAll()
+
+	blogsResponse := make([]*blogs.Blog, len(*blogList))
+
+	if blogList != nil && len(*blogList) > 0 {
+		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						Id:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						Id:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						Id:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
+			blogsResponse[i] = &blogs.Blog{
+				Id:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(blogs)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
-		return
+	ret := &blogs.GetAllBlogsResponse{
+		Blogs: blogsResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *BlogHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Create blog")
-	var blog model.Blog
-	err := json.NewDecoder(req.Body).Decode(&blog)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+func (handler *BlogHandler) CreateBlog(ctx context.Context, request *blogs.CreateBlogRequest) (*blogs.CreateBlogResponse, error) {
+	blog := model.Blog{}
+
+	if blog.Comments != nil && len(blog.Comments) > 0 {
+		commentList := make([]model.Comment, len(blog.Comments))
+		for index, b := range blog.Comments {
+			commentList[index] = model.Comment{
+				ID:        b.ID,
+				AuthorId:  b.AuthorId,
+				BlogId:    b.BlogId,
+				Text:      b.Text,
+				CreatedAt: b.CreatedAt,
+				UpdatedAt: b.UpdatedAt,
+			}
+		}
+		blog.Comments = commentList
 	}
-	err = handler.BlogService.Create(&blog)
-	if err != nil {
-		println("Error while creating a new blog")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
+
+	if blog.Votes != nil && len(blog.Votes) > 0 {
+		voteList := make([]model.Vote, len(blog.Votes))
+		for index, b := range blog.Votes {
+			voteList[index] = model.Vote{
+				ID:     b.ID,
+				UserId: b.UserId,
+				BlogId: b.BlogId,
+				Type:   b.Type,
+			}
+		}
+		blog.Votes = voteList
 	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+
+	if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+		recommendationList := make([]model.BlogRecommendation, len(blog.Recommendations))
+		for index, b := range blog.Recommendations {
+			recommendationList[index] = model.BlogRecommendation{
+				ID:                       b.ID,
+				BlogId:                   b.BlogId,
+				RecommenderId:            b.RecommenderId,
+				RecommendationReceiverId: b.RecommendationReceiverId,
+			}
+		}
+		blog.Recommendations = recommendationList
+	}
+
+	blog.ID = int(request.Blog.Id)
+	blog.Title = request.Blog.Title
+	blog.Description = request.Blog.Description
+	blog.Status = model.BlogStatus(request.Blog.Status)
+	blog.AuthorId = int(request.Blog.AuthorId)
+
+	handler.BlogService.Create(&blog)
+
+	return &blogs.CreateBlogResponse{}, nil
 }
 
-func (handler *BlogHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("usao")
-	id := mux.Vars(req)["id"]
-	log.Printf("Delete blog with id %s", id)
-
-	blog := handler.BlogService.Delete(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(blog)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method Delete")
-		return
-	}
-
+func (handler *BlogHandler) DeleteBlog(ctx context.Context, request *blogs.DeleteBlogRequest) (*blogs.DeleteBlogResponse, error) {
+	handler.BlogService.Delete(request.ID)
+	return &blogs.DeleteBlogResponse{}, nil
 }
 
-func (handler *BlogHandler) SearchByName(writer http.ResponseWriter, req *http.Request) {
-	name := mux.Vars(req)["name"]
-	log.Printf("Searching blogs with name " + name)
-	blogs, err := handler.BlogService.SearchByName(name)
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *BlogHandler) SearchBlogByName(ctx context.Context, request *blogs.SearchBlogByNameRequest) (*blogs.SearchBlogByNameResponse, error) {
+	blogList, _ := handler.BlogService.SearchByName(request.Title)
+
+	blogsResponse := make([]*blogs.Blog, len(*blogList))
+
+	if blogList != nil && len(*blogList) > 0 {
+		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						Id:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						Id:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						Id:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
+			blogsResponse[i] = &blogs.Blog{
+				Id:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(blogs)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
-		return
+	ret := &blogs.SearchBlogByNameResponse{
+		Blogs: blogsResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *BlogHandler) Publish(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Publish blog with id %s", id)
-
-	blog, err := handler.BlogService.Publish(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(blog)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method Publish")
-		return
-	}
+func (handler *BlogHandler) PublishBlog(ctx context.Context, request *blogs.PublishBlogRequest) (*blogs.PublishBlogResponse, error) {
+	handler.BlogService.Publish(strconv.FormatInt(int64(request.Blog.Id), 10))
+	return &blogs.PublishBlogResponse{}, nil
 }
 
-func (handler *BlogHandler) GetByAuthorId(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Blogs with author id " + id)
-	blogs, err := handler.BlogService.GetByAuthorId(id)
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *BlogHandler) GetBlogsByAuthorsId(ctx context.Context, request *blogs.GetBlogsByAuthorsIdRequest) (*blogs.GetBlogsByAuthorsIdResponse, error) {
+	blogList, _ := handler.BlogService.GetByAuthorId(string(request.AuthorId))
+
+	blogsResponse := make([]*blogs.Blog, len(*blogList))
+
+	if blogList != nil && len(*blogList) > 0 {
+		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						Id:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						Id:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						Id:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
+			blogsResponse[i] = &blogs.Blog{
+				Id:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
+			}
+		}
 	}
-	
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(blogs)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
-		return
+
+	ret := &blogs.GetBlogsByAuthorsIdResponse{
+		Blogs: blogsResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *BlogHandler) GetByAuthorIds(writer http.ResponseWriter, req *http.Request) {
-	authorIdsString := mux.Vars(req)["authorIds"]
-	authorIds := strings.Split(authorIdsString, ",")
-	log.Printf("Blogs with author ids " + authorIdsString)
-	blogs, err := handler.BlogService.GetByAuthorIds(authorIds)
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *BlogHandler) GetBlogsByAuthorsIds(ctx context.Context, request *blogs.GetBlogsByAuthorsIdsRequest) (*blogs.GetBlogsByAuthorsIdsResponse, error) {
+	authorIds := strings.Split(request.AuthorsIds, ",")
+	blogList, _ := handler.BlogService.GetByAuthorIds(authorIds)
+
+	blogsResponse := make([]*blogs.Blog, len(*blogList))
+
+	if blogList != nil && len(*blogList) > 0 {
+		for i, blog := range *blogList {
+
+			commentList := make([]*blogs.BlogComment, len(blog.Comments))
+			if blog.Comments != nil && len(blog.Comments) > 0 {
+				for index, b := range blog.Comments {
+					commentList[index] = &blogs.BlogComment{
+						Id:        int32(b.ID),
+						AuthorId:  int32(b.AuthorId),
+						BlogId:    int32(b.BlogId),
+						Text:      b.Text,
+						CreatedAt: TimeToProtoTimestamp(b.CreatedAt),
+						UpdatedAt: TimeToProtoTimestamp(b.UpdatedAt),
+					}
+				}
+			}
+
+			voteList := make([]*blogs.BlogVote, len(blog.Votes))
+			if blog.Votes != nil && len(blog.Votes) > 0 {
+				for index, b := range blog.Votes {
+					voteList[index] = &blogs.BlogVote{
+						Id:     int32(b.ID),
+						UserId: int32(b.UserId),
+						BlogId: int32(b.BlogId),
+						Type:   blogs.BlogVote_VoteType(votes.Vote_VoteType(b.Type)),
+					}
+				}
+			}
+
+			recommendationList := make([]*blogs.BlogsRecommendation, len(blog.Recommendations))
+			if blog.Recommendations != nil && len(blog.Recommendations) > 0 {
+				for index, b := range blog.Recommendations {
+					recommendationList[index] = &blogs.BlogsRecommendation{
+						Id:                       int32(b.ID),
+						BlogId:                   int32(b.BlogId),
+						RecommenderId:            int32(b.RecommenderId),
+						RecommendationReceiverId: int32(b.RecommendationReceiverId),
+					}
+				}
+			}
+
+			blogsResponse[i] = &blogs.Blog{
+				Id:              int32(blog.ID),
+				Title:           blog.Title,
+				Description:     blog.Description,
+				Status:          blogs.Blog_BlogStatus(blog.Status),
+				AuthorId:        int32(blog.AuthorId),
+				Comments:        commentList,
+				Votes:           voteList,
+				Recommendations: recommendationList,
+			}
+		}
 	}
-	
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(blogs)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode blogs in method GetAll")
-		return
+
+	ret := &blogs.GetBlogsByAuthorsIdsResponse{
+		Blogs: blogsResponse,
 	}
+
+	return ret, nil
 }

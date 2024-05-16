@@ -1,109 +1,121 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/gorilla/mux"
-	"log"
-	"net/http"
+	"context"
+	"errors"
 	"tours/model"
+	"tours/proto/facilities"
 	"tours/service"
 )
 
 type FacilityHandler struct {
 	FacilityService *service.FacilityService
+	facilities.UnimplementedFacilitiesServiceServer
 }
 
-func (handler *FacilityHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all facilities")
-	facilities, err := handler.FacilityService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *FacilityHandler) GetAllFacilities(ctx context.Context, request *facilities.GetAllFacilitiesRequest) (*facilities.GetAllFacilitiesResponse, error) {
+	facilityList, _ := handler.FacilityService.GetAll()
+
+	facilitiesResponse := make([]*facilities.Facility, len(*facilityList))
+
+	if facilityList != nil && len(*facilityList) > 0 {
+		for i, f := range *facilityList {
+			facilitiesResponse[i] = &facilities.Facility{
+				ID:          f.ID,
+				AuthorId:    f.AuthorId,
+				Name:        f.Name,
+				Description: f.Description,
+				Longitude:   f.Longitude,
+				Latitude:    f.Latitude,
+				Category:    facilities.Facility_Category(f.Category),
+				ImagePath:   f.ImagePath,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(facilities)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode facilities in method GetAll"))
-		return
+	ret := &facilities.GetAllFacilitiesResponse{
+		Facilities: facilitiesResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *FacilityHandler) GetAllByAuthorId(writer http.ResponseWriter, req *http.Request) {
-	authorId := mux.Vars(req)["authorId"]
-	log.Printf("Facility with author id %s", authorId)
+func (handler *FacilityHandler) GetFacilitiesByAuthorId(ctx context.Context, request *facilities.GetFacilitiesByAuthorIdRequest) (*facilities.GetFacilitiesByAuthorIdResponse, error) {
+	facilityList, _ := handler.FacilityService.GetAllByAuthorId(request.AuthorId)
 
-	facilities, err := handler.FacilityService.GetAllByAuthorId(authorId)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	if facilityList == nil {
+		return &facilities.GetFacilitiesByAuthorIdResponse{
+			Facilities: []*facilities.Facility{},
+		}, nil
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(facilities)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode facilities in method GetAllByAuthorId"))
-		return
+	facilitiesResponse := make([]*facilities.Facility, len(*facilityList))
+
+	if facilityList != nil && len(*facilityList) > 0 {
+		for i, f := range *facilityList {
+			facilitiesResponse[i] = &facilities.Facility{
+				ID:          f.ID,
+				AuthorId:    f.AuthorId,
+				Name:        f.Name,
+				Description: f.Description,
+				Longitude:   f.Longitude,
+				Latitude:    f.Latitude,
+				Category:    facilities.Facility_Category(f.Category),
+				ImagePath:   f.ImagePath,
+			}
+		}
 	}
+
+	ret := &facilities.GetFacilitiesByAuthorIdResponse{
+		Facilities: facilitiesResponse,
+	}
+
+	return ret, nil
 }
 
-func (handler *FacilityHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Create a facility")
-	var facility model.Facility
-	err := json.NewDecoder(req.Body).Decode(&facility)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+func (handler *FacilityHandler) CreateFacility(ctx context.Context, request *facilities.CreateFacilityRequest) (*facilities.CreateFacilityResponse, error) {
+	if request == nil {
+		return nil, errors.New("nil request")
 	}
 
-	err = handler.FacilityService.Create(&facility)
-
-	if err != nil {
-		println("Error while creating a new facility")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
+	if request.Facility == nil {
+		return nil, errors.New("nil facility in request")
 	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+
+	facility := model.Facility{}
+	facility.ID = request.Facility.ID
+	facility.AuthorId = request.Facility.AuthorId
+	facility.Name = request.Facility.Name
+	facility.Description = request.Facility.Description
+	facility.Longitude = request.Facility.Longitude
+	facility.Latitude = request.Facility.Latitude
+	facility.Category = model.FacilityCategory(request.Facility.Category)
+	facility.ImagePath = request.Facility.ImagePath
+	
+	if err := handler.FacilityService.Create(&facility); err != nil {
+		return nil, err
+	}
+
+	return &facilities.CreateFacilityResponse{}, nil
 }
 
-func (handler *FacilityHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Facility with id %s", id)
-
-	facility := handler.FacilityService.Delete(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(facility)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode facility in method Delete"))
-		return
-	}
+func (handler *FacilityHandler) DeleteFacility(ctx context.Context, request *facilities.DeleteFacilityRequest) (*facilities.DeleteFacilityResponse, error) {
+	handler.FacilityService.Delete(request.ID)
+	return &facilities.DeleteFacilityResponse{}, nil
 }
 
-func (handler *FacilityHandler) Update(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Update a facility")
-	var facility model.Facility
-	err := json.NewDecoder(req.Body).Decode(&facility)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *FacilityHandler) UpdateFacility(ctx context.Context, request *facilities.UpdateFacilityRequest) (*facilities.UpdateFacilityResponse, error) {
+	facility := model.Facility{}
+	facility.ID = request.Facility.ID
+	facility.AuthorId = request.Facility.AuthorId
+	facility.Name = request.Facility.Name
+	facility.Description = request.Facility.Description
+	facility.Longitude = request.Facility.Longitude
+	facility.Latitude = request.Facility.Latitude
+	facility.Category = model.FacilityCategory(request.Facility.Category)
+	facility.ImagePath = request.Facility.ImagePath
 
-	err = handler.FacilityService.Update(&facility)
+	handler.FacilityService.Update(&facility)
 
-	if err != nil {
-		println("Error while updating facility")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	return &facilities.UpdateFacilityResponse{}, nil
 }

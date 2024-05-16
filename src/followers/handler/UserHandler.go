@@ -2,182 +2,136 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"followers/model"
+	"followers/proto/followers"
 	"followers/service"
 	"log"
-	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
 type UserHandler struct {
 	UserService *service.UserService
 	logger      *log.Logger
+	followers.UnimplementedFollowersServiceServer
 }
 
 type KeyProduct struct{}
 
 func NewUserHandler(l *log.Logger, s *service.UserService) *UserHandler {
-	return &UserHandler{s, l}
+	return &UserHandler{s, l, followers.UnimplementedFollowersServiceServer{}}
 }
 
-func (handler *UserHandler) Create(rw http.ResponseWriter, h *http.Request) {
-	user := h.Context().Value(KeyProduct{}).(*model.User)
-	err := handler.UserService.Create(user)
-	if err != nil {
-		handler.logger.Print("Database exception: ", err)
-		rw.WriteHeader(http.StatusInternalServerError)
-		return
+func (handler UserHandler) GetUserByUsername(ctx context.Context, request *followers.GetUserByUsernameRequest) (*followers.GetUserByUsernameResponse, error) {
+	user, _ := handler.UserService.GetByUsername(request.Username)
+
+	userResponse := followers.User{}
+	userResponse.ID = user.ID
+	userResponse.Username = user.Username
+	userResponse.Password = user.Password
+	userResponse.IsActive = user.IsActive
+	userResponse.ProfilePicture = user.ProfilePicture
+	userResponse.Role = followers.User_Role(user.Role)
+
+	ret := &followers.GetUserByUsernameResponse{
+		User: &userResponse,
 	}
-	rw.WriteHeader(http.StatusCreated)
+
+	return ret, nil
 }
 
-func (handler *UserHandler) Follow(rw http.ResponseWriter, h *http.Request) {
-	userId := mux.Vars(h)["userId"]
-	followedById := mux.Vars(h)["followedById"]
+func (handler UserHandler) GetFollowers(ctx context.Context, request *followers.GetFollowersRequest) (*followers.GetFollowersResponse, error) {
+	users, _ := handler.UserService.GetFollowers(request.ID)
+	userResponse := make([]*followers.User, len(*users))
 
-	err := handler.UserService.Follow(userId, followedById)
-	if err != nil {
-		handler.logger.Print("Database exception: ", err)
-		rw.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	rw.WriteHeader(http.StatusCreated)
-}
-
-func (handler *UserHandler) Unfollow(writer http.ResponseWriter, req *http.Request) {
-	followerId := mux.Vars(req)["followerId"]
-	followingId := mux.Vars(req)["followingId"]
-
-	fmt.Println()
-
-	err := handler.UserService.Unfollow(followerId, followingId)
-	if err != nil {
-		handler.logger.Print("Database exception: ", err)
-		writer.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-}
-
-func (handler *UserHandler) GetFollowers(writer http.ResponseWriter, req *http.Request) {
-	userId := mux.Vars(req)["id"]
-	log.Printf("User with id %s", userId)
-
-	followers, err := handler.UserService.GetFollowers(userId)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(followers)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode followers in method GetFollowers"))
-		return
-	}
-}
-
-func (handler *UserHandler) GetFollowings(writer http.ResponseWriter, req *http.Request) {
-	userId := mux.Vars(req)["id"]
-	log.Printf("User with id %s", userId)
-
-	followers, err := handler.UserService.GetFollowings(userId)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(followers)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode followings in method GetFollowings"))
-		return
-	}
-}
-
-func (handler *UserHandler) GetByUsername(writer http.ResponseWriter, req *http.Request) {
-	username := mux.Vars(req)["username"]
-	log.Printf("User with username %s", username)
-
-	user, err := handler.UserService.GetByUsername(username)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(user)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode user in method GetByUsername"))
-		return
-	}
-}
-
-func (handler *UserHandler) GetRecommendedUsers(writer http.ResponseWriter, req *http.Request) {
-	userId := mux.Vars(req)["id"]
-	log.Printf("User with username %s", userId)
-
-	users, err := handler.UserService.GetRecommendedUsers(userId)
-
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(users)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode user in method GetByUsername"))
-		return
-	}
-}
-
-func (handler *UserHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		handler.logger.Println("Method [", h.Method, "] - Hit path :", h.URL.Path)
-
-		rw.Header().Add("Content-Type", "application/json")
-
-		next.ServeHTTP(rw, h)
-	})
-}
-
-func (handler *UserHandler) MiddlewareUserDeserialization(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		user := &model.User{}
-		err := user.FromJSON(h.Body)
-		if err != nil {
-			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
-			handler.logger.Fatal(err)
-			return
+	if users != nil && len(*users) > 0 {
+		for i, user := range *users {
+			userResponse[i] = &followers.User{
+				ID:             user.ID,
+				Username:       user.Username,
+				Password:       user.Password,
+				IsActive:       user.IsActive,
+				ProfilePicture: user.ProfilePicture,
+				Role:           followers.User_Role(user.Role),
+			}
 		}
-		ctx := context.WithValue(h.Context(), KeyProduct{}, user)
-		h = h.WithContext(ctx)
-		next.ServeHTTP(rw, h)
-	})
+	}
+
+	ret := &followers.GetFollowersResponse{
+		Users: userResponse,
+	}
+
+	return ret, nil
 }
 
-func (handler *UserHandler) MiddlewareUserFollowDeserialization(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
-		var users []*model.User
-		err := json.NewDecoder(h.Body).Decode(&users)
-		if err != nil {
-			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
-			handler.logger.Fatal(err)
-			return
+func (handler UserHandler) GetFollowings(ctx context.Context, request *followers.GetFollowingsRequest) (*followers.GetFollowingsResponse, error) {
+	users, _ := handler.UserService.GetFollowings(request.ID)
+
+	userResponse := make([]*followers.User, len(*users))
+
+	if users != nil && len(*users) > 0 {
+		for i, user := range *users {
+			userResponse[i] = &followers.User{
+				ID:             user.ID,
+				Username:       user.Username,
+				Password:       user.Password,
+				IsActive:       user.IsActive,
+				ProfilePicture: user.ProfilePicture,
+				Role:           followers.User_Role(user.Role),
+			}
 		}
-		ctx := context.WithValue(h.Context(), KeyProduct{}, users)
-		h = h.WithContext(ctx)
-		next.ServeHTTP(rw, h)
-	})
+	}
+
+	ret := &followers.GetFollowingsResponse{
+		Users: userResponse,
+	}
+
+	return ret, nil
+}
+
+func (handler UserHandler) GetRecommendedUsers(ctx context.Context, request *followers.GetRecommendedUsersRequest) (*followers.GetRecommendedUsersResponse, error) {
+	users, _ := handler.UserService.GetRecommendedUsers(request.ID)
+
+	userResponse := make([]*followers.User, len(*users))
+
+	if users != nil && len(*users) > 0 {
+		for i, user := range *users {
+			userResponse[i] = &followers.User{
+				ID:             user.ID,
+				Username:       user.Username,
+				Password:       user.Password,
+				IsActive:       user.IsActive,
+				ProfilePicture: user.ProfilePicture,
+				Role:           followers.User_Role(user.Role),
+			}
+		}
+	}
+
+	ret := &followers.GetRecommendedUsersResponse{
+		Users: userResponse,
+	}
+
+	return ret, nil
+}
+
+func (handler UserHandler) Follow(ctx context.Context, request *followers.FollowRequest) (*followers.FollowResponse, error) {
+	handler.UserService.Follow(request.FollowingId, request.FollowerId)
+	return &followers.FollowResponse{}, nil
+}
+
+func (handler UserHandler) Unfollow(ctx context.Context, request *followers.UnfollowRequest) (*followers.UnfollowResponse, error) {
+	handler.UserService.Unfollow(request.FollowerId, request.FollowingId)
+	return &followers.UnfollowResponse{}, nil
+}
+
+func (handler UserHandler) Create(ctx context.Context, request *followers.CreateRequest) (*followers.CreateResponse, error) {
+	user := model.User{}
+	user.ID = request.User.ID
+	user.Username = request.User.Username
+	user.Password = request.User.Password
+	user.IsActive = request.User.IsActive
+	user.ProfilePicture = request.User.ProfilePicture
+	user.Role = model.UserRole(request.User.Role)
+
+	handler.UserService.Create(&user)
+
+	return &followers.CreateResponse{}, nil
 }

@@ -47,7 +47,7 @@ func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 		Preload("KeyPoints").
 		Preload("Equipment").
 		Find(&tours)
-	if dbResult != nil {
+	if dbResult.Error != nil {
 		return nil, dbResult.Error
 	}
 	return tours, nil

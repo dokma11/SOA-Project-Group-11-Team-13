@@ -1,105 +1,102 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/gorilla/mux"
-	"log"
-	"net/http"
+	"context"
 	"tours/model"
+	"tours/proto/reviews"
 	"tours/service"
 )
 
 type ReviewHandler struct {
 	ReviewService *service.ReviewService
+	reviews.UnimplementedReviewsServiceServer
 }
 
-func (handler *ReviewHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Review with id %s", id)
+func (handler *ReviewHandler) GetReviewById(ctx context.Context, request *reviews.GetReviewByIdRequest) (*reviews.GetReviewByIdResponse, error) {
+	review, _ := handler.ReviewService.GetById(request.ID)
 
-	review, err := handler.ReviewService.GetById(id)
+	reviewResponse := reviews.Review{}
+	reviewResponse.Id = review.ID
+	reviewResponse.Rating = int32(review.Rating)
+	reviewResponse.TourId = review.TourId
+	reviewResponse.Comment = review.Comment
+	reviewResponse.TouristId = int32(review.TouristId)
+	reviewResponse.TourId = review.TourId
+	reviewResponse.TourVisitDate = TimeToProtoTimestamp(review.TourVisitDate)
+	reviewResponse.CommentDate = TimeToProtoTimestamp(review.CommentDate)
+	reviewResponse.Images = review.Images
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	ret := &reviews.GetReviewByIdResponse{
+		Review: &reviewResponse,
 	}
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(review)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode reviews in method GetById"))
-		return
-	}
+
+	return ret, nil
 }
 
-func (handler *ReviewHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	reviews, err := handler.ReviewService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *ReviewHandler) GetAllReviews(ctx context.Context, request *reviews.GetAllReviewsRequest) (*reviews.GetAllReviewsResponse, error) {
+	reviewList, _ := handler.ReviewService.GetAll()
+
+	reviewsResponse := make([]*reviews.Review, len(*reviewList))
+
+	if reviewList != nil && len(*reviewList) > 0 {
+		for i, review := range *reviewList {
+			reviewsResponse[i] = &reviews.Review{
+				Id:            review.ID,
+				Rating:        int32(review.Rating),
+				TourId:        review.TourId,
+				Comment:       review.Comment,
+				TouristId:     int32(review.TouristId),
+				TourVisitDate: TimeToProtoTimestamp(review.TourVisitDate),
+				CommentDate:   TimeToProtoTimestamp(review.CommentDate),
+				Images:        review.Images,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(reviews)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode reviews in method GetAll"))
-		return
+	ret := &reviews.GetAllReviewsResponse{
+		Reviews: reviewsResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *ReviewHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	var review model.Review
-	err := json.NewDecoder(req.Body).Decode(&review)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *ReviewHandler) CreateReview(ctx context.Context, request *reviews.CreateReviewRequest) (*reviews.CreateReviewResponse, error) {
+	review := model.Review{}
 
-	err = handler.ReviewService.Create(&review)
+	review.ID = request.Review.Id
+	review.Rating = int(request.Review.Rating)
+	review.TourId = request.Review.TourId
+	review.Comment = request.Review.Comment
+	review.TouristId = int(request.Review.TouristId)
+	review.TourId = request.Review.TourId
+	review.TourVisitDate, _ = ProtoTimestampToTime(request.Review.TourVisitDate)
+	review.CommentDate, _ = ProtoTimestampToTime(request.Review.CommentDate)
+	review.Images = request.Review.Images
 
-	if err != nil {
-		println("Error while creating a new review")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.ReviewService.Create(&review)
+
+	return &reviews.CreateReviewResponse{}, nil
 }
 
-func (handler *ReviewHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Review with id %s", id)
-
-	review := handler.ReviewService.Delete(id)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(review)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetById"))
-		return
-	}
+func (handler *ReviewHandler) DeleteReview(ctx context.Context, request *reviews.DeleteReviewRequest) (*reviews.DeleteReviewResponse, error) {
+	handler.ReviewService.Delete(request.ID)
+	return &reviews.DeleteReviewResponse{}, nil
 }
 
-func (handler *ReviewHandler) Update(writer http.ResponseWriter, req *http.Request) {
-	var review model.Review
-	err := json.NewDecoder(req.Body).Decode(&review)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *ReviewHandler) UpdateReview(ctx context.Context, request *reviews.UpdateReviewRequest) (*reviews.UpdateReviewResponse, error) {
+	review := model.Review{}
 
-	err = handler.ReviewService.Update(&review)
+	review.ID = request.Review.Id
+	review.Rating = int(request.Review.Rating)
+	review.TourId = request.Review.TourId
+	review.Comment = request.Review.Comment
+	review.TouristId = int(request.Review.TouristId)
+	review.TourId = request.Review.TourId
+	review.TourVisitDate, _ = ProtoTimestampToTime(request.Review.TourVisitDate)
+	review.CommentDate, _ = ProtoTimestampToTime(request.Review.CommentDate)
+	review.Images = request.Review.Images
 
-	if err != nil {
-		println("Error while updating review")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.ReviewService.Update(&review)
+
+	return &reviews.UpdateReviewResponse{}, nil
 }

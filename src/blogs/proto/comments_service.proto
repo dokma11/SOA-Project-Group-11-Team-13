@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "proto/comments";
+
+service CommentsService {
+  rpc GetCommentById(GetCommentByIdRequest) returns (GetCommentByIdResponse) {}
+  rpc GetAllComments(GetAllCommentsRequest) returns (GetAllCommentsResponse) {}
+  rpc GetCommentByBlogId(GetCommentByBlogIdRequest) returns (GetCommentByBlogIdResponse) {}
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse) {}
+  rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {}
+  rpc UpdateComment(UpdateCommentRequest) returns (UpdateCommentResponse) {}
+}
+
+message Comment {
+  int32 id = 1;
+  int32 authorId = 2;
+  int32 blogId = 3;
+  string text = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message GetCommentByIdRequest {
+  string ID = 1;
+}
+
+message GetCommentByIdResponse {
+  Comment comment = 1;
+}
+
+message GetAllCommentsRequest {
+}
+
+message GetAllCommentsResponse {
+  repeated Comment comments = 1;
+}
+
+message GetCommentByBlogIdRequest {
+  string BlogId = 1;
+}
+
+message GetCommentByBlogIdResponse {
+  repeated Comment comments = 1;
+}
+
+message CreateCommentRequest {
+  Comment comment = 1;
+}
+
+message CreateCommentResponse {
+}
+
+message DeleteCommentRequest {
+  string ID = 1;
+}
+
+message DeleteCommentResponse {
+}
+
+message UpdateCommentRequest {
+  Comment comment = 1;
+}
+
+message UpdateCommentResponse {
+}

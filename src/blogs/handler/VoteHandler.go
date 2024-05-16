@@ -1,51 +1,51 @@
 package handler
 
 import (
+	"blogs/proto/votes"
 	"blogs/service"
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/gorilla/mux"
+	"context"
 )
 
 type VoteHandler struct {
 	VoteService *service.VoteService
+	votes.UnimplementedVotesServiceServer
 }
 
-func (handler *VoteHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Vote with id %s", id)
+func (handler *VoteHandler) GetVoteById(ctx context.Context, request *votes.GetVoteByIdRequest) (*votes.GetVoteByIdResponse, error) {
+	vote, _ := handler.VoteService.GetById(request.ID)
 
-	review, err := handler.VoteService.GetById(id)
+	voteResponse := votes.Vote{}
+	voteResponse.Id = int32(vote.ID)
+	voteResponse.UserId = int32(vote.UserId)
+	voteResponse.BlogId = int32(vote.BlogId)
+	voteResponse.Type = votes.Vote_VoteType(vote.Type)
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	ret := &votes.GetVoteByIdResponse{
+		Vote: &voteResponse,
 	}
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(review)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode votes in method GetById")
-		return
-	}
+
+	return ret, nil
 }
 
-func (handler *VoteHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all votes")
-	tours, err := handler.VoteService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *VoteHandler) GetAllVotes(ctx context.Context, request *votes.GetAllVotesRequest) (*votes.GetAllVotesResponse, error) {
+	voteList, _ := handler.VoteService.GetAll()
+
+	votesResponse := make([]*votes.Vote, len(*voteList))
+
+	if voteList != nil && len(*voteList) > 0 {
+		for i, vote := range *voteList {
+			votesResponse[i] = &votes.Vote{
+				Id:     int32(vote.ID),
+				UserId: int32(vote.UserId),
+				BlogId: int32(vote.BlogId),
+				Type:   votes.Vote_VoteType(vote.Type),
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(tours)
-	if err != nil {
-		_ = fmt.Errorf("error encountered while trying to encode votes in method GetAll")
-		return
+	ret := &votes.GetAllVotesResponse{
+		Votes: votesResponse,
 	}
+
+	return ret, nil
 }

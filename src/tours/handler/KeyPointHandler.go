@@ -1,130 +1,131 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/gorilla/mux"
-	"log"
-	"net/http"
+	"context"
 	"tours/model"
+	keyPoints "tours/proto/keypoints"
 	"tours/service"
 )
 
 type KeyPointHandler struct {
 	KeyPointService *service.KeyPointService
+	keyPoints.UnimplementedKeyPointsServiceServer
 }
 
-func (handler *KeyPointHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Key Point with id %s", id)
+func (handler *KeyPointHandler) GetById(ctx context.Context, request *keyPoints.KeyPointGetByIdRequest) (*keyPoints.KeyPointGetByIdResponse, error) {
+	keyPoint, _ := handler.KeyPointService.GetById(request.ID)
 
-	keyPoint, err := handler.KeyPointService.GetById(id)
+	keyPointsResponse := keyPoints.KeyPoint{}
+	keyPointsResponse.Id = keyPoint.ID
+	keyPointsResponse.TourId = keyPoint.TourId
+	keyPointsResponse.Name = keyPoint.Name
+	keyPointsResponse.Description = keyPoint.Description
+	keyPointsResponse.Longitude = keyPoint.Longitude
+	keyPointsResponse.Latitude = keyPoint.Latitude
+	keyPointsResponse.LocationAddress = keyPoint.LocationAddress
+	keyPointsResponse.ImagePath = keyPoint.ImagePath
+	keyPointsResponse.Order = keyPoint.Order
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	ret := &keyPoints.KeyPointGetByIdResponse{
+		KeyPoint: &keyPointsResponse,
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(keyPoint)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetById"))
-		return
-	}
+	return ret, nil
 }
 
-func (handler *KeyPointHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all Key Points")
+func (handler *KeyPointHandler) GetAll(ctx context.Context, request *keyPoints.KeyPointGetAllRequest) (*keyPoints.KeyPointGetAllResponse, error) {
+	keyPointList, _ := handler.KeyPointService.GetAll()
 
-	keyPoints, err := handler.KeyPointService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	keyPointsResponse := make([]*keyPoints.KeyPoint, len(*keyPointList))
+
+	if keyPointList != nil && len(*keyPointList) > 0 {
+		for i, keyPoint := range *keyPointList {
+			keyPointsResponse[i] = &keyPoints.KeyPoint{
+				Id:              keyPoint.ID,
+				TourId:          keyPoint.TourId,
+				Name:            keyPoint.Name,
+				Description:     keyPoint.Description,
+				Longitude:       keyPoint.Longitude,
+				Latitude:        keyPoint.Latitude,
+				LocationAddress: keyPoint.LocationAddress,
+				ImagePath:       keyPoint.ImagePath,
+				Order:           keyPoint.Order,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(keyPoints)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetAll"))
-		return
+	ret := &keyPoints.KeyPointGetAllResponse{
+		KeyPoints: keyPointsResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *KeyPointHandler) GetAllByTourId(writer http.ResponseWriter, req *http.Request) {
-	tourId := mux.Vars(req)["tourId"]
-	log.Printf("Key Points with tour id %s", tourId)
+func (handler *KeyPointHandler) GetByTourId(ctx context.Context, request *keyPoints.KeyPointGetByTourIdRequest) (*keyPoints.KeyPointGetByTourIdResponse, error) {
+	keyPointList, _ := handler.KeyPointService.GetAllByTourId(request.TourId)
 
-	keyPoints, err := handler.KeyPointService.GetAllByTourId(tourId)
+	keyPointsResponse := make([]*keyPoints.KeyPoint, len(*keyPointList))
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	if keyPointList != nil && len(*keyPointList) > 0 {
+		for i, keyPoint := range *keyPointList {
+			keyPointsResponse[i] = &keyPoints.KeyPoint{
+				Id:              keyPoint.ID,
+				TourId:          keyPoint.TourId,
+				Name:            keyPoint.Name,
+				Description:     keyPoint.Description,
+				Longitude:       keyPoint.Longitude,
+				Latitude:        keyPoint.Latitude,
+				LocationAddress: keyPoint.LocationAddress,
+				ImagePath:       keyPoint.ImagePath,
+				Order:           keyPoint.Order,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(keyPoints)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method GetAllByTourId"))
-		return
+	ret := &keyPoints.KeyPointGetByTourIdResponse{
+		KeyPoints: keyPointsResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *KeyPointHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Creating a Key Point")
-	var keyPoint model.KeyPoint
-	err := json.NewDecoder(req.Body).Decode(&keyPoint)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *KeyPointHandler) Create(ctx context.Context, request *keyPoints.KeyPointCreateRequest) (*keyPoints.KeyPointCreateResponse, error) {
+	keyPoint := model.KeyPoint{}
 
-	err = handler.KeyPointService.Create(&keyPoint)
+	keyPoint.ID = request.KeyPoint.Id
+	keyPoint.TourId = request.KeyPoint.TourId
+	keyPoint.Name = request.KeyPoint.Name
+	keyPoint.Description = request.KeyPoint.Description
+	keyPoint.Longitude = request.KeyPoint.Longitude
+	keyPoint.Latitude = request.KeyPoint.Latitude
+	keyPoint.LocationAddress = request.KeyPoint.LocationAddress
+	keyPoint.ImagePath = request.KeyPoint.ImagePath
+	keyPoint.Order = request.KeyPoint.Order
 
-	if err != nil {
-		println("Error while creating a new key point")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.KeyPointService.Create(&keyPoint)
+
+	return &keyPoints.KeyPointCreateResponse{}, nil
 }
 
-func (handler *KeyPointHandler) Delete(writer http.ResponseWriter, req *http.Request) {
-	idString := mux.Vars(req)["id"]
-	log.Printf("Key Point with id %s", idString)
-
-	keyPoint := handler.KeyPointService.Delete(idString)
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(writer).Encode(keyPoint)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode key points in method Delete"))
-		return
-	}
+func (handler *KeyPointHandler) Delete(ctx context.Context, request *keyPoints.KeyPointDeleteRequest) (*keyPoints.KeyPointDeleteResponse, error) {
+	handler.KeyPointService.Delete(request.ID)
+	return &keyPoints.KeyPointDeleteResponse{}, nil
 }
 
-func (handler *KeyPointHandler) Update(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Update Key Point")
-	var keyPoint model.KeyPoint
-	err := json.NewDecoder(req.Body).Decode(&keyPoint)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *KeyPointHandler) Update(ctx context.Context, request *keyPoints.KeyPointUpdateRequest) (*keyPoints.KeyPointUpdateResponse, error) {
+	keyPoint := model.KeyPoint{}
 
-	err = handler.KeyPointService.Update(&keyPoint)
+	keyPoint.ID = request.KeyPoint.Id
+	keyPoint.TourId = request.KeyPoint.TourId
+	keyPoint.Name = request.KeyPoint.Name
+	keyPoint.Description = request.KeyPoint.Description
+	keyPoint.Longitude = request.KeyPoint.Longitude
+	keyPoint.Latitude = request.KeyPoint.Latitude
+	keyPoint.LocationAddress = request.KeyPoint.LocationAddress
+	keyPoint.ImagePath = request.KeyPoint.ImagePath
+	keyPoint.Order = request.KeyPoint.Order
 
-	if err != nil {
-		println("Error while updating keyPoint")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	handler.KeyPointService.Update(&keyPoint)
+
+	return &keyPoints.KeyPointUpdateResponse{}, nil
 }

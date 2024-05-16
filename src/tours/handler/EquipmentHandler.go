@@ -1,74 +1,61 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
+	"context"
 	"tours/model"
+	"tours/proto/equipment"
 	"tours/service"
-
-	"github.com/gorilla/mux"
 )
 
 type EquipmentHandler struct {
 	EquipmentService *service.EquipmentService
+	equipment.UnimplementedEquipmentServiceServer
 }
 
-func (handler *EquipmentHandler) GetById(writer http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	log.Printf("Equipment with id %s", id)
+func (handler *EquipmentHandler) GetById(ctx context.Context, request *equipment.EquipmentGetByIdRequest) (*equipment.EquipmentGetByIdResponse, error) {
+	equipmentList, _ := handler.EquipmentService.GetById(request.ID)
 
-	equipment, err := handler.EquipmentService.GetById(id)
+	equipmentResponse := equipment.Equipment{}
+	equipmentResponse.Id = equipmentList.ID
+	equipmentResponse.Name = equipmentList.Name
+	equipmentResponse.Description = equipmentList.Description
 
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+	ret := &equipment.EquipmentGetByIdResponse{
+		Equipment: &equipmentResponse,
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(equipment)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode equipment"))
-		return
-	}
+	return ret, nil
 }
 
-func (handler *EquipmentHandler) GetAll(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Get all equipment")
-	equipment, err := handler.EquipmentService.GetAll()
-	writer.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writer.WriteHeader(http.StatusNotFound)
-		return
+func (handler *EquipmentHandler) GetAll(ctx context.Context, request *equipment.EquipmentGetAllRequest) (*equipment.EquipmentGetAllResponse, error) {
+	equipmentList, _ := handler.EquipmentService.GetAll()
+
+	equipmentResponse := make([]*equipment.Equipment, len(*equipmentList))
+
+	if equipmentList != nil && len(*equipmentList) > 0 {
+		for i, eq := range *equipmentList {
+			equipmentResponse[i] = &equipment.Equipment{
+				Id:          eq.ID,
+				Name:        eq.Name,
+				Description: eq.Description,
+			}
+		}
 	}
 
-	writer.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(writer).Encode(equipment)
-	if err != nil {
-		_ = fmt.Errorf(fmt.Sprintf("error encountered while trying to encode equipment in method GetAll"))
-		return
+	ret := &equipment.EquipmentGetAllResponse{
+		Equipment: equipmentResponse,
 	}
+
+	return ret, nil
 }
 
-func (handler *EquipmentHandler) Create(writer http.ResponseWriter, req *http.Request) {
-	log.Printf("Create equipment")
-	var equipment model.Equipment
-	err := json.NewDecoder(req.Body).Decode(&equipment)
-	if err != nil {
-		println("Error while parsing json")
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+func (handler *EquipmentHandler) Create(ctx context.Context, request *equipment.EquipmentCreateRequest) (*equipment.EquipmentCreateResponse, error) {
+	equipmentResponse := model.Equipment{}
+	equipmentResponse.ID = request.Equipment.Id
+	equipmentResponse.Name = request.Equipment.Name
+	equipmentResponse.Description = request.Equipment.Description
 
-	err = handler.EquipmentService.Create(&equipment)
+	handler.EquipmentService.Create(&equipmentResponse)
 
-	if err != nil {
-		println("Error while creating a new equipment")
-		writer.WriteHeader(http.StatusExpectationFailed)
-		return
-	}
-	writer.WriteHeader(http.StatusCreated)
-	writer.Header().Set("Content-Type", "application/json")
+	return &equipment.EquipmentCreateResponse{}, nil
 }

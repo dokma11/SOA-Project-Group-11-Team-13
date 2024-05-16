@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "proto/jwt";
+
+service JwtService {
+  rpc GenerateToken(GenerateTokenRequest) returns (GenerateTokenResponse);
+}
+
+message GenerateTokenRequest {
+  string user_id = 1;    // The user's unique identifier.
+  string username = 2;   // The username.
+  string person_id = 3;  // The person identifier, if different from the user identifier.
+  string role = 4;       // The user's role.
+}
+
+message GenerateTokenResponse {
+  string token = 1;  // The JWT token.
+}

@@ -3,19 +3,23 @@ package main
 import (
 	"blogs/handler"
 	"blogs/model"
+	"blogs/proto/blog_recommendations"
+	"blogs/proto/blogs"
+	"blogs/proto/comments"
+	"blogs/proto/votes"
 	"blogs/repo"
 	"blogs/service"
 	"context"
 	"fmt"
-	"log"
-	"net/http"
-	"time"
-
-	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"net"
+	"time"
 )
 
 func initDB() *gorm.DB {
@@ -59,7 +63,7 @@ func initMongoDB() *mongo.Client {
 	defer cancel()
 
 	// Connect to MongoDB
-	client, err := mongo.Connect(ctx , options.Client().ApplyURI("mongodb://blogs-mongodb:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://blogs-mongodb:27017"))
 	if err != nil {
 		return nil
 	}
@@ -76,59 +80,14 @@ func initMongoDB() *mongo.Client {
 	return client
 }
 
-func startServer(blogHandler *handler.BlogHandler, commentHandler *handler.CommentHandler, voteHandler *handler.VoteHandler, blogRecommendationHandler *handler.BlogRecommendationHandler) {
-	router := mux.NewRouter().StrictSlash(true)
-
-	initializeBlogRoutes(router, blogHandler)
-	initializeCommentRoutes(router, commentHandler)
-	initializeVoteRoutes(router, voteHandler)
-	initializeBlogRecommendationRoutes(router, blogRecommendationHandler)
-
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
-
-	println("Server starting")
-	log.Fatal(http.ListenAndServe(":8082", router))
-}
-
-func initializeBlogRoutes(router *mux.Router, blogHandler *handler.BlogHandler) {
-	router.HandleFunc("/blogs", blogHandler.Create).Methods("POST")
-	router.HandleFunc("/blogs", blogHandler.GetAll).Methods("GET")
-	router.HandleFunc("/blogs/{id}", blogHandler.GetById).Methods("GET")
-	router.HandleFunc("/blogs/authors/{authorIds}", blogHandler.GetByAuthorIds).Methods("GET")
-	router.HandleFunc("/blogs/search/{name}", blogHandler.SearchByName).Methods("GET")
-	router.HandleFunc("/blogs/publish/{id}", blogHandler.Publish).Methods("PATCH")
-	router.HandleFunc("/blogs/{id}", blogHandler.Delete).Methods("DELETE")
-}
-
-func initializeCommentRoutes(router *mux.Router, commentHandler *handler.CommentHandler) {
-	router.HandleFunc("/comments", commentHandler.GetAll).Methods("GET")
-	router.HandleFunc("/comments/{id}", commentHandler.GetById).Methods("GET")
-	router.HandleFunc("/comments/byBlog/{id}", commentHandler.GetByBlogId).Methods("GET")
-	router.HandleFunc("/comments", commentHandler.Create).Methods("POST")
-	router.HandleFunc("/comments/{id}", commentHandler.Delete).Methods("DELETE")
-	router.HandleFunc("/comments", commentHandler.Update).Methods("PUT")
-
-}
-
-func initializeVoteRoutes(router *mux.Router, blogHandler *handler.VoteHandler) {
-	router.HandleFunc("/votes", blogHandler.GetAll).Methods("GET")
-	router.HandleFunc("/votes/{id}", blogHandler.GetById).Methods("GET")
-}
-
-func initializeBlogRecommendationRoutes(router *mux.Router, blogRecommendationHandler *handler.BlogRecommendationHandler) {
-	router.HandleFunc("/blog/recommendations", blogRecommendationHandler.Create).Methods("POST")
-	router.HandleFunc("/blog/recommendations", blogRecommendationHandler.GetAll).Methods("GET")
-	router.HandleFunc("/blog/recommendations/{id}", blogRecommendationHandler.GetById).Methods("GET")
-	router.HandleFunc("/blog/recommendations/by-receiver/{receiver}", blogRecommendationHandler.GetByReceiverId).Methods("GET")
-}
-
 func main() {
 	database := initDB()
-	blogsMongoDB := initMongoDB();
+	blogsMongoDB := initMongoDB()
 	if database == nil {
 		println("FAILED TO CONNECT TO DB")
 		return
 	}
+
 	blogRepository := &repo.BlogRepository{DatabaseConnection: blogsMongoDB}
 	commentRepository := &repo.CommentRepository{MongoConnection: blogsMongoDB}
 	voteRepository := &repo.VoteRepository{DatabaseConnection: database}
@@ -144,5 +103,26 @@ func main() {
 	voteHandler := &handler.VoteHandler{VoteService: voteService}
 	blogRecommendationHandler := &handler.BlogRecommendationHandler{BlogRecommendationService: blogRecommendationService}
 
-	startServer(blogHandler, commentHandler, voteHandler, blogRecommendationHandler)
+	listener, err := net.Listen("tcp", "blogs:8082")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer func(listener net.Listener) {
+		err := listener.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(listener)
+
+	grpcServer := grpc.NewServer()
+	reflection.Register(grpcServer)
+
+	blogs.RegisterBlogsServiceServer(grpcServer, blogHandler)
+	comments.RegisterCommentsServiceServer(grpcServer, commentHandler)
+	votes.RegisterVotesServiceServer(grpcServer, voteHandler)
+	blog_recommendations.RegisterBlogRecommendationServiceServer(grpcServer, blogRecommendationHandler)
+
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatal("server error: ", err)
+	}
 }
