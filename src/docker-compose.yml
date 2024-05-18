@@ -8,8 +8,9 @@ services:
     restart: always
     networks:
       - database
+      - monitoring
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
       - toursdb # pre pokretanja ovog kontejnera treba prvo da se pokrene baza
 
@@ -20,7 +21,7 @@ services:
     networks:
       - database
     ports:
-      - 8082:8082
+      - "8082:8082"
     depends_on:
       - blogsdb
 
@@ -31,15 +32,10 @@ services:
     restart: always
     networks:
       - database
-    #Mapping ports
     ports:
-      # <port_on_local>:<port_in_machine>
-      - 8084:8084
-    #Will be accessible through os.Getenv("PORT")
+      - "8084:8084"
     environment:
       - PORT=8084
-      # NoSQL: environment variable holding connection URI for Neo4J database
-      # Local DB instance
       - NEO4J_DB=bolt://neo4j:7687
       - NEO4J_USERNAME=neo4j
       - NEO4J_PASS=nekaSifra
@@ -54,18 +50,16 @@ services:
     networks:
       - database
     ports:
-      - 8085:8085
-  
-
-
+      - "8085:8085"
 
   toursdb:
     image: postgres
     container_name: tours-database
     networks:
       - database
+      - monitoring
     ports:
-      - 5433:5432 # na pgAdmin-u se moze povezati na bazu na port 5433
+      - "5433:5432" # na pgAdmin-u se moze povezati na bazu na port 5433
     environment:
       - POSTGRES_DB=soa-gorm
       - POSTGRES_USER=postgres
@@ -79,7 +73,7 @@ services:
     networks:
       - database
     ports:
-      - 5434:5432
+      - "5434:5432"
     environment:
       - POSTGRES_DB=soa-blogs
       - POSTGRES_USER=postgres
@@ -87,22 +81,16 @@ services:
     volumes:
       - blogs-data:/var/lib/postgresql/data
   
-  # NoSQL: Neo4J DB
   neo4j:
     image: neo4j
     restart: always
     networks:
       - database
     ports:
-      # bolt
       - "7687:7687"
-      # http
       - "7474:7474"
-      # https
       - "7473:7473"
-    # Docker healtcheck - checks if database is "alive"
     healthcheck:
-      # test: [ "CMD-SHELL", "echo RETURN 1 | cypher-shell -a <NEO4J_dbms_connector_bolt_listen__address> -u <user defined username> -p <user defined password> || exit 1" ]
       test:
         [
           "CMD-SHELL",
@@ -120,12 +108,11 @@ services:
     image: mongo
     container_name: blogs-mongodb
     ports:
-      - 27017:27017
+      - "27017:27017"
     networks:
       - database
     volumes:
       - blogs-mongodb-data:/data/db
-      
 
 volumes:
   tours-data:
@@ -145,6 +132,8 @@ networks:
   database:
     name: database
     driver: bridge
+  monitoring:
+    external: true
 
 # Slike koje postoje se mogu izlistati komandom: docker images
 # Build-ovane slike se mogu izbrisati komandom: docker rmi <slika> (npr. docker rmi tours)
