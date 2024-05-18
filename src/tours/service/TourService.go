@@ -1,7 +1,9 @@
 package service
 
 import (
+	"context"
 	"fmt"
+	"go.opentelemetry.io/otel/sdk/trace"
 	"strconv"
 	"time"
 	"tours/dto"
@@ -80,8 +82,11 @@ func (service *TourService) GetPublished() (*[]dto.TourResponseDto, error) {
 	return &tourDtos, nil
 }
 
-func (service *TourService) Create(tour *model.Tour) error {
-	err := service.TourRepository.Create(tour)
+func (service *TourService) Create(tour *model.Tour, tp *trace.TracerProvider, ctx context.Context) error {
+	_, span := tp.Tracer("tours").Start(ctx, "tours-service-create")
+	defer func() { span.End() }()
+
+	err := service.TourRepository.Create(tour, tp, ctx)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were created"))
 		return err

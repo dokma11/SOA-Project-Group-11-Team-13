@@ -1,12 +1,13 @@
 package repo
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"tours/model"
-
+	"go.opentelemetry.io/otel/sdk/trace"
 	"gorm.io/gorm"
+	"tours/model"
 )
 
 type TourRepository struct {
@@ -67,7 +68,10 @@ func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
 	return tours, nil
 }
 
-func (repo *TourRepository) Create(tour *model.Tour) error {
+func (repo *TourRepository) Create(tour *model.Tour, tp *trace.TracerProvider, ctx context.Context) error {
+	_, span := tp.Tracer("tours").Start(ctx, "tours-repository-create")
+	defer func() { span.End() }()
+
 	dbResult := repo.DatabaseConnection.Create(tour)
 	if dbResult.Error != nil {
 		return dbResult.Error
