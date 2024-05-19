@@ -1,5 +1,10 @@
 version: '3.8'
 
+x-logging: &fluent-bit
+  driver: fluentd
+  options:
+    fluentd-address: "0.0.0.0:24224"
+
 services:
 
   tours:
@@ -11,6 +16,7 @@ services:
       - monitoring
     ports:
       - "8081:8081"
+    logging: *fluent-bit
     depends_on:
       - toursdb # pre pokretanja ovog kontejnera treba prvo da se pokrene baza
 
@@ -64,9 +70,10 @@ services:
       - POSTGRES_DB=soa-gorm
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=super
+    logging: *fluent-bit
     volumes:
       - tours-data:/var/lib/postgresql/data
-  
+
   blogsdb:
     image: postgres
     container_name: blogs-database

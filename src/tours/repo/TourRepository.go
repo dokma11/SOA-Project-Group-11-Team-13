@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"go.opentelemetry.io/otel/sdk/trace"
 	"gorm.io/gorm"
+	"log"
 	"tours/model"
 )
 
@@ -15,6 +16,7 @@ type TourRepository struct {
 }
 
 func (repo *TourRepository) GetById(id string) (model.Tour, error) {
+	log.Printf("Get tour by id repository call\n")
 	var tour model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
@@ -29,6 +31,7 @@ func (repo *TourRepository) GetById(id string) (model.Tour, error) {
 }
 
 func (repo *TourRepository) GetByAuthorId(authorId string) ([]model.Tour, error) {
+	log.Printf("Get tour by author id repository call\n")
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
@@ -43,6 +46,7 @@ func (repo *TourRepository) GetByAuthorId(authorId string) ([]model.Tour, error)
 }
 
 func (repo *TourRepository) GetAll() ([]model.Tour, error) {
+	log.Printf("Get all tours repository call\n")
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
@@ -55,6 +59,7 @@ func (repo *TourRepository) GetAll() ([]model.Tour, error) {
 }
 
 func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
+	log.Printf("Get published tours repository call\n")
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
@@ -69,6 +74,7 @@ func (repo *TourRepository) GetPublished() ([]model.Tour, error) {
 }
 
 func (repo *TourRepository) Create(tour *model.Tour, tp *trace.TracerProvider, ctx context.Context) error {
+	log.Printf("Create tour repository call\n")
 	_, span := tp.Tracer("tours").Start(ctx, "tours-repository-create")
 	defer func() { span.End() }()
 
@@ -81,6 +87,7 @@ func (repo *TourRepository) Create(tour *model.Tour, tp *trace.TracerProvider, c
 }
 
 func (repo *TourRepository) Delete(id string) error {
+	log.Printf("Delete tour repository call\n")
 	var tour model.Tour
 	result := repo.DatabaseConnection.
 		Preload("KeyPoints").
@@ -121,6 +128,7 @@ func (repo *TourRepository) Delete(id string) error {
 }
 
 func (repo *TourRepository) Update(tour *model.Tour) error {
+	log.Printf("Update tour repository call\n")
 	dbResult := repo.DatabaseConnection.Model(&model.Tour{}).
 		Where("id = ?", tour.ID).
 		Omit("Durations").
