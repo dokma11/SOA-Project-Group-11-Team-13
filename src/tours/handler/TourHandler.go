@@ -60,7 +60,7 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-get-by-author-id")
 	defer func() { span.End() }()
 
-	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId)
+	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId, handler.tp, ctx)
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
 

@@ -30,8 +30,12 @@ func (service *TourService) GetById(id string) (*dto.TourResponseDto, error) {
 	}
 }
 
-func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseDto, error) {
+func (service *TourService) GetByAuthorId(authorId string, tp *trace.TracerProvider, ctx context.Context) (*[]dto.TourResponseDto, error) {
 	log.Printf("Get tour by author id service call, Author ID" + authorId + "\n")
+	_, span := tp.Tracer("tours").Start(ctx, "tours-service-getByAuthorId")
+	span.AddEvent("GetByAuthorId")
+	defer func() { span.End() }()
+
 	tours, err := service.TourRepository.GetByAuthorId(authorId)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))

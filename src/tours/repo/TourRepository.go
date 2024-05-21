@@ -30,8 +30,11 @@ func (repo *TourRepository) GetById(id string) (model.Tour, error) {
 	return tour, nil
 }
 
-func (repo *TourRepository) GetByAuthorId(authorId string) ([]model.Tour, error) {
+func (repo *TourRepository) GetByAuthorId(authorId string, tp *trace.TracerProvider, ctx context.Context) ([]model.Tour, error) {
 	log.Printf("Get tour by author id repository call\n")
+	_, span := tp.Tracer("tours").Start(ctx, "tours-repository-getByAuthorId")
+	defer func() { span.End() }()
+
 	var tours []model.Tour
 	dbResult := repo.DatabaseConnection.
 		Preload("KeyPoints").
