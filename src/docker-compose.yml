@@ -57,7 +57,7 @@ services:
       - 8085:8085
 
   tour-search:
-    build: .
+    build: tour-search/
     image: tour-search
     container_name: tour-search
     restart: always
