@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Tour {
 
     @Id
-    private Integer id;    
+    private String id;    
 
     private String name;
 

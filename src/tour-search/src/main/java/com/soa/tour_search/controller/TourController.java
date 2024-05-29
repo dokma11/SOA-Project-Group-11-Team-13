@@ -43,7 +43,7 @@ public class TourController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
+    public ResponseEntity<?> findById(@PathVariable String id) {
         try {
             var tour = tourService.findById(id);
             var dto = modelMapper.map(tour, TourResponseDTO.class);
@@ -60,7 +60,7 @@ public class TourController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable String id) {
         tourService.deleteById(id);
     }
 
