@@ -38,6 +38,12 @@ services:
       - elasticsearch
     restart: always
 
+  nats:
+    image: nats
+    container_name: nats
+    ports:
+      - 4222:4222
+
 volumes:
   elasticsearch-data:
     driver: local

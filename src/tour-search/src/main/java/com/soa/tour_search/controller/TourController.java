@@ -14,6 +14,7 @@ import com.soa.tour_search.dto.TourResponseDTO;
 import com.soa.tour_search.model.Tour;
 import com.soa.tour_search.service.ITourService;
 
+import io.nats.client.Dispatcher;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,8 @@ public class TourController {
     private final ITourService tourService;
 
     private final ModelMapper modelMapper;
+
+    private final Dispatcher dispatcher;
 
     @GetMapping
     public ResponseEntity<Collection<TourResponseDTO>> findAll() {

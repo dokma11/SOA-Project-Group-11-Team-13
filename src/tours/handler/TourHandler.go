@@ -2,18 +2,23 @@ package handler
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"strconv"
 	"time"
+	"tours/dto"
 	"tours/model"
 	"tours/proto/tours"
 	"tours/service"
+
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
+	saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
 )
 
 type TourHandler struct {
 	TourService *service.TourService
+	CommandPublisher saga.Publisher
 	tours.UnimplementedToursServiceServer
+
 }
 
 func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetTourByIdRequest) (*tours.GetTourByIdResponse, error) {
@@ -275,6 +280,16 @@ func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.Creat
 	tour.Durations = durationsList
 
 	handler.TourService.Create(&tour)
+
+	tourSearchSagaRequestDTO := dto.TourSearchSagaRequestDTO {
+		ID: tour.ID,
+		Name: tour.Name,
+		Description: tour.Description,
+	};
+	
+	handler.CommandPublisher.Publish(tourSearchSagaRequestDTO)
+
+	println("KURCINNAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
 	return &tours.CreateTourResponse{}, nil
 }

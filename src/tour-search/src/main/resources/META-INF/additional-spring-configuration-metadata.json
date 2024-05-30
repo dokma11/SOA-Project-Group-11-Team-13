@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "application.nats.port",
+    "type": "java.lang.String",
+    "description": "Port for connecting to NATS"
+  },
+  {
+    "name": "application.nats.host",
+    "type": "java.lang.String",
+    "description": "Host for connection to NATS"
+  }
+]}

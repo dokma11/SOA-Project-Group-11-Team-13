@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
 	"net"
+	"os"
 	"tours/handler"
+	"tours/messaging/nats"
 	"tours/model"
 	"tours/proto/equipment"
 	"tours/proto/facilities"
@@ -17,10 +15,18 @@ import (
 	"tours/proto/tours"
 	"tours/repo"
 	"tours/service"
+
+	saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func initDB() *gorm.DB {
-	connectionStr := "host=tours-database user=postgres password=super dbname=soa-gorm port=5432 sslmode=disable"
+	dbHost := getEnv("DB_HOST", "localhost");
+	dbPort := getEnv("DB_PORT", "5433");
+	connectionStr := "host=" + dbHost + " user=postgres password=super dbname=soa-gorm port=" + dbPort + " sslmode=disable"
 	database, err := gorm.Open(postgres.Open(connectionStr), &gorm.Config{})
 	if err != nil {
 		print(err)
@@ -60,6 +66,22 @@ func initDB() *gorm.DB {
 	return database
 }
 
+func getEnv(key, fallback string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return fallback
+}
+
+func initPublisher(subject string) saga.Publisher {
+	publisher, err := nats.NewNATSPublisher(
+		getEnv("NATS_HOST", "localhost"), getEnv("NATS_PORT", "4222"), subject);
+	if err != nil {
+		log.Fatal(err)
+	}
+	return publisher
+}
+
 func main() {
 	database := initDB()
 	if database == nil {
@@ -69,7 +91,8 @@ func main() {
 
 	tourRepository := &repo.TourRepository{DatabaseConnection: database}
 	tourService := &service.TourService{TourRepository: tourRepository}
-	tourHandler := &handler.TourHandler{TourService: tourService}
+	commandPublisher := initPublisher("com.tours");
+	tourHandler := &handler.TourHandler{TourService: tourService, CommandPublisher: commandPublisher};
 
 	keyPointRepository := &repo.KeyPointRepository{DatabaseConnection: database}
 	keyPointService := &service.KeyPointService{KeyPointRepository: keyPointRepository}
