@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"fmt"
-	"go.opentelemetry.io/otel/sdk/trace"
 	"log"
 	"strconv"
 	"time"
 	"tours/dto"
 	"tours/model"
 	"tours/repo"
+
+	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 type TourService struct {
@@ -36,7 +37,7 @@ func (service *TourService) GetByAuthorId(authorId string, tp *trace.TracerProvi
 	span.AddEvent("GetByAuthorId")
 	defer func() { span.End() }()
 
-	tours, err := service.TourRepository.GetByAuthorId(authorId)
+	tours, err := service.TourRepository.GetByAuthorId(authorId, tp, ctx)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))
 	}
