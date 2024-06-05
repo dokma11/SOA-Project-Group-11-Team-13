@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 x-logging: &fluent-bit
   driver: fluentd
@@ -13,7 +13,6 @@ services:
     restart: always
     networks:
       - database
-      - monitoring
     ports:
       - 8081:8081
     environment:
@@ -116,22 +115,24 @@ services:
     image: docker.io/prom/prometheus:v2.52.0
     container_name: prometheus
     ports:
-      - 9090:9090
+      - "9091:9090"
     command: "--config.file=/etc/prometheus/prometheus.yaml"
     volumes:
       - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
       - prometheus-data:/prometheus
     restart: unless-stopped
+    networks:
+      - database
 
-  grafana:
-    image: docker.io/grafana/grafana-oss:11.0.0
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana-data:/var/lib/grafana
-    restart: unless-stopped
-  
+#  grafana:
+#    image: docker.io/grafana/grafana-oss:11.0.0
+#    container_name: grafana
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - grafana-data:/var/lib/grafana
+#    restart: unless-stopped
+#
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cadvisor
@@ -163,7 +164,6 @@ services:
     container_name: tours-database
     networks:
       - database
-      - monitoring
     ports:
       - "5433:5432" # na pgAdmin-u se moze povezati na bazu na port 5433
     environment:
@@ -250,6 +250,7 @@ networks:
     driver: bridge
   monitoring:
     external: true
+    driver: bridge
 
 # Slike koje postoje se mogu izlistati komandom: docker images
 # Build-ovane slike se mogu izbrisati komandom: docker rmi <slika> (npr. docker rmi tours)
