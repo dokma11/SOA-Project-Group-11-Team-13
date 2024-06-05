@@ -1,5 +1,10 @@
 version: '3.8'
 
+x-logging: &fluent-bit
+  driver: fluentd
+  options:
+    fluentd-address: "0.0.0.0:24224"
+
 services:
 
   tours:
@@ -8,6 +13,7 @@ services:
     restart: always
     networks:
       - database
+      - monitoring
     ports:
       - 8081:8081
     environment:
@@ -15,6 +21,8 @@ services:
       - NATS_PORT=4222
       - DB_HOST=tours-database
       - DB_PORT=5432
+      - "8081:8081"
+    logging: *fluent-bit
     depends_on:
       - toursdb # pre pokretanja ovog kontejnera treba prvo da se pokrene baza
       - nats
@@ -26,7 +34,7 @@ services:
     networks:
       - database
     ports:
-      - 8082:8082
+      - "8082:8082"
     depends_on:
       - blogsdb
 
@@ -37,15 +45,10 @@ services:
     restart: always
     networks:
       - database
-    #Mapping ports
     ports:
-      # <port_on_local>:<port_in_machine>
-      - 8084:8084
-    #Will be accessible through os.Getenv("PORT")
+      - "8084:8084"
     environment:
       - PORT=8084
-      # NoSQL: environment variable holding connection URI for Neo4J database
-      # Local DB instance
       - NEO4J_DB=bolt://neo4j:7687
       - NEO4J_USERNAME=neo4j
       - NEO4J_PASS=nekaSifra
@@ -107,28 +110,77 @@ services:
     networks:
       - database
 
+      - "8085:8085"
+
+  prometheus:
+    image: docker.io/prom/prometheus:v2.52.0
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command: "--config.file=/etc/prometheus/prometheus.yaml"
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: docker.io/grafana/grafana-oss:11.0.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+  
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    restart: unless-stopped
+  
+  #windows_exporter:
+    #image: prometheuscommunity/windows-exporter:master
+    #container_name: windows_exporter
+    #ports:
+    #  - "9182:9182"
+    #command:
+    #  - '--collectors.enabled=cpu,memory,logical_disk,net'
+    #  - '--log.level=info'
+    #restart: unless-stopped
 
   toursdb:
     image: postgres
     container_name: tours-database
     networks:
       - database
+      - monitoring
     ports:
-      - 5433:5432 # na pgAdmin-u se moze povezati na bazu na port 5433
+      - "5433:5432" # na pgAdmin-u se moze povezati na bazu na port 5433
     environment:
       - POSTGRES_DB=soa-gorm
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=super
+    logging: *fluent-bit
     volumes:
       - tours-data:/var/lib/postgresql/data
-  
+
   blogsdb:
     image: postgres
     container_name: blogs-database
     networks:
       - database
     ports:
-      - 5434:5432
+      - "5434:5432"
     environment:
       - POSTGRES_DB=soa-blogs
       - POSTGRES_USER=postgres
@@ -136,22 +188,16 @@ services:
     volumes:
       - blogs-data:/var/lib/postgresql/data
   
-  # NoSQL: Neo4J DB
   neo4j:
     image: neo4j
     restart: always
     networks:
       - database
     ports:
-      # bolt
       - "7687:7687"
-      # http
       - "7474:7474"
-      # https
       - "7473:7473"
-    # Docker healtcheck - checks if database is "alive"
     healthcheck:
-      # test: [ "CMD-SHELL", "echo RETURN 1 | cypher-shell -a <NEO4J_dbms_connector_bolt_listen__address> -u <user defined username> -p <user defined password> || exit 1" ]
       test:
         [
           "CMD-SHELL",
@@ -169,12 +215,11 @@ services:
     image: mongo
     container_name: blogs-mongodb
     ports:
-      - 27017:27017
+      - "27017:27017"
     networks:
       - database
     volumes:
       - blogs-mongodb-data:/data/db
-      
 
 volumes:
   tours-data:
@@ -192,10 +237,19 @@ volumes:
   elasticsearch-data:
     driver: local
 
+  prometheus-data:
+    driver: local
+    name: prometheus-data 
+  grafana-data:
+    driver: local
+    name: grafana-data 
+  
 networks:
   database:
     name: database
     driver: bridge
+  monitoring:
+    external: true
 
 # Slike koje postoje se mogu izlistati komandom: docker images
 # Build-ovane slike se mogu izbrisati komandom: docker rmi <slika> (npr. docker rmi tours)

@@ -1,7 +1,10 @@
 package service
 
 import (
+	"context"
 	"fmt"
+	"go.opentelemetry.io/otel/sdk/trace"
+	"log"
 	"strconv"
 	"time"
 	"tours/dto"
@@ -14,6 +17,7 @@ type TourService struct {
 }
 
 func (service *TourService) GetById(id string) (*dto.TourResponseDto, error) {
+	log.Printf("Get tour by id service call, Tour ID: " + id + "\n")
 	tour, err := service.TourRepository.GetById(id)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("menu item with id %s not found", id))
@@ -26,7 +30,12 @@ func (service *TourService) GetById(id string) (*dto.TourResponseDto, error) {
 	}
 }
 
-func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseDto, error) {
+func (service *TourService) GetByAuthorId(authorId string, tp *trace.TracerProvider, ctx context.Context) (*[]dto.TourResponseDto, error) {
+	log.Printf("Get tour by author id service call, Author ID" + authorId + "\n")
+	_, span := tp.Tracer("tours").Start(ctx, "tours-service-getByAuthorId")
+	span.AddEvent("GetByAuthorId")
+	defer func() { span.End() }()
+
 	tours, err := service.TourRepository.GetByAuthorId(authorId)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("tours with author id %s not found", authorId))
@@ -45,6 +54,7 @@ func (service *TourService) GetByAuthorId(authorId string) (*[]dto.TourResponseD
 }
 
 func (service *TourService) GetAll() (*[]dto.TourResponseDto, error) {
+	log.Printf("Get all tours service call\n")
 	tours, err := service.TourRepository.GetAll()
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("no tours were found"))
@@ -63,6 +73,7 @@ func (service *TourService) GetAll() (*[]dto.TourResponseDto, error) {
 }
 
 func (service *TourService) GetPublished() (*[]dto.TourResponseDto, error) {
+	log.Printf("Get published tours service call\n")
 	tours, err := service.TourRepository.GetPublished()
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("no published tours were found"))
@@ -80,8 +91,12 @@ func (service *TourService) GetPublished() (*[]dto.TourResponseDto, error) {
 	return &tourDtos, nil
 }
 
-func (service *TourService) Create(tour *model.Tour) error {
-	err := service.TourRepository.Create(tour)
+func (service *TourService) Create(tour *model.Tour, tp *trace.TracerProvider, ctx context.Context) error {
+	log.Printf("Create tour service call\n")
+	_, span := tp.Tracer("tours").Start(ctx, "tours-service-create")
+	defer func() { span.End() }()
+
+	err := service.TourRepository.Create(tour, tp, ctx)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were created"))
 		return err
@@ -90,6 +105,7 @@ func (service *TourService) Create(tour *model.Tour) error {
 }
 
 func (service *TourService) Delete(id string) error {
+	log.Printf("Delete tour service call, Tour ID: " + id + "\n")
 	err := service.TourRepository.Delete(id)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were deleted"))
@@ -99,6 +115,7 @@ func (service *TourService) Delete(id string) error {
 }
 
 func (service *TourService) Update(tour *model.Tour) error {
+	log.Printf("Update tour service call\n")
 	err := service.TourRepository.Update(tour)
 	if err != nil {
 		_ = fmt.Errorf(fmt.Sprintf("no tours were updated"))
@@ -117,6 +134,7 @@ func (service *TourService) AddDurations(tour *model.Tour) error {
 }
 
 func (service *TourService) Publish(id string) error {
+	log.Printf("Publish tour service call, Tour ID: " + id + "\n")
 	tourDto, _ := service.TourRepository.GetById(id)
 
 	if tourDto.Status != model.Published {
@@ -140,6 +158,7 @@ func (service *TourService) Publish(id string) error {
 }
 
 func (service *TourService) Archive(id string) error {
+	log.Printf("Archive tour service call, Tour ID" + id + "\n")
 	tourDto, _ := service.TourRepository.GetById(id)
 
 	if tourDto.Status == model.Published {

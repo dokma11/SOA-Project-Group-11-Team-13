@@ -2,12 +2,15 @@ package handler
 
 import (
 	"context"
+	"log"
 	"strconv"
 	"time"
 	"tours/dto"
 	"tours/model"
 	"tours/proto/tours"
 	"tours/service"
+
+	"go.opentelemetry.io/otel/sdk/trace"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
@@ -16,12 +19,24 @@ import (
 
 type TourHandler struct {
 	TourService *service.TourService
+	tp          *trace.TracerProvider
 	CommandPublisher saga.Publisher
 	tours.UnimplementedToursServiceServer
 
 }
 
+func NewTourHandler(tourService *service.TourService, tp *trace.TracerProvider) *TourHandler {
+	return &TourHandler{
+		TourService: tourService,
+		tp:          tp,
+	}
+}
+
 func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetTourByIdRequest) (*tours.GetTourByIdResponse, error) {
+	log.Printf("Get tour by id call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-get-by-tour-id")
+	defer func() { span.End() }()
+
 	tour, _ := handler.TourService.GetById(request.ID)
 
 	tourResponse := tours.Tour{}
@@ -47,7 +62,11 @@ func (handler *TourHandler) GetTourById(ctx context.Context, request *tours.GetT
 }
 
 func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tours.GetToursByAuthorIdRequest) (*tours.GetToursByAuthorIdResponse, error) {
-	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId)
+	log.Printf("Get tours by author id handler call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-get-by-author-id")
+	defer func() { span.End() }()
+
+	toursList, _ := handler.TourService.GetByAuthorId(request.AuthorId, handler.tp, ctx)
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
 
@@ -109,6 +128,10 @@ func (handler *TourHandler) GetToursByAuthorId(ctx context.Context, request *tou
 }
 
 func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetAllToursRequest) (*tours.GetAllToursResponse, error) {
+	log.Printf("Get all tours handler call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-get-all")
+	defer func() { span.End() }()
+
 	toursList, _ := handler.TourService.GetAll()
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
@@ -171,6 +194,10 @@ func (handler *TourHandler) GetAllTours(ctx context.Context, request *tours.GetA
 }
 
 func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tours.GetPublishedToursRequest) (*tours.GetPublishedToursResponse, error) {
+	log.Printf("Get published tours handler call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-get-published")
+	defer func() { span.End() }()
+
 	toursList, _ := handler.TourService.GetPublished()
 
 	toursResponse := make([]*tours.Tour, len(*toursList))
@@ -233,6 +260,7 @@ func (handler *TourHandler) GetPublishedTours(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.CreateTourRequest) (*tours.CreateTourResponse, error) {
+	log.Printf("Create tour handler call")
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.Id
@@ -279,7 +307,14 @@ func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.Creat
 	tour.KeyPoints = keypointList
 	tour.Durations = durationsList
 
-	handler.TourService.Create(&tour)
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-handler-create")
+	defer func() { span.End() }()
+
+	span.AddEvent("Calling create service method")
+
+	handler.TourService.Create(&tour, handler.tp, ctx)
+
+	span.AddEvent("Tour successfully created")
 
 	tourSearchSagaRequestDTO := dto.TourSearchSagaRequestDTO {
 		ID: tour.ID,
@@ -289,17 +324,20 @@ func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.Creat
 	
 	handler.CommandPublisher.Publish(tourSearchSagaRequestDTO)
 
-	println("KURCINNAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
 	return &tours.CreateTourResponse{}, nil
 }
 
 func (handler *TourHandler) DeleteTour(ctx context.Context, request *tours.DeleteTourRequest) (*tours.DeleteTourResponse, error) {
+	log.Printf("Delete tour handler call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-delete")
+	defer func() { span.End() }()
+
 	handler.TourService.Delete(request.ID)
 	return &tours.DeleteTourResponse{}, nil
 }
 
 func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.UpdateTourRequest) (*tours.UpdateTourResponse, error) {
+	log.Printf("Update tour handler call\n")
 	tour := model.Tour{}
 
 	tour.ID = request.Tour.Id
@@ -345,6 +383,9 @@ func (handler *TourHandler) UpdateTour(ctx context.Context, request *tours.Updat
 
 	tour.KeyPoints = keypointList
 	tour.Durations = durationsList
+
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-update")
+	defer func() { span.End() }()
 
 	handler.TourService.Update(&tour)
 
@@ -404,11 +445,19 @@ func (handler *TourHandler) AddToursDurations(ctx context.Context, request *tour
 }
 
 func (handler *TourHandler) PublishTour(ctx context.Context, request *tours.PublishTourRequest) (*tours.PublishTourResponse, error) {
+	log.Printf("Publish tour handler call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-publish")
+	defer func() { span.End() }()
+
 	handler.TourService.Publish(strconv.FormatInt(request.Tour.Id, 10))
 	return &tours.PublishTourResponse{}, nil
 }
 
 func (handler *TourHandler) ArchiveTour(ctx context.Context, request *tours.ArchiveTourRequest) (*tours.ArchiveTourResponse, error) {
+	log.Printf("Archive tour handler call\n")
+	_, span := handler.tp.Tracer("tours").Start(ctx, "tours-archive")
+	defer func() { span.End() }()
+
 	handler.TourService.Archive(strconv.FormatInt(request.Tour.Id, 10))
 	return &tours.ArchiveTourResponse{}, nil
 }
