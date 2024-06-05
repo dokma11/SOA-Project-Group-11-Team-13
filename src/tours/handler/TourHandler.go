@@ -25,10 +25,11 @@ type TourHandler struct {
 
 }
 
-func NewTourHandler(tourService *service.TourService, tp *trace.TracerProvider) *TourHandler {
+func NewTourHandler(tourService *service.TourService, tp *trace.TracerProvider, cp saga.Publisher) *TourHandler {
 	return &TourHandler{
 		TourService: tourService,
 		tp:          tp,
+		CommandPublisher: cp,
 	}
 }
 

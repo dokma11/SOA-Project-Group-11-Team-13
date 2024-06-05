@@ -160,7 +160,7 @@ func main() {
 	tourRepository := &repo.TourRepository{DatabaseConnection: database}
 	tourService := &service.TourService{TourRepository: tourRepository}
 	commandPublisher := initPublisher("com.tours");
-	tourHandler := &handler.TourHandler{TourService: tourService, CommandPublisher: commandPublisher};
+	tourHandler := handler.NewTourHandler(tourService, tp, commandPublisher);
 
 	keyPointRepository := &repo.KeyPointRepository{DatabaseConnection: database}
 	keyPointService := &service.KeyPointService{KeyPointRepository: keyPointRepository}
