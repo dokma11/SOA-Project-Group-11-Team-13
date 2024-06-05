@@ -1,11 +1,11 @@
-version: '3.8'
+version: '3.9'
 
 services:
 
   loki:
     image: grafana/loki:main-5206e3a
     networks:
-      - monitoring
+      - database
 
   grafana:
     image: grafana/grafana:8.5.3
@@ -20,21 +20,21 @@ services:
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/provisioning:/etc/grafana/provisioning
     networks:
-      - monitoring
+      - database
 
   renderer:
     image: grafana/grafana-image-renderer:3.4.2
     environment:
       ENABLE_METRICS: "true"
     networks:
-      - monitoring
+      - database
 
   jaeger:
     image: jaegertracing/all-in-one:1.34
     ports:
       - "9000:16686"
     networks:
-      - monitoring
+      - database
 
   fluent-bit:
     image: grafana/fluent-bit-plugin-loki:main-5206e3a-amd64
@@ -44,14 +44,16 @@ services:
       - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
     ports:
       - "24224:24224"
+      - "24224:24224/tcp"
       - "24224:24224/udp"
     networks:
-      - monitoring
+      - database
 
 volumes:
   grafana:
     name: grafana
 
 networks:
-  monitoring:
-    name: monitoring
+  database:
+    name: database
+    driver: bridge
