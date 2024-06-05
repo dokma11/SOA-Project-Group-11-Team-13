@@ -58,6 +58,52 @@ services:
     ports:
       - "8085:8085"
 
+  prometheus:
+    image: docker.io/prom/prometheus:v2.52.0
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command: "--config.file=/etc/prometheus/prometheus.yaml"
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: docker.io/grafana/grafana-oss:11.0.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+  
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    restart: unless-stopped
+  
+  #windows_exporter:
+    #image: prometheuscommunity/windows-exporter:master
+    #container_name: windows_exporter
+    #ports:
+    #  - "9182:9182"
+    #command:
+    #  - '--collectors.enabled=cpu,memory,logical_disk,net'
+    #  - '--log.level=info'
+    #restart: unless-stopped
+
   toursdb:
     image: postgres
     container_name: tours-database
@@ -134,7 +180,13 @@ volumes:
   neo4j_data: 
     driver: local
     name: followers-data 
-
+  prometheus-data:
+    driver: local
+    name: prometheus-data 
+  grafana-data:
+    driver: local
+    name: grafana-data 
+  
 networks:
   database:
     name: database
