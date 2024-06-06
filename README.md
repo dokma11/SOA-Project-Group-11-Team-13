@@ -27,7 +27,7 @@ Other relevant parts from the previously made monolith project:
 
 [API Gateway](https://github.com/dokma11/soa-group-11-team-13-back-end)
 
-[Front-end](https://github.com/dokma11/soa-group-11-team-13-back-end)
+[Front-end](https://github.com/dokma11/soa-group-11-team-13-front-end)
 
 # Technologies:
 - Golang: Programming language for the microservices.
