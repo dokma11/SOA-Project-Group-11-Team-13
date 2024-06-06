@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"fmt"
-	"go.opentelemetry.io/otel/sdk/trace"
 	"log"
 	"strconv"
 	"time"
 	"tours/dto"
 	"tours/model"
 	"tours/repo"
+
+	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 type TourService struct {

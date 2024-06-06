@@ -2,27 +2,34 @@ package handler
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/timestamp"
-	"go.opentelemetry.io/otel/sdk/trace"
 	"log"
 	"strconv"
 	"time"
+	"tours/dto"
 	"tours/model"
 	"tours/proto/tours"
 	"tours/service"
+
+	"go.opentelemetry.io/otel/sdk/trace"
+
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
+	saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
 )
 
 type TourHandler struct {
 	TourService *service.TourService
 	tp          *trace.TracerProvider
+	CommandPublisher saga.Publisher
 	tours.UnimplementedToursServiceServer
+
 }
 
-func NewTourHandler(tourService *service.TourService, tp *trace.TracerProvider) *TourHandler {
+func NewTourHandler(tourService *service.TourService, tp *trace.TracerProvider, cp saga.Publisher) *TourHandler {
 	return &TourHandler{
 		TourService: tourService,
 		tp:          tp,
+		CommandPublisher: cp,
 	}
 }
 
@@ -309,6 +316,14 @@ func (handler *TourHandler) CreateTour(ctx context.Context, request *tours.Creat
 	handler.TourService.Create(&tour, handler.tp, ctx)
 
 	span.AddEvent("Tour successfully created")
+
+	tourSearchSagaRequestDTO := dto.TourSearchSagaRequestDTO {
+		ID: tour.ID,
+		Name: tour.Name,
+		Description: tour.Description,
+	};
+	
+	handler.CommandPublisher.Publish(tourSearchSagaRequestDTO)
 
 	return &tours.CreateTourResponse{}, nil
 }
