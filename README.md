@@ -46,10 +46,12 @@ Other relevant parts from the previously made monolith project:
 
 # Getting started
 <h3>Prerequisites</h3>
+
 - Git: Ensure you have Git installed. You can download it from [here](https://git-scm.com/downloads).
 - Docker: Ensure you have Docker installed. You can download it from [here](https://docs.docker.com/desktop/install/windows-install/).
 
 <h3>Steps</h3>
+
 1. Clone the repository<br>
     git clone https://github.com/dokma11/SOA-Project-Group-11-Team-13.git
 2. Navigate to monitoring directory<br>
